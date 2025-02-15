@@ -16,9 +16,7 @@ enum UserStatus {
 }
 
 enum UserRole {
-  Student
-  Teacher
+  Holder
   Admin
   Owner
-  Referror
 }
