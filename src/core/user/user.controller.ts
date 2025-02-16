@@ -33,27 +33,24 @@ export class UserController {
     return this.userService.count(query);
   }
 
-  @Get('get/:id')
+  @Get('get/:username')
   @UseAdmin('get-user')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  findOne(@Param('username') username: string) {
+    return this.userService.findOne(username);
   }
 
   @Get('get-current-user')
   getCurrentUser(@CurrentUser() user: CurrentUser) {
-    return this.userService.findOne(user.id);
+    return this.userService.findOne(user.username);
   }
 
-  @Patch('update/:id')
+  @Patch('update/:username')
   @UseAdmin('update-user')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
-  }
-
-  @Delete('remove/:id')
-  @UseAdmin('delete-user')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  update(
+    @Param('username') username: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(username, updateUserDto);
   }
 
   @Patch('update-new-password')
@@ -61,6 +58,6 @@ export class UserController {
     @CurrentUser() user: CurrentUser,
     @Body() updateUserDto: UpdateNewPasswordDto,
   ) {
-    return this.userService.updateNewPassword(user.id, updateUserDto);
+    return this.userService.updateNewPassword(user.username, updateUserDto);
   }
 }

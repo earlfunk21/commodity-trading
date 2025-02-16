@@ -28,7 +28,7 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
     await super.canActivate(context);
     const request = context.switchToHttp().getRequest();
     const user: CurrentUser = request.user;
-    const userStatus = await this.getUserStatus(user.id);
+    const userStatus = await this.getUserStatus(user.username);
 
     if (!userStatus) {
       return false;
@@ -54,12 +54,12 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
     ]);
   }
 
-  getUserStatus(id: string) {
-    const key = `access-token-guard-${id}`;
+  getUserStatus(username: string) {
+    const key = `access-token-guard-${username}`;
     return this.cachingService.fetch(key, 10000, async () => {
       const user = await this.prisma.user.findUnique({
         where: {
-          id,
+          username,
         },
         select: {
           status: true,

@@ -28,7 +28,7 @@ export class AuthService {
         username: loginDto.username,
       },
       select: {
-        id: true,
+        username: true,
         status: true,
         role: true,
         password: true,
@@ -48,7 +48,7 @@ export class AuthService {
     }
 
     return this.generateAuthTokens({
-      id: user.id,
+      username: user.username,
       role: user.role,
     });
   }
@@ -59,7 +59,7 @@ export class AuthService {
         id: userId,
       },
       select: {
-        id: true,
+        username: true,
         status: true,
         role: true,
       },
@@ -73,7 +73,7 @@ export class AuthService {
     }
 
     return this.generateAuthTokens({
-      id: user.id,
+      username: user.username,
       role: user.role,
     });
   }
@@ -83,7 +83,7 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          sub: user.id,
+          sub: user.username,
           role: user.role,
         },
         {
@@ -93,7 +93,7 @@ export class AuthService {
       ),
       this.jwtService.signAsync(
         {
-          sub: user.id,
+          sub: user.username,
         },
         {
           expiresIn: '1d',

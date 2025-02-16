@@ -1,26 +1,26 @@
 import { PrismaService } from '@/common/prisma/prisma.service';
 import { Injectable, Scope } from '@nestjs/common';
-import { Admin, Prisma, User } from '@prisma/client';
+import { Holder, Prisma, User } from '@prisma/client';
 import {
-  CreateAdminDto,
-  FindManyAdminQuery,
-  UpdateAdminDto,
-} from './admin.dto';
+  CreateHolderDto,
+  FindManyHolderQuery,
+  UpdateHolderDto,
+} from './holder.dto';
 
 @Injectable({ scope: Scope.REQUEST })
-export class AdminService {
+export class HolderService {
   constructor(private prisma: PrismaService) {}
 
   setPrisma(prisma: PrismaService) {
     this.prisma = prisma;
   }
 
-  async create(createAdminDto: CreateAdminDto) {
-    const { user, ...adminInput } = createAdminDto;
+  async create(createHolderDto: CreateHolderDto) {
+    const { user, ...holderInput } = createHolderDto;
 
-    return this.prisma.admin.create({
+    return this.prisma.holder.create({
       data: {
-        ...adminInput,
+        ...holderInput,
         user: {
           create: user,
         },
@@ -28,8 +28,8 @@ export class AdminService {
     });
   }
 
-  findAll(query: FindManyAdminQuery) {
-    const args: Prisma.AdminFindManyArgs = {
+  findAll(query: FindManyHolderQuery) {
+    const args: Prisma.HolderFindManyArgs = {
       take: query.take,
       skip: query.skip,
       orderBy: {
@@ -49,24 +49,24 @@ export class AdminService {
         },
       },
     };
-    return this.prisma.admin.findMany(args);
+    return this.prisma.holder.findMany(args);
   }
 
-  count(query: FindManyAdminQuery) {
-    const args: Prisma.AdminCountArgs = {
+  count(query: FindManyHolderQuery) {
+    const args: Prisma.HolderCountArgs = {
       where: {
         ...this.searchQuery(query),
       },
     };
-    return this.prisma.admin.count(args);
+    return this.prisma.holder.count(args);
   }
 
-  private searchQuery(query: FindManyAdminQuery): Prisma.AdminWhereInput {
+  private searchQuery(query: FindManyHolderQuery): Prisma.HolderWhereInput {
     if (!query.search) {
       return {};
     }
 
-    const searchFields: (keyof Admin)[] = [
+    const searchFields: (keyof Holder)[] = [
       'id',
       'firstName',
       'lastName',
@@ -96,7 +96,7 @@ export class AdminService {
   }
 
   findOne(id: string) {
-    return this.prisma.admin.findUnique({
+    return this.prisma.holder.findUnique({
       where: {
         id,
       },
@@ -114,17 +114,17 @@ export class AdminService {
     });
   }
 
-  update(id: string, updateAdminDto: UpdateAdminDto) {
-    return this.prisma.admin.update({
+  update(id: string, updateHolderDto: UpdateHolderDto) {
+    return this.prisma.holder.update({
       where: {
         id,
       },
-      data: updateAdminDto,
+      data: updateHolderDto,
     });
   }
 
   async remove(id: string) {
-    const deletedAdmin = await this.prisma.admin.delete({
+    const deletedHolder = await this.prisma.holder.delete({
       where: {
         id,
       },
@@ -132,7 +132,7 @@ export class AdminService {
 
     await this.prisma.user.delete({
       where: {
-        id: deletedAdmin.userId,
+        id: deletedHolder.userId,
       },
     });
   }

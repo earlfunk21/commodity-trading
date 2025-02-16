@@ -63,10 +63,10 @@ export class UserService {
     };
   }
 
-  findOne(id: string) {
+  findOne(username: string) {
     return this.prisma.user.findUnique({
       where: {
-        id,
+        username,
       },
       omit: {
         password: true,
@@ -74,10 +74,10 @@ export class UserService {
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(username: string, updateUserDto: UpdateUserDto) {
     return this.prisma.user.update({
       where: {
-        id,
+        username,
       },
       data: updateUserDto,
       omit: {
@@ -87,12 +87,12 @@ export class UserService {
   }
 
   async updateNewPassword(
-    id: string,
+    username: string,
     updateNewPasswordDto: UpdateNewPasswordDto,
   ) {
     const user = await this.prisma.user.findUnique({
       where: {
-        id,
+        username,
       },
       select: {
         password: true,
@@ -113,21 +113,13 @@ export class UserService {
 
     return this.prisma.user.update({
       where: {
-        id,
+        username,
       },
       data: {
         password: updateNewPasswordDto.newPassword,
       },
       omit: {
         password: true,
-      },
-    });
-  }
-
-  remove(id: string) {
-    return this.prisma.user.delete({
-      where: {
-        id,
       },
     });
   }

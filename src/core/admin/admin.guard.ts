@@ -27,12 +27,12 @@ export class AdminGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const user: CurrentUser = request.user;
 
-    const admin = await this.getAdmin(user.id);
+    const admin = await this.getAdmin(user.username);
 
     if (!admin) {
       throw new ForbiddenException('You do not have admin privileges.');
     }
-    
+
     request.admin = admin;
 
     if (user.role === UserRole.Owner) {
@@ -72,11 +72,15 @@ export class AdminGuard extends AuthGuard('jwt') {
     ]);
   }
 
-  private getAdmin(userId: string) {
-    const key = `admin:${userId}`;
+  private getAdmin(username: string) {
+    const key = `admin:${username}`;
     return this.cachingService.fetch(key, 30000, async () =>
-      this.prisma.admin.findUnique({
-        where: { userId },
+      this.prisma.admin.findFirst({
+        where: {
+          user: {
+            username,
+          },
+        },
         select: {
           id: true,
           userId: true,

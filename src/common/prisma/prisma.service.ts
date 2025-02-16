@@ -1,4 +1,5 @@
 import exists from '@/common/prisma/extensions/exists';
+import softDelete from '@/common/prisma/extensions/soft-delete';
 import {
   Injectable,
   Logger,
@@ -8,7 +9,7 @@ import {
 import { PrismaClient } from '@prisma/client';
 
 export const prismaExtendedClient = (prismaClient: PrismaClient) =>
-  prismaClient.$extends(exists);
+  prismaClient.$extends(softDelete).$extends(exists);
 
 class UntypedExtendedClient extends PrismaClient {
   constructor(options?: ConstructorParameters<typeof PrismaClient>[0]) {

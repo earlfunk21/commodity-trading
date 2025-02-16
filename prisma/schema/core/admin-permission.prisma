@@ -1,5 +1,5 @@
 model AdminPermission {
-  id         String    @id @default(nanoid(16))
+  id         String    @id @default(nanoid())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?

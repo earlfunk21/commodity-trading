@@ -9,8 +9,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(configService: ConfigService) {
-    const jwtRefreshSecret =
-      configService.getOrThrow<string>('SECRET_KEY');
+    const jwtRefreshSecret = configService.getOrThrow<string>('SECRET_KEY');
     super({
       jwtFromRequest: ExtractJwt.fromUrlQueryParameter('refreshToken'),
       secretOrKey: jwtRefreshSecret,
@@ -19,7 +18,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
 
   validate(payload: any) {
     return {
-      id: payload.sub,
+      username: payload.sub,
     };
   }
 }

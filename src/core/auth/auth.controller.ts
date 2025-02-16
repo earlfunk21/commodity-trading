@@ -25,7 +25,7 @@ export class AuthController {
   @Get('get-access-token')
   @UseGuards(RefreshTokenGuard)
   getAccessToken(@CurrentUser() user: CurrentUser) {
-    return this.authService.getAccessToken(user.id);
+    return this.authService.getAccessToken(user.username);
   }
 
   @Patch('forgot-password/:email')

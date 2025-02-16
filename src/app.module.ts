@@ -15,6 +15,7 @@ import { CachingModule } from './common/caching/caching.module';
 import { EmailModule } from './common/email/email.module';
 import { FileModule } from './common/file/file.module';
 import { CoreModule } from './core/core.module';
+import { CommodityModule } from './commodity/commodity.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { CoreModule } from './core/core.module';
     CoreModule,
     EmailModule,
     FileModule,
+    CommodityModule,
   ],
   controllers: [AppController],
   providers: [
