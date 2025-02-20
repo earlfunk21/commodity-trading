@@ -29,6 +29,19 @@ export class UserService {
       omit: {
         password: true,
       },
+      include: {
+        upline: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        _count: {
+          select: {
+            downlines: true,
+          },
+        },
+      },
     };
 
     return this.prisma.user.findMany(args);
@@ -70,6 +83,19 @@ export class UserService {
       },
       omit: {
         password: true,
+      },
+      include: {
+        upline: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        _count: {
+          select: {
+            downlines: true,
+          },
+        },
       },
     });
   }

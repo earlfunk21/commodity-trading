@@ -5,6 +5,8 @@ const softDelete = createSoftDeleteExtension({
     User: true,
     Admin: true,
     Holder: true,
+    CommodityType: true,
+    Commodity: true,
   },
   defaultConfig: {
     field: 'deletedAt',

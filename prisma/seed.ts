@@ -19,11 +19,6 @@ async function main() {
             status: UserStatus.Active,
           },
         },
-        permissions: {
-          create: {
-            permission: 'all',
-          },
-        },
       },
     });
   }

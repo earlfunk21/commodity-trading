@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
-import { catchError, lastValueFrom, map } from 'rxjs';
+import { catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
 import * as sharp from 'sharp';
 
 @Injectable()
@@ -16,52 +16,83 @@ export class FileService {
   private readonly ACCESS_KEY: string;
   private readonly STORAGE_ZONE_NAME: string;
   private readonly HOSTNAME: string;
+  private readonly FILE_PATH: string;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
     this.REGION = this.configService.getOrThrow<string>('BUNNYCDN_REGION');
-    this.ACCESS_KEY = this.configService.getOrThrow<string>('BUNNYCDN_ACCESS_KEY');
+    this.ACCESS_KEY = this.configService.getOrThrow<string>(
+      'BUNNYCDN_ACCESS_KEY',
+    );
     this.STORAGE_ZONE_NAME = this.configService.getOrThrow<string>(
       'BUNNYCDN_STORAGE_ZONE_NAME',
     );
     this.HOSTNAME = this.configService.getOrThrow<string>('BUNNYCDN_HOSTNAME');
+    this.FILE_PATH =
+      this.configService.getOrThrow<string>('BUNNYCDN_FILE_PATH');
   }
 
-  async uploadImage(file: Express.Multer.File, key: string, logo?: boolean) {
-    const optimizedImage = await this.createOptimizeImage(file, logo);
-    const url = `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${process.env.FILE_PATH}${key}`;
+  async uploadImage(file: Express.Multer.File, key: string) {
+    const optimizedImage = await this.createOptimizeImage(file);
+    const url = `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${this.FILE_PATH}/${key}`;
 
-    return this.httpService
-      .put(url, optimizedImage, {
-        headers: {
-          AccessKey: this.ACCESS_KEY,
-          'Content-Type': 'application/octet-stream',
-        },
-      })
-      .subscribe();
+    const { data } = await firstValueFrom(
+      this.httpService
+        .put(url, optimizedImage, {
+          headers: {
+            AccessKey: this.ACCESS_KEY,
+            'Content-Type': file.mimetype,
+          },
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(error);
+            throw new UnprocessableEntityException(
+              'Unable to upload the image',
+            );
+          }),
+        ),
+    );
+
+    return data;
   }
 
-  async createOptimizeImage(file: Express.Multer.File, logo: boolean = false) {
-    let resizedImage = sharp(file.buffer).resize({ width: 800 });
-    if (logo) {
-      const response = await this.getFile('logo-white.png');
-      const logoBuffer = Buffer.from(response, 'binary');
-      const logoImage = sharp(logoBuffer).resize({ width: 200 });
-      const logoResizedBuffer = await logoImage.toBuffer();
-      resizedImage = resizedImage.composite([
-        { input: logoResizedBuffer, top: 0, left: 0 },
-      ]);
-    }
+  async uploadVideo(file: Express.Multer.File, key: string) {
+    const url = `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${this.FILE_PATH}/${key}`;
 
-    return resizedImage.toBuffer();
+    const { data } = await firstValueFrom(
+      this.httpService
+        .put(url, file.buffer, {
+          headers: {
+            AccessKey: this.ACCESS_KEY,
+            'Content-Type': file.mimetype,
+          },
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(error);
+            throw new UnprocessableEntityException(
+              'Unable to upload the video',
+            );
+          }),
+        ),
+    );
+
+    return data;
+  }
+
+  async createOptimizeImage(file: Express.Multer.File) {
+    const resizedImage = sharp(file.buffer).resize({ width: 800 });
+
+    return resizedImage.png().toBuffer();
   }
 
   async getFile(key: string) {
     const response = this.httpService
       .get(
-        `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${process.env.FILE_PATH}${key}`,
+        `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${this.FILE_PATH}${key}`,
         {
           headers: {
             AccessKey: this.ACCESS_KEY,
@@ -80,15 +111,26 @@ export class FileService {
   }
 
   async deleteFile(key: string) {
-    return this.httpService
-      .delete(
-        `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${process.env.FILE_PATH}${key}`,
-        {
-          headers: {
-            AccessKey: this.ACCESS_KEY,
+    const { data } = await lastValueFrom(
+      this.httpService
+        .delete(
+          `https://${this.REGION}.${this.HOSTNAME}/${this.STORAGE_ZONE_NAME}/${this.FILE_PATH}/${key}`,
+          {
+            headers: {
+              AccessKey: this.ACCESS_KEY,
+            },
           },
-        },
-      )
-      .subscribe();
+        )
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(error);
+            throw new UnprocessableEntityException(
+              'Unable to delete the image',
+            );
+          }),
+        ),
+    );
+
+    return data;
   }
 }

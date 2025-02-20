@@ -135,5 +135,6 @@ export class HolderService {
         id: deletedHolder.userId,
       },
     });
+    return deletedHolder;
   }
 }

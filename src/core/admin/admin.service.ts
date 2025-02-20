@@ -135,5 +135,7 @@ export class AdminService {
         id: deletedAdmin.userId,
       },
     });
+
+    return deletedAdmin
   }
 }

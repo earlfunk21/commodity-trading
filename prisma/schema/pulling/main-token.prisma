@@ -1,0 +1,13 @@
+model MainToken {
+  id              String        @id @default(nanoid(16))
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  name            String
+  code            String        @unique
+  commodityId     String
+  commodity       Commodity     @relation(fields: [commodityId], references: [id])
+  commodityTypeId String
+  commodityType   CommodityType @relation(fields: [commodityTypeId], references: [id])
+  subTokens       SubToken[]
+}

@@ -13,9 +13,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CachingModule } from './common/caching/caching.module';
 import { EmailModule } from './common/email/email.module';
-import { FileModule } from './common/file/file.module';
 import { CoreModule } from './core/core.module';
-import { CommodityModule } from './commodity/commodity.module';
+import { PullingModule } from './pulling/pulling.module';
 
 @Module({
   imports: [
@@ -56,8 +55,7 @@ import { CommodityModule } from './commodity/commodity.module';
     CachingModule,
     CoreModule,
     EmailModule,
-    FileModule,
-    CommodityModule,
+    PullingModule,
   ],
   controllers: [AppController],
   providers: [

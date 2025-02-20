@@ -1,4 +1,4 @@
-import { HolderGuard } from '@/commodity/holder/holder.guard';
+import { HolderGuard } from '@/pulling/holder/holder.guard';
 import {
   applyDecorators,
   createParamDecorator,
