@@ -1,5 +1,5 @@
 "use client";
-import { removeHolder } from "@/actions/pulling/holder.action";
+import { removeCommodityType } from "@/actions/pulling/commodity-type.action";
 import { useConfirm } from "@/components/ui-extension/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,39 +7,37 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Holder } from "@/types/pulling.type";
+import { CommodityType } from "@/types/pulling.type";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
 type Props = {
-  holder: Holder;
+  commodityType: CommodityType;
 };
 
-export default function HolderDropdownAction({ holder }: Props) {
+export default function CommodityTypeDropdownAction({ commodityType }: Props) {
   const confirm = useConfirm();
 
-  const onDeleteHolder = async () => {
+  const onDeleteCommodityType = async () => {
     const confirmResult = await confirm({
-      title: "Are you sure you want to delete this holder?",
+      title: "Are you sure you want to delete this commodity type?",
     });
 
     if (!confirmResult) {
       return;
     }
 
-    const { error } = await removeHolder(holder.id);
+    const { error } = await removeCommodityType(commodityType.id);
 
     if (error) {
       return toast.error(error);
     }
 
-    toast.success("Holder deleted successfully");
+    toast.success("CommodityType deleted successfully");
   };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -50,23 +48,18 @@ export default function HolderDropdownAction({ holder }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={onDeleteHolder}>
-            Delete Holder
+          <DropdownMenuItem onClick={onDeleteCommodityType}>
+            Delete Commodity Type
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/holder/${holder.id}/update`}>Update Holder</Link>
+            <Link href={`/commodity-type/${commodityType.slug}/update`}>
+              Update Commodity Type
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/holder/${holder.id}`}>View Details</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href={`/user/${holder.userId}`}>View User</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`/user/${holder.userId}/update`}>Update User</Link>
+            <Link href={`/commodity-type/${commodityType.slug}`}>
+              View Details
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

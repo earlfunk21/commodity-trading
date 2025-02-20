@@ -11,8 +11,7 @@ export default function Providers({ children }: { children: ReactNode }) {
         <ConfirmDialogProvider
           defaultOptions={{
             title: "Are you sure you want to proceed?",
-          }}
-        >
+          }}>
           {children}
         </ConfirmDialogProvider>
       </ThemeProvider>

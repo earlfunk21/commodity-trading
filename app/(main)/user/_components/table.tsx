@@ -23,6 +23,7 @@ export default function UserTable({ userList }: Props) {
             <TableHead className="md:font-semibold">Username</TableHead>
             <TableHead className="md:font-semibold">Email</TableHead>
             <TableHead className="md:font-semibold">Roles</TableHead>
+            <TableHead className="md:font-semibold">Sponsor</TableHead>
             <TableHead className="md:font-semibold">Status</TableHead>
             <TableHead className="sr-only">Actions</TableHead>
           </TableRow>
@@ -66,6 +67,16 @@ export default function UserTable({ userList }: Props) {
                     className="bg-gray-50 dark:bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-500/20">
                     Holder
                   </Badge>
+                )}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Sponsor
+                </span>
+                {!!user.upline ? (
+                  user.upline.username
+                ) : (
+                  <Badge variant="outline">No Sponsor</Badge>
                 )}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">

@@ -23,6 +23,16 @@ export default function UserDetailsCard({ user }: UserCardProps) {
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex justify-between">
+          <span className="text-gray-500">Sponsor</span>
+          <span className="font-medium">
+            {!!user.upline ? (
+              user.upline.username
+            ) : (
+              <Badge variant="outline">No Sponsor</Badge>
+            )}
+          </span>
+        </div>
+        <div className="flex justify-between">
           <span className="text-gray-500">Role</span>
           <span className="font-medium">{user.role}</span>
         </div>

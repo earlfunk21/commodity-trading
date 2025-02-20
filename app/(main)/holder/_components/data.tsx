@@ -1,4 +1,4 @@
-import { getHolderList } from "@/actions/commodity/holder.action";
+import { getHolderList } from "@/actions/pulling/holder.action";
 import HolderTable from "@/app/(main)/holder/_components/table";
 import { AlertError, AlertInfo } from "@/components/ui-extension/alerts";
 

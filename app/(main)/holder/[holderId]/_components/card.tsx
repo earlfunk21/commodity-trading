@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { titleCase } from "@/lib/utils";
-import { Holder } from "@/types/commodity.type";
 import { UserStatus } from "@/types/core.type";
+import { Holder } from "@/types/pulling.type";
 import { format } from "date-fns";
 import Link from "next/link";
 

@@ -1,9 +1,10 @@
 "use server";
 import { auth } from "@/auth";
+import axios from "axios";
 import { redirect } from "next/navigation";
 
 type Options<T> = {
-  afterRequest?: (result: T) => void;
+  afterRequest?: (result: Response<T>) => void;
   beforeRequest?: () => void;
 } & RequestInit;
 
@@ -13,7 +14,7 @@ type Response<T> = {
   error?: string;
 };
 
-export async function apiRequest<ResponseData>(
+async function apiRequest<ResponseData>(
   pathName: string,
   options: Options<ResponseData> = {}
 ): Promise<Response<ResponseData>> {
@@ -41,6 +42,20 @@ export async function apiRequest<ResponseData>(
   if (afterRequest) {
     afterRequest(result);
   }
-  
+
   return result;
 }
+
+const apiRequestAxios = axios.create({
+  baseURL: process.env.SERVER_URL,
+});
+
+apiRequestAxios.interceptors.request.use(async (config) => {
+  const session = await auth();
+  if (session) {
+    config.headers["Authorization"] = `Bearer ${session.user.accessToken}`;
+  }
+  return config;
+});
+
+export { apiRequest, apiRequestAxios };

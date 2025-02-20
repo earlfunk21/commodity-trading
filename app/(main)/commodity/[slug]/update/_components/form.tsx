@@ -1,6 +1,6 @@
 "use client";
 
-import { updateHolder } from "@/actions/pulling/holder.action";
+import { updateCommodity } from "@/actions/pulling/commodity.action";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,34 +11,33 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Holder } from "@/types/pulling.type";
+import { Textarea } from "@/components/ui/textarea";
+import { Commodity } from "@/types/pulling.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  middleName: z.string().optional(),
-  lastName: z.string().min(1, "Last name is required"),
+  name: z.string({ required_error: "Name of the commodity is required" }),
+  description: z.string().min(1, "Description of the commodity is required"),
 });
 
 type Props = {
-  holder: Holder;
+  commodity: Commodity;
 };
 
-export default function HolderUpdateForm({ holder }: Props) {
+export default function CommodityUpdateForm({ commodity }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: holder.firstName,
-      middleName: holder.middleName ?? "",
-      lastName: holder.lastName,
+      name: commodity.name,
+      description: commodity.description,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const result = await updateHolder(holder.id, values);
+    const result = await updateCommodity(commodity.id, values);
 
     if (result.error) {
       toast.error(result.error);
@@ -54,38 +53,29 @@ export default function HolderUpdateForm({ holder }: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="firstName"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="ex. John" />
+                <Input {...field} placeholder="ex. Precious Metals" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="middleName"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Middle Name</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="ex. Ramsy" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="ex. Doe" />
+                <Textarea
+                  {...field}
+                  placeholder="ex. Gold, Silver, Platinum, etc."
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -95,7 +85,9 @@ export default function HolderUpdateForm({ holder }: Props) {
           type="submit"
           disabled={form.formState.isSubmitting}
           className="w-full">
-          {form.formState.isSubmitting ? "Submitting..." : "Submit New Holder"}
+          {form.formState.isSubmitting
+            ? "Submitting..."
+            : "Submit New Commodity"}
         </Button>
       </form>
     </Form>

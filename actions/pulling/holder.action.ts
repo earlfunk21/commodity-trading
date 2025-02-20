@@ -1,7 +1,7 @@
 "use server";
 import { apiRequest } from "@/lib/fetch";
 import { createURLParams } from "@/lib/utils";
-import { Holder } from "@/types/commodity.type";
+import { Holder } from "@/types/pulling.type";
 import { revalidateTag } from "next/cache";
 
 export async function createHolder(values: any) {

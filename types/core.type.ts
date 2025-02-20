@@ -7,6 +7,12 @@ export type User = {
   password: string;
   status: UserStatus;
   role: UserRole;
+  uplineId?: string;
+  upline?: User;
+  downlines: User[];
+  _count: {
+    downlines: number;
+  };
 };
 
 export enum UserStatus {
@@ -46,4 +52,23 @@ export type AdminPermission = {
 export type ResourcePermission = {
   resource: string;
   permissions: string[];
+};
+
+export enum FileType {
+  Image = 'Image',
+  Video = 'Video',
+  Document = 'Document',
+}
+
+export type File = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  url: string;
+  path: string;
+  name: string;
+  type: FileType;
+  uploadedByUserId: string;
+  uploadedByUser: User;
 };

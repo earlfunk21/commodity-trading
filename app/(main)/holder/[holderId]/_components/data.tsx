@@ -1,4 +1,4 @@
-import { getHolder } from "@/actions/commodity/holder.action";
+import { getHolder } from "@/actions/pulling/holder.action";
 import HolderCard from "@/app/(main)/holder/[holderId]/_components/card";
 import { AlertError } from "@/components/ui-extension/alerts";
 

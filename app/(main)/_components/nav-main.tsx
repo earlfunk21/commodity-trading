@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronRight, LayoutDashboard, Users } from "lucide-react";
 import Link from "next/link";
+import { LuChartNoAxesCombined } from "react-icons/lu";
 
 type ItemProps = {
   title: string;
@@ -24,7 +25,7 @@ type ItemProps = {
     icon?: React.ComponentType;
     url: string;
   }[];
-}
+};
 
 const items: ItemProps[] = [
   {
@@ -39,6 +40,14 @@ const items: ItemProps[] = [
       { title: "All Users", url: "/user" },
       { title: "All Admins", url: "/admin" },
       { title: "All Holders", url: "/holder" },
+    ],
+  },
+  {
+    title: "Commodity",
+    icon: LuChartNoAxesCombined,
+    items: [
+      { title: "All Commodities", url: "/commodity" },
+      { title: "All Types", url: "/commodity-type" },
     ],
   },
 ];
