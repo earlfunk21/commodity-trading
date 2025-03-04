@@ -1,63 +1,26 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, CreditCard, DollarSign, Users } from "lucide-react";
+import FAQSection from "@/app/(main)/_components/faq-section";
+import Features from "@/app/(main)/_components/features";
+import Footer from "@/app/(main)/_components/footer";
+import Hero from "@/app/(main)/_components/hero";
 
-export default function DashboardPage() {
+export default function Home() {
   return (
-    <div className="p-6 space-y-4">
-      <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-primary/10">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-destructive/10">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Trades</CardTitle>
-            <Activity className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+573</div>
-            <p className="text-xs text-muted-foreground">
-              +201 since last hour
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-secondary/10">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-secondary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2,350</div>
-            <p className="text-xs text-muted-foreground">+180 new users</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-accent/10">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Subscriptions
-            </CardTitle>
-            <CreditCard className="h-4 w-4 text-accent" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1,250</div>
-            <p className="text-xs text-muted-foreground">
-              +4.25% from last month
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <>
+      <main className="bg-gradient-to-r from-gray-800 via-gray-900 to-black pt-16">
+        <div className="container mx-auto max-w-4xl">
+          <Hero />
+        </div>
+      </main>
+      <section className="bg-gradient-to-b from-black via-zinc-900 to-black">
+        <div className="container mx-auto max-w-4xl">
+          <Features />
+        </div>
+      </section>
+      <section className="bg-gradient-to-r from-gray-800 via-gray-900 to-black">
+        <div className="container mx-auto max-w-4xl">
+          <FAQSection />
+        </div>
+      </section>
+    </>
   );
 }

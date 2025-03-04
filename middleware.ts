@@ -14,8 +14,14 @@ export default auth((req) => {
   if (isAuthRoute && isAuthenticated)
     return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl));
 
-  if (!isAuthenticated && !isPublicRoute && !isAuthRoute)
-    return Response.redirect(new URL("/login", nextUrl));
+  if (!isAuthenticated && !isPublicRoute && !isAuthRoute) {
+    const redirectUrl = new URL("/login", nextUrl);
+    const callbackUrl = req.nextUrl.pathname;
+    if (callbackUrl !== DEFAULT_REDIRECT) {
+      redirectUrl.searchParams.append("callbackUrl", callbackUrl);
+    }
+    return Response.redirect(redirectUrl);
+  }
 });
 
 export const config = {

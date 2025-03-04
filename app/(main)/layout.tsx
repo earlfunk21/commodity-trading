@@ -1,133 +1,35 @@
-import { getCurrentUser } from "@/actions/core/user.action";
-import NavMain from "@/app/(main)/_components/nav-main";
-import Logo from "@/components/logo";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { UserRole } from "@/types/core.type";
-import { Bell, ChevronsUpDown, LogOut } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import * as React from "react";
+import AuthButtons from "@/app/(main)/_components/auth-buttons";
+import Footer from "@/app/(main)/_components/footer";
+import Logo from "@/app/(main)/_components/logo";
+import NavMenu from "@/app/(main)/_components/nav-menu";
+import NavigationSheet from "@/app/(main)/_components/navigation-sheet";
+import { ReactNode, Suspense } from "react";
 
-export default async function MainLayout({
-  children,
-  modal,
-  breadcrumbs,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-  breadcrumbs: React.ReactNode;
-}) {
-  const result = await getCurrentUser();
+type Props = {
+  children: ReactNode;
+};
 
-  const user = result.data;
-
-  if (user.role !== UserRole.Admin && user.role !== UserRole.Owner) {
-    redirect("/logout");
-  }
-
+export default function MainLayout({ children }: Props) {
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="icon">
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton size="lg">
-                <Logo />
-                Commodity Trading
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
-        <SidebarContent>
-          <ScrollArea>
-            <NavMain />
-          </ScrollArea>
-        </SidebarContent>
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton
-                    size="lg"
-                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
-                        {user.username}
-                      </span>
-                    </div>
-                    <ChevronsUpDown className="ml-auto size-4" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                  side="bottom"
-                  align="end"
-                  sideOffset={4}>
-                  <DropdownMenuLabel className="p-0 font-normal">
-                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                      <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold">
-                          {user.username}
-                        </span>
-                      </div>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <Link href="/notification">
-                      <DropdownMenuItem>
-                        <Bell />
-                        Notifications
-                      </DropdownMenuItem>
-                    </Link>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <Link href="/logout">
-                    <DropdownMenuItem>
-                      <LogOut />
-                      Log out
-                    </DropdownMenuItem>
-                  </Link>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      </Sidebar>
-      <SidebarInset>
-        {/* <NotificationSocket /> */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            {breadcrumbs}
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <nav className="fixed top-6 inset-x-0 h-16 bg-background border dark:border-slate-700/70 max-w-screen-xl mx-auto rounded-full shadow-md z-50">
+        <div className="h-full flex items-center justify-between max-w-screen-xl mx-auto px-4">
+          <Logo />
+          <NavMenu className="hidden md:block" />
+          <div className="flex items-center gap-3">
+            <Suspense>
+              <AuthButtons />
+            </Suspense>
+            {/* Mobile Menu */}
+            <div className="md:hidden">
+              <NavigationSheet />
+            </div>
           </div>
-        </header>
-        <div className="py-4 md:py-8 md:px-4">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
+      </nav>
+      <div className="py-16" />
+      {children}
+      <Footer />
+    </div>
   );
 }

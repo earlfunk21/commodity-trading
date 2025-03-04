@@ -29,7 +29,11 @@ export const formSchema = z.object({
 
 export type FormSchema = z.infer<typeof formSchema>;
 
-export default function LoginForm() {
+type Props = {
+  callbackUrl?: string;
+};
+
+export default function LoginForm({ callbackUrl }: Props) {
   const router = useRouter();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -47,7 +51,7 @@ export default function LoginForm() {
       return;
     }
 
-    router.push(DEFAULT_REDIRECT);
+    router.push(callbackUrl ?? DEFAULT_REDIRECT);
   };
 
   return (

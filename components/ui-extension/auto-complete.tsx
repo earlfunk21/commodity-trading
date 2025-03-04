@@ -91,7 +91,7 @@ export const AutoComplete = <T,>({
             disabled={disabled}>
             <div className="grid">
               <span className="truncate">
-                {value ? `${getLabel()}2131231231` : "Select data"}
+                {value ? getLabel() : "Select data"}
               </span>
             </div>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -151,7 +151,7 @@ export const AutoComplete = <T,>({
             disabled={disabled}>
             <div className="grid">
               <span className="truncate">
-                {value ? `${getLabel()}2131231231` : "Select data"}
+                {value ? getLabel() : "Select data"}
               </span>
             </div>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

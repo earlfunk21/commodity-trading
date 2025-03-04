@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap } from "lucide-react";
 import Link from "next/link";
 
-export default async function LoginPage() {
+type Props = {
+  searchParams: {
+    callbackUrl?: string;
+  }
+}
+
+export default async function LoginPage({ searchParams }: Props) {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-8 w-full">
       <div className="mx-auto flex w-full flex-col justify-center space-y-4 sm:w-[350px]">
@@ -15,7 +21,7 @@ export default async function LoginPage() {
             Enter your credentials to sign in
           </p>
         </div>
-        <LoginForm />
+        <LoginForm callbackUrl={searchParams.callbackUrl} />
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
