@@ -62,7 +62,7 @@ export default function MainTokenCard({ mainToken }: MainTokenCardProps) {
               <span className="text-sm font-medium">Total Value</span>
             </div>
             <div className="mt-2 text-2xl font-bold">
-              ${mainToken.totalValue.toLocaleString()}
+              {mainToken.totalValue.toLocaleString()}
             </div>
           </div>
           <div className="rounded-lg bg-card p-4 border shadow-sm">
@@ -71,7 +71,7 @@ export default function MainTokenCard({ mainToken }: MainTokenCardProps) {
               <span className="text-sm font-medium">Unit Value</span>
             </div>
             <div className="mt-2 text-2xl font-bold">
-              ${mainToken.unitValue.toLocaleString()}
+              {mainToken.unitValue.toLocaleString()}
             </div>
           </div>
         </div>

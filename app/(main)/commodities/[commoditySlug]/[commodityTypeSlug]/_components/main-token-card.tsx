@@ -11,6 +11,7 @@ import { cn, currency } from "@/lib/utils";
 import { MainToken } from "@/types/pooling.type";
 import { differenceInMilliseconds, format } from "date-fns";
 import { ArrowDown, ArrowUp } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   commoditySlug: string;
@@ -27,9 +28,11 @@ export default function MainTokenCard({
     <Card className="border-none bg-gradient-to-br from-zinc-900 to-black shadow-xl">
       <CardHeader className="pb-3 grid grid-cols-2">
         <div>
-          <CardTitle className="text-xl font-medium text-white">
-            {mainToken.name}
-          </CardTitle>
+          <Link href={`/commodities/${commoditySlug}/${commodityTypeSlug}/${mainToken.code}`}>
+            <CardTitle className="text-xl font-medium text-white">
+              {mainToken.name}
+            </CardTitle>
+          </Link>
           <CardDescription>{mainToken.code}</CardDescription>
         </div>
 

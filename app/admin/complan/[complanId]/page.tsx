@@ -6,7 +6,7 @@ import { Suspense } from "react";
 
 type Props = {
   params: {
-    id: string;
+    complanId: string;
   };
 };
 
@@ -14,9 +14,9 @@ export default function ComplanDetailsPage({ params }: Props) {
   return (
     <div className="space-y-8 w-full max-w-md">
       <Suspense fallback={<LoadingIcon />}>
-        <ComplanDetailsData id={params.id} />
+        <ComplanDetailsData id={params.complanId} />
         <Button asChild className="w-full">
-          <Link href={`${params.id}/update`}>Update</Link>
+          <Link href={`${params.complanId}/update`}>Update</Link>
         </Button>
       </Suspense>
     </div>

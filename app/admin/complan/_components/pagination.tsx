@@ -1,4 +1,4 @@
-import { getComplanCount } from "@/actions/complan-system/complan.action";
+import { getComplanCount } from "@/actions/accounting/complan.action";
 import { AlertError } from "@/components/ui-extension/alerts";
 import Pagination from "@/components/ui-extension/pagination";
 

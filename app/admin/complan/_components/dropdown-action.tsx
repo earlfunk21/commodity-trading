@@ -1,5 +1,5 @@
 "use client";
-import { removeComplan } from "@/actions/complan-system/complan.action";
+import { removeComplan } from "@/actions/accounting/complan.action";
 import { useConfirm } from "@/components/ui-extension/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Complan } from "@/types/complan-system.type";
+import { Complan } from "@/types/accounting.type";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -53,10 +53,10 @@ export default function ComplanDropdownAction({ complan }: Props) {
             Delete Complan
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/complan/${complan.id}/update`}>Update Complan</Link>
+            <Link href={`./complan/${complan.id}/update`}>Update Complan</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/complan/${complan.id}`}>View Details</Link>
+            <Link href={`./complan/${complan.id}`}>View Details</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

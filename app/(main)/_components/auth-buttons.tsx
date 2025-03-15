@@ -30,11 +30,16 @@ export default async function AuthButtons() {
 
   return (
     <>
-      <Button variant="outline" className="hidden sm:inline-flex rounded-full">
-        Sign In
+      <Button
+        variant="outline"
+        className="hidden sm:inline-flex rounded-full"
+        asChild>
+        <Link href="/login">Sign In</Link>
       </Button>
-      <Button className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-opacity">
-        Get Started
+      <Button
+        className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-opacity"
+        asChild>
+        <Link href="/login">Get Started</Link>
       </Button>
     </>
   );

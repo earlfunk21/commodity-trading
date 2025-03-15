@@ -1,4 +1,5 @@
-import { User } from "@/types/core.type";
+import { Complan } from "@/types/accounting.type";
+import { Admin, User } from "@/types/core.type";
 
 export type Holder = {
   id: string;
@@ -80,4 +81,72 @@ export type MainToken = {
   change: number;
   volume: number;
   unitType: string;
+  complanId: string;
+  complan: Complan;
 };
+
+export type MainTokenTransaction = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  complanId: string;
+  complan: Complan;
+  userId: string;
+  user: User;
+  amount: number;
+  mainTokenId: string;
+  mainToken: MainToken
+};
+
+export type SubToken = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  amount: number;
+  tokens: number;
+  mainTokenId: string;
+  mainToken: MainToken;
+  status: SubTokenStatus;
+  parentTokenId?: string | null;
+  holderId: string;
+  holder: Holder;
+  parentToken?: SubToken | null;
+  childTokens: SubToken[];
+  purchaseTokens: PurchaseToken[];
+};
+
+export enum SubTokenStatus {
+  Active = "Active",
+  Inactive = "Inactive",
+}
+
+export type PurchaseToken = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  commodityId: string;
+  commodity: Commodity;
+  commodityTypeId: string;
+  commodityType: CommodityType;
+  mainTokenId: string;
+  mainToken: MainToken;
+  amount: number;
+  capital: number;
+  tokens: number;
+  status: PurchaseStatus;
+  holderId: string;
+  holder: Holder;
+  approvedByAdminId?: string | null;
+  approvedByAdmin?: Admin | null;
+  subTokenId?: string | null;
+  subToken?: SubToken | null;
+};
+
+export enum PurchaseStatus {
+  Pending = "Pending",
+  Approved = "Approved",
+  Declined = "Declined",
+}

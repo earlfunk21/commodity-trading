@@ -23,6 +23,27 @@ export function currency(value: number) {
   }).format(value);
 }
 
+export function formatNumber (value: string | number) {
+  const num = String(value);
+
+  // Remove existing commas and non-numeric characters except decimal point
+  const cleanValue = num.replace(/,/g, "").replace(/[^\d.]/g, "");
+
+  // Handle decimal points
+  const parts = cleanValue.split(".");
+
+  // Format the whole number part with commas
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  // Limit decimal places to 2 and join back with decimal point
+  if (parts.length > 1) {
+    return `${parts[0]}.${parts[1].slice(0, 2)}`;
+  }
+
+  return parts[0];
+};
+
+
 export function createURLParams(query: any) {
   if (!query) {
     return "";

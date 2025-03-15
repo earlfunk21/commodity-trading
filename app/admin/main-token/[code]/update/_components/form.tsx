@@ -1,5 +1,6 @@
 "use client";
 
+import { getComplanList } from "@/actions/accounting/complan.action";
 import { getCommodityTypeList } from "@/actions/pooling/commodity-type.action";
 import { getCommodityList } from "@/actions/pooling/commodity.action";
 import { updateMainToken } from "@/actions/pooling/main-token.action";
@@ -15,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Complan } from "@/types/accounting.type";
 import { Commodity, CommodityType, MainToken } from "@/types/pooling.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -24,6 +26,7 @@ import * as z from "zod";
 const formSchema = z.object({
   name: z.string().min(1, "Product Name is required"),
   code: z.string().min(1, "Product Code is required"),
+  complanId: z.string({ required_error: "Complan is required" }),
   commodityId: z.string().min(1, "Commodity is required"),
   commodityTypeId: z.string().min(1, "Commodity Type is required"),
   totalValue: z.coerce.number().min(1, "Total Value is required"),
@@ -58,6 +61,7 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
     defaultValues: {
       name: mainToken.name,
       code: mainToken.code,
+      complanId: mainToken.complanId,
       totalValue: mainToken.totalValue,
       unitValue: mainToken.unitValue,
       unitType: mainToken.unitType,
@@ -114,6 +118,37 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
               <FormLabel>Code</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter Product code" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="complanId"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-4">
+              <FormLabel>Complan</FormLabel>
+              <FormControl>
+                <AutoComplete
+                  name="complan"
+                  value={field.value}
+                  onChange={field.onChange}
+                  getData={async (searchValue) => {
+                    const result = await getComplanList({
+                      search: searchValue,
+                    });
+                    if (result.error) {
+                      toast.error("Something went wrong", {
+                        description: result.error,
+                      });
+                      return [];
+                    }
+                    return result.data;
+                  }}
+                  label={(item: Complan) => item.name}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

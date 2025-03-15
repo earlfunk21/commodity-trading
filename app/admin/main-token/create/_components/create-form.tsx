@@ -1,5 +1,6 @@
 "use client";
 
+import { getComplanList } from "@/actions/accounting/complan.action";
 import { getCommodityTypeList } from "@/actions/pooling/commodity-type.action";
 import { getCommodityList } from "@/actions/pooling/commodity.action";
 import { createMainToken } from "@/actions/pooling/main-token.action";
@@ -15,6 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { formatNumber } from "@/lib/utils";
+import { Complan } from "@/types/accounting.type";
 import { Commodity, CommodityType } from "@/types/pooling.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -24,29 +27,27 @@ import * as z from "zod";
 const formSchema = z.object({
   name: z.string().min(1, "Product Name is required"),
   code: z.string().min(1, "Product Code is required"),
+  complanId: z.string({ required_error: "Complan is required" }),
   commodityId: z.string({ required_error: "Commodity is required" }),
   commodityTypeId: z.string({ required_error: "Commodity Type is required" }),
   totalValue: z
     .string()
+    .transform((value) => value.replace(/,/g, ""))
     .transform((value) => (value === "" ? "" : Number(value)))
     .refine((value) => !isNaN(Number(value)), {
       message: "Expected number, received string",
     }),
   unitValue: z
     .string()
+    .transform((value) => value.replace(/,/g, ""))
     .transform((value) => (value === "" ? "" : Number(value)))
     .refine((value) => !isNaN(Number(value)), {
       message: "Expected number, received string",
     }),
   unitType: z.string().min(1, "Unit Type is required"),
-  quantity: z
-    .string()
-    .transform((value) => (value === "" ? "" : Number(value)))
-    .refine((value) => !isNaN(Number(value)), {
-      message: "Expected number, received string",
-    }),
   totalTokens: z
     .string()
+    .transform((value) => value.replace(/,/g, ""))
     .transform((value) => (value === "" ? "" : Number(value)))
     .refine((value) => !isNaN(Number(value)), {
       message: "Expected number, received string",
@@ -69,6 +70,15 @@ const formSchema = z.object({
   tradingEnd: z.date({
     required_error: "Trading end date is required",
   }),
+  poolingStart: z.date({
+    required_error: "Pooling start date is required",
+  }),
+  poolingEnd: z.date({
+    required_error: "Pooling end date is required",
+  }),
+  tradingDuration: z.date({
+    required_error: "Trading duration is required",
+  }),
 });
 
 export default function MainTokenCreateForm() {
@@ -79,15 +89,18 @@ export default function MainTokenCreateForm() {
       code: "",
       totalValue: "",
       unitValue: "",
-      quantity: "",
       totalTokens: "",
       origin: "",
       performanceBondNumber: "",
       insurerCompany: "",
+      insurancePolicyNumber: "",
       certificateOfStockNumber: "",
       CADTNumber: "",
       tradingStart: new Date(),
       tradingEnd: new Date(),
+      poolingStart: new Date(),
+      poolingEnd: new Date(),
+      tradingDuration: new Date(),
     },
   });
 
@@ -104,6 +117,8 @@ export default function MainTokenCreateForm() {
   }
 
   const commodityId = form.watch("commodityId");
+  const totalValue = form.watch("totalValue");
+  const unitValue = form.watch("unitValue");
 
   return (
     <Form {...form}>
@@ -114,7 +129,7 @@ export default function MainTokenCreateForm() {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
+            <FormItem className="col-span-12 md:col-span-4">
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter Product name" />
@@ -123,14 +138,46 @@ export default function MainTokenCreateForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="code"
           render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
+            <FormItem className="col-span-12 md:col-span-4">
               <FormLabel>Code</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter Product code" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="complanId"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-4">
+              <FormLabel>Complan</FormLabel>
+              <FormControl>
+                <AutoComplete
+                  name="complan"
+                  value={field.value}
+                  onChange={field.onChange}
+                  getData={async (searchValue) => {
+                    const result = await getComplanList({
+                      search: searchValue,
+                    });
+                    if (result.error) {
+                      toast.error("Something went wrong", {
+                        description: result.error,
+                      });
+                      return [];
+                    }
+                    return result.data;
+                  }}
+                  label={(item: Complan) => item.name}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -203,6 +250,20 @@ export default function MainTokenCreateForm() {
 
         <FormField
           control={form.control}
+          name="unitType"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-3">
+              <FormLabel>Unit Type</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="ex. Karat" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="totalValue"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-3">
@@ -211,7 +272,9 @@ export default function MainTokenCreateForm() {
                 <Input
                   {...field}
                   placeholder="Enter total value"
-                  type="number"
+                  type="text"
+                  pattern="^[0-9,]*\.?[0-9]*$"
+                  onChange={(e) => field.onChange(formatNumber(e.target.value))}
                 />
               </FormControl>
               <FormMessage />
@@ -228,8 +291,10 @@ export default function MainTokenCreateForm() {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="Enter total value"
-                  type="number"
+                  placeholder="Enter unit value"
+                  type="text"
+                  pattern="^[0-9,]*\.?[0-9]*$"
+                  onChange={(e) => field.onChange(formatNumber(e.target.value))}
                 />
               </FormControl>
               <FormMessage />
@@ -237,51 +302,29 @@ export default function MainTokenCreateForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="unitType"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Unit Type</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="ex. Karat" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Unit Value</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Enter quantity" type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="totalTokens"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Total Tokens</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Enter total tokens"
-                  type="number"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormItem className="col-span-12 md:col-span-3">
+          <FormLabel>Quantity & Tokens</FormLabel>
+          <FormControl>
+            <Input
+              value={
+                !!totalValue && !!unitValue
+                  ? formatNumber(
+                      (
+                        Number(String(totalValue).replace(/,/g, "")) /
+                        Number(String(unitValue).replace(/,/g, ""))
+                      ).toString()
+                    )
+                  : ""
+              }
+              readOnly
+              className="bg-muted"
+              placeholder="Calculated automatically"
+            />
+          </FormControl>
+          <p className="text-sm text-muted-foreground">
+            Auto-calculated from Total Value / Unit Value
+          </p>
+        </FormItem>
 
         <FormField
           control={form.control}
@@ -315,7 +358,7 @@ export default function MainTokenCreateForm() {
           control={form.control}
           name="insurerCompany"
           render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-4">
+            <FormItem className="col-span-12 md:col-span-3">
               <FormLabel>Insurer Company</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter insurer company" />
@@ -327,9 +370,23 @@ export default function MainTokenCreateForm() {
 
         <FormField
           control={form.control}
+          name="insurancePolicyNumber"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-3">
+              <FormLabel>Insurance Policy Number</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Enter Insurance Policy Number" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="certificateOfStockNumber"
           render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-4">
+            <FormItem className="col-span-12 md:col-span-3">
               <FormLabel>Certificate of stock number</FormLabel>
               <FormControl>
                 <Input
@@ -346,7 +403,7 @@ export default function MainTokenCreateForm() {
           control={form.control}
           name="CADTNumber"
           render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-4">
+            <FormItem className="col-span-12 md:col-span-3">
               <FormLabel>
                 Certificate of Ancestral Domain Title (CADT) Number
               </FormLabel>
@@ -358,6 +415,26 @@ export default function MainTokenCreateForm() {
           )}
         />
 
+        <div className="col-span-12 grid grid-cols-12 gap-8">
+          <FormField
+            control={form.control}
+            name="tradingDuration"
+            render={({ field }) => (
+              <FormItem className="flex flex-col  md:col-span-6">
+                <FormLabel>Trading Duration</FormLabel>
+                <FormControl>
+                  <DateTimePicker
+                    hourCycle={12}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="tradingStart"
@@ -365,7 +442,11 @@ export default function MainTokenCreateForm() {
             <FormItem className="flex flex-col col-span-12 md:col-span-6">
               <FormLabel>Trading Start Date</FormLabel>
               <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -378,7 +459,47 @@ export default function MainTokenCreateForm() {
             <FormItem className="flex flex-col col-span-12 md:col-span-6">
               <FormLabel>Trading End Date</FormLabel>
               <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="poolingStart"
+          render={({ field }) => (
+            <FormItem className="flex flex-col col-span-12 md:col-span-6">
+              <FormLabel>Pooling Start Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="poolingEnd"
+          render={({ field }) => (
+            <FormItem className="flex flex-col col-span-12 md:col-span-6">
+              <FormLabel>Pooling End Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

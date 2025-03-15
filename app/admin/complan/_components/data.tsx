@@ -1,4 +1,4 @@
-import { getComplanList } from "@/actions/complan-system/complan.action";
+import { getComplanList } from "@/actions/accounting/complan.action";
 import ComplanTable from "@/app/admin/complan/_components/table";
 import { AlertError, AlertInfo } from "@/components/ui-extension/alerts";
 

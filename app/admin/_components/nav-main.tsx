@@ -57,9 +57,12 @@ const items: ItemProps[] = [
     ],
   },
   {
-    title: "Complan",
+    title: "Accounting",
     icon: TicketsPlane,
-    items: [{ title: "All Complans", url: "/admin/complan" }],
+    items: [
+      { title: "All Complans", url: "/admin/complan" },
+      { title: "All Account Deposit", url: "/admin/account-deposit" },
+    ],
   },
 ];
 

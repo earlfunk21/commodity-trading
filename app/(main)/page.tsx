@@ -1,6 +1,5 @@
 import FAQSection from "@/app/(main)/_components/faq-section";
 import Features from "@/app/(main)/_components/features";
-import Footer from "@/app/(main)/_components/footer";
 import Hero from "@/app/(main)/_components/hero";
 
 export default function Home() {

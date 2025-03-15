@@ -1,3 +1,5 @@
+import { Account } from "@/types/accounting.type";
+
 export type User = {
   id: string;
   createdAt: Date;
@@ -13,6 +15,8 @@ export type User = {
   _count: {
     downlines: number;
   };
+  accountId?: string;
+  account?: Account;
 };
 
 export enum UserStatus {
@@ -55,9 +59,9 @@ export type ResourcePermission = {
 };
 
 export enum FileType {
-  Image = 'Image',
-  Video = 'Video',
-  Document = 'Document',
+  Image = "Image",
+  Video = "Video",
+  Document = "Document",
 }
 
 export type File = {

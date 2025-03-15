@@ -1,7 +1,7 @@
 "use server";
 import { apiRequest } from "@/lib/fetch";
 import { createURLParams } from "@/lib/utils";
-import { Complan } from "@/types/complan-system.type";
+import { Complan } from "@/types/accounting.type";
 import { revalidateTag } from "next/cache";
 
 export async function createComplan(values: any) {

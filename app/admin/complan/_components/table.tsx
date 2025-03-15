@@ -1,10 +1,5 @@
 import ComplanDropdownAction from "@/app/admin/complan/_components/dropdown-action";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
   Table,
   TableBody,
   TableCell,
@@ -12,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Complan } from "@/types/complan-system.type";
+import { Complan } from "@/types/accounting.type";
 
 type Props = {
   complanList: Complan[];
@@ -25,7 +20,13 @@ export default function ComplanTable({ complanList }: Props) {
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
             <TableHead className="md:font-semibold">Name</TableHead>
-            <TableHead className="md:font-semibold">Description</TableHead>
+            <TableHead className="md:font-semibold">Referral (%)</TableHead>
+            <TableHead className="md:font-semibold">Management (%)</TableHead>
+            <TableHead className="md:font-semibold">Pooling (%)</TableHead>
+            <TableHead className="md:font-semibold">Capital (%)</TableHead>
+            <TableHead className="md:font-semibold">
+              IT Management (%)
+            </TableHead>
             <TableHead className="sr-only">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -42,21 +43,35 @@ export default function ComplanTable({ complanList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Description
+                  Referral
                 </span>
-                <HoverCard>
-                  <HoverCardTrigger asChild>
-                    <p className="truncate max-w-40">{complan.description}</p>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="bg-transparent backdrop-blur-md">
-                    {complan.description}
-                  </HoverCardContent>
-                </HoverCard>
+                {complan.referral}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Actions
+                  Management
                 </span>
+                {complan.management}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Pooling
+                </span>
+                {complan.pooling}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Capital
+                </span>
+                {complan.capital}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  IT Management
+                </span>
+                {complan.itManagement}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
                 <ComplanDropdownAction complan={complan} />
               </TableCell>
             </TableRow>

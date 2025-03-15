@@ -1,4 +1,4 @@
-import { getComplan } from "@/actions/complan-system/complan.action";
+import { getComplan } from "@/actions/accounting/complan.action";
 import ComplanUpdateForm from "@/app/admin/complan/[complanId]/update/_components/form";
 import { AlertError } from "@/components/ui-extension/alerts";
 

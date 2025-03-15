@@ -59,6 +59,11 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
           <DropdownMenuItem asChild>
             <Link href={`./main-token/${mainToken.code}`}>View Details</Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`./main-token/${mainToken.code}/transaction`}>
+              Transactions
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
