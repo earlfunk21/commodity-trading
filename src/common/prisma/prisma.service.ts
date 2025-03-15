@@ -39,4 +39,13 @@ export class PrismaService
     this.logger.log('Database connection closed');
     await this.$disconnect();
   }
+
+  async transaction<T>(
+    callback: (prisma: PrismaService) => Promise<T>,
+  ): Promise<T> {
+    return this.$transaction(callback, {
+      maxWait: 5000,
+      timeout: 60000,
+    });
+  }
 }

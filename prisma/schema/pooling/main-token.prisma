@@ -1,0 +1,39 @@
+model MainToken {
+  id                       String                   @id @default(nanoid(16))
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+  deletedAt                DateTime?
+  name                     String
+  code                     String                   @unique
+  commodityId              String
+  commodity                Commodity                @relation(fields: [commodityId], references: [id])
+  commodityTypeId          String
+  commodityType            CommodityType            @relation(fields: [commodityTypeId], references: [id])
+  totalValue               Float
+  unitValue                Float
+  currentValue             Float                    @default(0)
+  lastValue                Float
+  quantity                 Float
+  totalTokens              Int
+  usedTokens               Int                      @default(0)
+  origin                   String
+  performanceBondNumber    String
+  insurerCompany           String
+  insurancePolicyNumber    String
+  certificateOfStockNumber String
+  CADTNumber               String
+  subTokens                SubToken[]
+  tradingStart             DateTime
+  tradingEnd               DateTime
+  poolingStart             DateTime
+  poolingEnd               DateTime
+  tradingDuration          DateTime
+  unitType                 String
+  complanId                String
+  complan                  Complan                  @relation(fields: [complanId], references: [id])
+  purchaseTokens           PurchaseToken[]
+  trades                   Trade[]
+  tpcpiReferrerCommission  TPCPIReferrerCommission?
+  transactions             MainTokenTransaction[]
+  tradeTransactions        TradeTransaction[]
+}

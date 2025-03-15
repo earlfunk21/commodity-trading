@@ -1,4 +1,10 @@
-import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
+import {
+  AccountType,
+  Allocation,
+  PrismaClient,
+  UserRole,
+  UserStatus,
+} from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -21,6 +27,61 @@ async function main() {
         },
       },
     });
+  }
+
+  const allocations = [
+    {
+      allocation: Allocation.Referral,
+      accountType: AccountType.NonWithdrawable,
+    },
+    {
+      allocation: Allocation.TPCPIReferrer,
+      accountType: AccountType.NonWithdrawable,
+    },
+    {
+      allocation: Allocation.Management,
+      accountType: AccountType.NonWithdrawable,
+    },
+    {
+      allocation: Allocation.Pooling,
+      accountType: AccountType.Withdrawable,
+    },
+    {
+      allocation: Allocation.Capital,
+      accountType: AccountType.NonWithdrawable,
+    },
+    {
+      allocation: Allocation.ITManagement,
+      accountType: AccountType.Withdrawable,
+    },
+    {
+      allocation: Allocation.PartnersManagement,
+      accountType: AccountType.Withdrawable,
+    },
+    {
+      allocation: Allocation.TPCPIReferrerManagement,
+      accountType: AccountType.Withdrawable,
+    },
+    {
+      allocation: Allocation.TPCPIManagement,
+      accountType: AccountType.Withdrawable,
+    },
+  ];
+
+  for (const { allocation, accountType } of allocations) {
+    const accountExists = await prisma.allocationAccount.findFirst({
+      where: { allocation },
+    });
+
+    if (!accountExists) {
+      await prisma.allocationAccount.create({
+        data: {
+          allocation,
+          balance: 0,
+          accountType,
+        },
+      });
+    }
   }
 }
 main()

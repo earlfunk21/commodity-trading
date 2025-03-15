@@ -1,0 +1,20 @@
+model AllocationIncomeTransaction {
+  id                     String                @id @default(nanoid(16))
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  deletedAt              DateTime?
+  allocation             Allocation
+  amount                 Float
+  complanId              String
+  complan                Complan               @relation(fields: [complanId], references: [id])
+  mainTokenTransactionId String?
+  mainTokenTransaction   MainTokenTransaction? @relation(fields: [mainTokenTransactionId], references: [id])
+  accountId              String
+  account                AllocationAccount     @relation(fields: [accountId], references: [id])
+  tradeTransaction       TradeTransaction?     @relation(fields: [tradeTransactionId], references: [id])
+  tradeTransactionId     String?
+
+  @@index([allocation])
+  @@index([createdAt])
+  @@index([allocation, createdAt])
+}

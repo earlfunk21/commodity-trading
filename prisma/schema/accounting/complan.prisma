@@ -1,0 +1,22 @@
+model Complan {
+  id                           String                        @id @default(nanoid(16))
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @updatedAt
+  deletedAt                    DateTime?
+  name                         String
+  commission                   Float                         @default(0)
+  tax                          Float                         @default(0)
+  referral                     Float                         @default(0)
+  tpcpiReferrer                Float                         @default(0)
+  pooling                      Float                         @default(0)
+  capital                      Float                         @default(0)
+  management                   Float                         @default(0)
+  itManagement                 Float                         @default(0)
+  partnersManagement           Float                         @default(0)
+  tpcpiReferrerManagement      Float                         @default(0)
+  tpcpiManagement              Float                         @default(0)
+  mainTokens                   MainToken[]
+  mainTokenTransactions        MainTokenTransaction[]
+  allocationIncometransactions AllocationIncomeTransaction[]
+  tradeTransactions            TradeTransaction[]
+}

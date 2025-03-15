@@ -1,0 +1,13 @@
+model Holder {
+  id              String          @id @default(nanoid())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+  firstName       String
+  middleName      String?
+  lastName        String
+  userId          String          @unique
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subTokens       SubToken[]
+  purchasedTokens PurchaseToken[]
+}

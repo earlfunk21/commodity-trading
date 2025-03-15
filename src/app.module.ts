@@ -14,7 +14,8 @@ import { AppService } from './app.service';
 import { CachingModule } from './common/caching/caching.module';
 import { EmailModule } from './common/email/email.module';
 import { CoreModule } from './core/core.module';
-import { PullingModule } from './pulling/pulling.module';
+import { poolingModule } from './pooling/pooling.module';
+import { AccountingModule } from './accounting/accounting.module';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { PullingModule } from './pulling/pulling.module';
     CachingModule,
     CoreModule,
     EmailModule,
-    PullingModule,
+    poolingModule,
+    AccountingModule,
   ],
   controllers: [AppController],
   providers: [

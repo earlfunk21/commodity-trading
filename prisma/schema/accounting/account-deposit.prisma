@@ -1,0 +1,22 @@
+model AccountDeposit {
+  id           String               @id @default(nanoid())
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  deletedAt    DateTime?
+  accountId    String
+  account      Account              @relation(fields: [accountId], references: [id])
+  amount       Float
+  status       DepositStatus        @default(Pending)
+  transactions AccountTransaction[]
+
+  @@index([accountId])
+  @@index([accountId, status])
+  @@index([accountId, createdAt])
+  @@index([accountId, status, createdAt])
+}
+
+enum DepositStatus {
+  Pending
+  Approved
+  Declined
+}
