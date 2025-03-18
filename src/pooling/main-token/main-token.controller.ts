@@ -58,4 +58,14 @@ export class MainTokenController {
   remove(@Param('id') id: string) {
     return this.mainTokenService.remove(id);
   }
+
+  @Patch('released-referral-commission/:id')
+  releasedReferralCommission(@Param('id') id: string) {
+    return this.mainTokenService.releasedReferralCommission(id);
+  }
+
+  @Patch('released-management-fee/:id')
+  releasedManagementFee(@Param('id') id: string) {
+    return this.mainTokenService.releasedManagementFee(id);
+  }
 }

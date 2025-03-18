@@ -1,5 +1,10 @@
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { Injectable, Scope } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Scope,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Complan, Prisma } from '@prisma/client';
 import {
   CreateComplanDto,
@@ -19,14 +24,14 @@ export class ComplanService {
     const totalPercentage =
       createComplanDto.commission +
       createComplanDto.tax +
-      createComplanDto.referral +
-      createComplanDto.tpcpiReferrer +
-      createComplanDto.management +
-      createComplanDto.pooling +
+      createComplanDto.referralCommission +
+      createComplanDto.pendingReferralCommission +
+      createComplanDto.managementFee +
+      createComplanDto.pendingManagementFee +
       createComplanDto.capital;
     if (totalPercentage !== 100) {
-      throw new Error(
-        'The sum of referral, management, pooling, and capital must be 100%',
+      throw new UnprocessableEntityException(
+        `The sum of referral, management, capital, tax and commission was ${totalPercentage} must be 100%`,
       );
     }
 
@@ -36,7 +41,7 @@ export class ComplanService {
       createComplanDto.tpcpiReferrerManagement +
       createComplanDto.tpcpiManagement;
     if (managementPercentage !== 100) {
-      throw new Error(
+      throw new UnprocessableEntityException(
         'The sum of itManagement, partnersManagement, tpcpiReferrerManagement, and tpcpiManagement must 100%',
       );
     }
@@ -106,18 +111,20 @@ export class ComplanService {
     });
 
     if (currentComplan === null) {
-      throw new Error('Complan not found');
+      throw new NotFoundException('Complan not found');
     }
 
     const totalPercentage =
-      (updateComplanDto.referral ?? currentComplan.referral) +
-      (updateComplanDto.management ?? currentComplan.management) +
-      (updateComplanDto.pooling ?? currentComplan.pooling) +
-      (updateComplanDto.capital ?? currentComplan.capital);
-
+      (updateComplanDto.commission ?? 0) +
+      (updateComplanDto.tax ?? 0) +
+      (updateComplanDto.referralCommission ?? 0) +
+      (updateComplanDto.pendingReferralCommission ?? 0) +
+      (updateComplanDto.managementFee ?? 0) +
+      (updateComplanDto.pendingManagementFee ?? 0) +
+      (updateComplanDto.capital ?? 0);
     if (totalPercentage !== 100) {
-      throw new Error(
-        'The sum of referral, management, pooling, and capital must be 100%',
+      throw new UnprocessableEntityException(
+        `The sum of referral, management, capital, tax and commission was ${totalPercentage} must be 100%`,
       );
     }
 
@@ -130,7 +137,7 @@ export class ComplanService {
       (updateComplanDto.tpcpiManagement ?? currentComplan.tpcpiManagement);
 
     if (managementPercentage !== 100) {
-      throw new Error(
+      throw new UnprocessableEntityException(
         'The sum of itManagement, partnersManagement, tpcpiReferrerManagement, and tpcpiManagement must be 100%',
       );
     }

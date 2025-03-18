@@ -3,6 +3,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import {
   AccountTransactionType,
   Allocation,
+  Complan,
   MainTokenTransaction,
   Prisma,
 } from '@prisma/client';
@@ -20,189 +21,195 @@ export class MainTokenTransactionService {
   }
 
   async create(createMainTokenTransactionDto: CreateMainTokenTransactionDto) {
-    const mainTokenTransaction = await this.prisma.mainTokenTransaction.create({
-      data: createMainTokenTransactionDto,
-    });
+    const [mainTokenTransaction, complan] = await Promise.all([
+      this.prisma.mainTokenTransaction.create({
+        data: createMainTokenTransactionDto,
+      }),
+      this.prisma.complan.findUniqueOrThrow({
+        where: {
+          id: createMainTokenTransactionDto.complanId,
+        },
+      }),
+    ]);
 
     await Promise.all([
-      this.processReferral(mainTokenTransaction),
-      this.processTPCPIReferrer(mainTokenTransaction),
-      this.processManagement(mainTokenTransaction),
-      this.processPooling(mainTokenTransaction),
-      this.processCapital(mainTokenTransaction),
+      this.processReferralCommission(mainTokenTransaction, complan),
+      this.processPendingReferralCommission(mainTokenTransaction, complan),
+      this.processManagement(mainTokenTransaction, complan),
+      this.processPendingManagement(mainTokenTransaction, complan),
     ]);
 
     return mainTokenTransaction;
   }
 
-  private async processReferral(mainTokenTransaction: MainTokenTransaction) {
-    const { complanId, amount } = mainTokenTransaction;
-
-    const [complan, upline] = await Promise.all([
-      this.prisma.complan.findUniqueOrThrow({
-        where: {
-          id: complanId,
-        },
-      }),
-      this.prisma.user.findFirst({
-        where: {
-          downlines: {
-            some: {
-              id: mainTokenTransaction.userId,
-            },
-          },
-        },
-      }),
-    ]);
-
-    if (!complan.referral || !upline) {
-      return;
-    }
-
-    const referralAmount = amount * (complan.referral / 100);
-
-    await Promise.all([
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.Referral,
-        },
-        data: {
-          balance: {
-            increment: referralAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.Referral,
-              amount: referralAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.user.update({
-        where: {
-          id: upline.id,
-        },
-        data: {
-          account: {
-            update: {
-              balance: {
-                increment: referralAmount,
-              },
-              transactions: {
-                create: {
-                  amount: referralAmount,
-                  type: AccountTransactionType.Income,
-                },
-              },
-            },
-          },
-        },
-      }),
-    ]);
-  }
-
-  private async processTPCPIReferrer(
+  private async processReferralCommission(
     mainTokenTransaction: MainTokenTransaction,
+    complan: Complan,
   ) {
-    const { complanId, amount } = mainTokenTransaction;
+    const { amount } = mainTokenTransaction;
 
-    const [complan, upline] = await Promise.all([
-      this.prisma.complan.findUniqueOrThrow({
-        where: {
-          id: complanId,
-        },
-      }),
-      this.prisma.user.findFirst({
-        where: {
-          downlines: {
-            some: {
-              id: mainTokenTransaction.userId,
-            },
-          },
-        },
-      }),
-    ]);
-
-    if (!complan.tpcpiReferrer || !upline) {
-      return;
-    }
-
-    const tpcpiReferrerAmount = amount * (complan.referral / 100);
-
-    await Promise.all([
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.TPCPIReferrer,
-        },
-        data: {
-          balance: {
-            increment: tpcpiReferrerAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.TPCPIReferrer,
-              amount: tpcpiReferrerAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.tPCPIReferrerCommission.create({
-        data: {
-          amount: tpcpiReferrerAmount,
-          user: {
-            connect: {
-              id: upline.id,
-            },
-          },
-          mainTokenTransaction: {
-            connect: {
-              id: mainTokenTransaction.id,
-            },
-          },
-          mainToken: {
-            connect: {
-              id: mainTokenTransaction.mainTokenId,
-            },
-          },
-        },
-      }),
-    ]);
-  }
-
-  private async processManagement(mainTokenTransaction: MainTokenTransaction) {
-    const { complanId, amount } = mainTokenTransaction;
-
-    const complan = await this.prisma.complan.findUniqueOrThrow({
+    const upline = await this.prisma.user.findFirst({
       where: {
-        id: complanId,
+        downlines: {
+          some: {
+            id: mainTokenTransaction.userId,
+          },
+        },
       },
     });
 
-    if (!complan.management) {
+    if (!complan.referralCommission) {
       return;
     }
 
-    const managementAmount = amount * (complan.referral / 100);
+    const referralCommissionAmount =
+      amount * (complan.referralCommission / 100);
+
+    if (!upline) {
+      return this.releaseReferralCommission(
+        mainTokenTransaction,
+        referralCommissionAmount,
+      );
+    }
+
+    await Promise.all([
+      this.prisma.referralCommission.create({
+        data: {
+          amount: referralCommissionAmount,
+          userId: upline.id,
+          mainTokenTransactionId: mainTokenTransaction.id,
+          mainTokenId: mainTokenTransaction.mainTokenId,
+          releasedAt: new Date(),
+        },
+      }),
+      this.releaseReferralCommission(
+        mainTokenTransaction,
+        referralCommissionAmount,
+        upline.id,
+      ),
+    ]);
+  }
+
+  releaseReferralCommission(
+    mainTokenTransaction: MainTokenTransaction,
+    amount: number,
+    uplineId?: string,
+  ) {
+    if (!uplineId) {
+      return this.prisma.allocationAccount.upsert({
+        where: {
+          allocation: Allocation.UnclaimedReferral,
+        },
+        update: {
+          balance: {
+            increment: amount,
+          },
+          transactions: {
+            create: {
+              allocation: Allocation.UnclaimedReferral,
+              amount: amount,
+              mainTokenTransaction: {
+                connect: {
+                  id: mainTokenTransaction.id,
+                },
+              },
+            },
+          },
+        },
+        create: {
+          allocation: Allocation.UnclaimedReferral,
+          balance: amount,
+          transactions: {
+            create: {
+              allocation: Allocation.UnclaimedReferral,
+              amount: amount,
+              mainTokenTransaction: {
+                connect: {
+                  id: mainTokenTransaction.id,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    return this.prisma.account.upsert({
+      where: {
+        userId: uplineId,
+      },
+      create: {
+        user: {
+          connect: {
+            id: uplineId,
+          },
+        },
+        balance: amount,
+        transactions: {
+          create: {
+            amount: amount,
+            type: AccountTransactionType.Referral,
+          },
+        },
+      },
+      update: {
+        balance: {
+          increment: amount,
+        },
+        transactions: {
+          create: {
+            amount: amount,
+            type: AccountTransactionType.Referral,
+          },
+        },
+      },
+    });
+  }
+
+  private async processPendingReferralCommission(
+    mainTokenTransaction: MainTokenTransaction,
+    complan: Complan,
+  ) {
+    const { amount } = mainTokenTransaction;
+
+    const upline = await this.prisma.user.findFirst({
+      where: {
+        downlines: {
+          some: {
+            id: mainTokenTransaction.userId,
+          },
+        },
+      },
+    });
+
+    if (!complan.pendingReferralCommission || !upline) {
+      return;
+    }
+
+    const pendingReferralCommission =
+      amount * (complan.pendingReferralCommission / 100);
+
+    await this.prisma.referralCommission.create({
+      data: {
+        amount: pendingReferralCommission,
+        userId: upline.id,
+        mainTokenTransactionId: mainTokenTransaction.id,
+        mainTokenId: mainTokenTransaction.mainTokenId,
+      },
+    });
+  }
+
+  private async processManagement(
+    mainTokenTransaction: MainTokenTransaction,
+    complan: Complan,
+  ) {
+    const { amount } = mainTokenTransaction;
+
+    if (!complan.managementFee) {
+      return;
+    }
+
+    const managementAmount = amount * (complan.managementFee / 100);
 
     const itManagementAmount = managementAmount * (complan.itManagement / 100);
     const partnersManagementAmount =
@@ -213,171 +220,61 @@ export class MainTokenTransactionService {
       managementAmount * (complan.tpcpiManagement / 100);
 
     await Promise.all([
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.Management,
-        },
-        data: {
-          balance: {
-            increment: managementAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.Management,
-              amount: managementAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.ITManagement,
-        },
-        data: {
-          balance: {
-            increment: itManagementAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.ITManagement,
-              amount: itManagementAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.PartnersManagement,
-        },
-        data: {
-          balance: {
-            increment: partnersManagementAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.PartnersManagement,
-              amount: partnersManagementAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.TPCPIReferrerManagement,
-        },
-        data: {
-          balance: {
-            increment: tpcpiReferrerManagementAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.TPCPIReferrerManagement,
-              amount: tpcpiReferrerManagementAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
-      this.prisma.allocationAccount.update({
-        where: {
-          allocation: Allocation.TPCPIManagement,
-        },
-        data: {
-          balance: {
-            increment: tpcpiManagementAmount,
-          },
-          transactions: {
-            create: {
-              allocation: Allocation.TPCPIManagement,
-              amount: tpcpiManagementAmount,
-              complan: {
-                connect: {
-                  id: complanId,
-                },
-              },
-              mainTokenTransaction: {
-                connect: {
-                  id: mainTokenTransaction.id,
-                },
-              },
-            },
-          },
-        },
-      }),
+      this.releasedManagementFee(
+        mainTokenTransaction,
+        Allocation.ITManagement,
+        itManagementAmount,
+      ),
+      this.releasedManagementFee(
+        mainTokenTransaction,
+        Allocation.PartnersManagement,
+        partnersManagementAmount,
+      ),
+      this.releasedManagementFee(
+        mainTokenTransaction,
+        Allocation.TPCPIReferrerManagement,
+        tpcpiReferrerManagementAmount,
+      ),
+      this.releasedManagementFee(
+        mainTokenTransaction,
+        Allocation.TPCPIManagement,
+        tpcpiManagementAmount,
+      ),
     ]);
   }
 
-  private async processPooling(mainTokenTransaction: MainTokenTransaction) {
-    const { complanId, amount } = mainTokenTransaction;
-
-    const complan = await this.prisma.complan.findUniqueOrThrow({
+  releasedManagementFee(
+    mainTokenTransaction: MainTokenTransaction,
+    allocation: Allocation,
+    amount: number,
+  ) {
+    return this.prisma.allocationAccount.upsert({
       where: {
-        id: complanId,
+        allocation,
       },
-    });
-
-    if (!complan.pooling) {
-      return;
-    }
-
-    const poolingAmount = amount * (complan.referral / 100);
-
-    await this.prisma.allocationAccount.update({
-      where: {
-        allocation: Allocation.Pooling,
-      },
-      data: {
+      update: {
         balance: {
-          increment: poolingAmount,
+          increment: amount,
         },
         transactions: {
           create: {
-            allocation: Allocation.Pooling,
-            amount: poolingAmount,
-            complan: {
+            allocation,
+            amount,
+            mainTokenTransaction: {
               connect: {
-                id: complanId,
+                id: mainTokenTransaction.id,
               },
             },
+          },
+        },
+      },
+      create: {
+        allocation,
+        balance: amount,
+        transactions: {
+          create: {
+            allocation,
+            amount,
             mainTokenTransaction: {
               connect: {
                 id: mainTokenTransaction.id,
@@ -389,45 +286,43 @@ export class MainTokenTransactionService {
     });
   }
 
-  private async processCapital(mainTokenTransaction: MainTokenTransaction) {
-    const { complanId, amount } = mainTokenTransaction;
+  private async processPendingManagement(
+    mainTokenTransaction: MainTokenTransaction,
+    complan: Complan,
+  ) {
+    const { amount } = mainTokenTransaction;
 
-    const complan = await this.prisma.complan.findUniqueOrThrow({
-      where: {
-        id: complanId,
-      },
-    });
-
-    if (!complan.capital) {
+    if (!complan.pendingManagementFee) {
       return;
     }
 
-    const capitalAmount = amount * (complan.referral / 100);
+    const managementAmount = amount * (complan.pendingManagementFee / 100);
 
-    await this.prisma.allocationAccount.update({
-      where: {
-        allocation: Allocation.Capital,
-      },
+    const itManagementAmount = managementAmount * (complan.itManagement / 100);
+    const partnersManagementAmount =
+      managementAmount * (complan.partnersManagement / 100);
+    const tpcpiReferrerManagementAmount =
+      managementAmount * (complan.tpcpiReferrerManagement / 100);
+    const tpcpiManagementAmount =
+      managementAmount * (complan.tpcpiManagement / 100);
+
+    await this.prisma.pendingManagementFee.create({
       data: {
-        balance: {
-          increment: capitalAmount,
-        },
-        transactions: {
-          create: {
-            allocation: Allocation.Capital,
-            amount: capitalAmount,
-            complan: {
-              connect: {
-                id: complanId,
-              },
-            },
-            mainTokenTransaction: {
-              connect: {
-                id: mainTokenTransaction.id,
-              },
-            },
+        mainToken: {
+          connect: {
+            id: mainTokenTransaction.mainTokenId,
           },
         },
+        amount: managementAmount,
+        mainTokenTransaction: {
+          connect: {
+            id: mainTokenTransaction.id,
+          },
+        },
+        itManagementAmount: itManagementAmount,
+        partnersManagementAmount: partnersManagementAmount,
+        tpcpiReferrerManagementAmount: tpcpiReferrerManagementAmount,
+        tpcpiManagementAmount: tpcpiManagementAmount,
       },
     });
   }

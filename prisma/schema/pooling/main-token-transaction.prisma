@@ -1,17 +1,18 @@
 model MainTokenTransaction {
-  id                           String                        @id @default(nanoid())
-  createdAt                    DateTime                      @default(now())
-  updatedAt                    DateTime                      @updatedAt
-  deletedAt                    DateTime?
-  complanId                    String
-  complan                      Complan                       @relation(fields: [complanId], references: [id])
-  userId                       String
-  user                         User                          @relation(fields: [userId], references: [id])
-  amount                       Float
-  allocationIncomeTransactions AllocationIncomeTransaction[]
-  tpcpiReferrerCommission      TPCPIReferrerCommission?
-  mainToken                    MainToken                     @relation(fields: [mainTokenId], references: [id])
-  mainTokenId                  String
+  id                            String                         @id @default(nanoid())
+  createdAt                     DateTime                       @default(now())
+  updatedAt                     DateTime                       @updatedAt
+  deletedAt                     DateTime?
+  complanId                     String
+  complan                       Complan                        @relation(fields: [complanId], references: [id])
+  userId                        String
+  user                          User                           @relation(fields: [userId], references: [id])
+  amount                        Float
+  allocationAccountTransactions AllocationAccountTransaction[]
+  mainToken                     MainToken                      @relation(fields: [mainTokenId], references: [id])
+  mainTokenId                   String
+  referralCommissions           ReferralCommission[]
+  pendingManagementFee          PendingManagementFee?
 
   @@index([complanId])
   @@index([createdAt])

@@ -40,9 +40,9 @@ export class CommodityTypeService {
       },
       where: {
         commodity: {
-          id: query.commodityId,
           slug: query.commoditySlug,
         },
+        commodityId: query.commodityId,
         ...this.searchQuery(query),
       },
       include: {
@@ -120,9 +120,9 @@ export class CommodityTypeService {
     const args: Prisma.CommodityTypeCountArgs = {
       where: {
         commodity: {
-          id: query.commodityId,
           slug: query.commoditySlug,
         },
+        commodityId: query.commodityId,
         ...this.searchQuery(query),
       },
     };

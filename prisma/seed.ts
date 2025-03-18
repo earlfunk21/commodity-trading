@@ -1,10 +1,4 @@
-import {
-  AccountType,
-  Allocation,
-  PrismaClient,
-  UserRole,
-  UserStatus,
-} from '@prisma/client';
+import { Allocation, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -29,46 +23,9 @@ async function main() {
     });
   }
 
-  const allocations = [
-    {
-      allocation: Allocation.Referral,
-      accountType: AccountType.NonWithdrawable,
-    },
-    {
-      allocation: Allocation.TPCPIReferrer,
-      accountType: AccountType.NonWithdrawable,
-    },
-    {
-      allocation: Allocation.Management,
-      accountType: AccountType.NonWithdrawable,
-    },
-    {
-      allocation: Allocation.Pooling,
-      accountType: AccountType.Withdrawable,
-    },
-    {
-      allocation: Allocation.Capital,
-      accountType: AccountType.NonWithdrawable,
-    },
-    {
-      allocation: Allocation.ITManagement,
-      accountType: AccountType.Withdrawable,
-    },
-    {
-      allocation: Allocation.PartnersManagement,
-      accountType: AccountType.Withdrawable,
-    },
-    {
-      allocation: Allocation.TPCPIReferrerManagement,
-      accountType: AccountType.Withdrawable,
-    },
-    {
-      allocation: Allocation.TPCPIManagement,
-      accountType: AccountType.Withdrawable,
-    },
-  ];
+  const allocations = Object.keys(Allocation).map((key) => Allocation[key]);
 
-  for (const { allocation, accountType } of allocations) {
+  for (const allocation of allocations) {
     const accountExists = await prisma.allocationAccount.findFirst({
       where: { allocation },
     });
@@ -78,7 +35,6 @@ async function main() {
         data: {
           allocation,
           balance: 0,
-          accountType,
         },
       });
     }

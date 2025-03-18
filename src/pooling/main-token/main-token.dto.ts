@@ -61,7 +61,7 @@ export class CreateMainTokenDto {
   tradingDuration: Date;
 
   @IsString()
-  unitType: string;
+  specs: string;
 
   @IsString()
   complanId: string;
@@ -89,4 +89,8 @@ export class FindManyMainTokenQuery extends PaginationQuery {
   @IsOptional()
   @IsString()
   holderId?: string;
+
+  @IsOptional()
+  @IsString()
+  commodityTypeSlug?: string;
 }

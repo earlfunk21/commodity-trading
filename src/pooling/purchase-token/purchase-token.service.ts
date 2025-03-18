@@ -85,7 +85,7 @@ export class PurchaseTokenService {
           },
         }),
         this.mainTokenTransactionService.create({
-          amount: createPurchaseTokenDto.capital,
+          amount: createPurchaseTokenDto.amount,
           complanId: mainToken.complanId,
           userId: holder.userId,
           mainTokenId: createPurchaseTokenDto.mainTokenId,

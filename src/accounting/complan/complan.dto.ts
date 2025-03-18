@@ -13,16 +13,16 @@ export class CreateComplanDto {
   tax: number;
 
   @IsNumber()
-  referral: number;
+  referralCommission: number;
 
   @IsNumber()
-  tpcpiReferrer: number;
+  pendingReferralCommission: number;
 
   @IsNumber()
-  management: number;
+  managementFee: number;
 
   @IsNumber()
-  pooling: number;
+  pendingManagementFee: number;
 
   @IsNumber()
   capital: number;

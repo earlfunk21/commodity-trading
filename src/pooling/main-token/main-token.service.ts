@@ -1,6 +1,7 @@
 import { PrismaService } from '@/common/prisma/prisma.service';
+import { MainTokenTransactionService } from '@/pooling/main-token-transaction/main-token-transaction.service';
 import { Injectable, Scope } from '@nestjs/common';
-import { MainToken, Prisma } from '@prisma/client';
+import { Allocation, MainToken, Prisma } from '@prisma/client';
 import {
   CreateMainTokenDto,
   FindManyMainTokenQuery,
@@ -9,7 +10,10 @@ import {
 
 @Injectable({ scope: Scope.REQUEST })
 export class MainTokenService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly mainTokenTransactionService: MainTokenTransactionService,
+  ) {}
 
   setPrisma(prisma: PrismaService) {
     this.prisma = prisma;
@@ -42,6 +46,9 @@ export class MainTokenService {
             },
           },
         }),
+        commodityType: {
+          slug: query.commodityTypeSlug,
+        },
         commodityId: query.commodityId,
         commodityTypeId: query.commodityTypeId,
         ...this.searchQuery(query),
@@ -64,6 +71,16 @@ export class MainTokenService {
         _count: {
           select: {
             subTokens: true,
+            pendingManagementFees: {
+              where: {
+                releasedAt: null,
+              },
+            },
+            referralCommissions: {
+              where: {
+                releasedAt: null,
+              },
+            },
           },
         },
       },
@@ -103,6 +120,9 @@ export class MainTokenService {
             },
           },
         }),
+        commodityType: {
+          slug: query.commodityTypeSlug,
+        },
         commodityId: query.commodityId,
         commodityTypeId: query.commodityTypeId,
         ...this.searchQuery(query),
@@ -153,6 +173,16 @@ export class MainTokenService {
         _count: {
           select: {
             subTokens: true,
+            pendingManagementFees: {
+              where: {
+                releasedAt: null,
+              },
+            },
+            referralCommissions: {
+              where: {
+                releasedAt: null,
+              },
+            },
           },
         },
       },
@@ -189,6 +219,122 @@ export class MainTokenService {
     return this.prisma.mainToken.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  async releasedReferralCommission(mainTokenId: string) {
+    await this.prisma.transaction(async (tx) => {
+      const referralCommissions =
+        await tx.referralCommission.updateManyAndReturn({
+          where: {
+            releasedAt: null,
+            mainTokenId,
+          },
+          data: {
+            releasedAt: new Date(),
+          },
+          include: {
+            mainTokenTransaction: true,
+          },
+        });
+
+      this.mainTokenTransactionService.setPrisma(tx);
+
+      const promises: any[] = [];
+
+      for (const referralCommission of referralCommissions) {
+        if (!referralCommission.mainTokenTransaction) {
+          continue;
+        }
+        const promise =
+          await this.mainTokenTransactionService.releaseReferralCommission(
+            referralCommission.mainTokenTransaction,
+            referralCommission.amount,
+            referralCommission.userId,
+          );
+        promises.push(promise);
+      }
+
+      await Promise.all(promises);
+    });
+
+    return this.prisma.mainToken.update({
+      where: {
+        id: mainTokenId,
+      },
+      data: {
+        releaseReferralCommission: new Date(),
+      },
+    });
+  }
+
+  async releasedManagementFee(mainTokenId: string) {
+    await this.prisma.transaction(async (tx) => {
+      const managementFees = await tx.pendingManagementFee.updateManyAndReturn({
+        where: {
+          releasedAt: null,
+          mainTokenId,
+        },
+        data: {
+          releasedAt: new Date(),
+        },
+        include: {
+          mainTokenTransaction: true,
+        },
+      });
+
+      this.mainTokenTransactionService.setPrisma(tx);
+
+      const promises: any[] = [];
+
+      for (const managementFee of managementFees) {
+        if (!managementFee.mainTokenTransaction) {
+          continue;
+        }
+
+        const {
+          itManagementAmount,
+          partnersManagementAmount,
+          tpcpiReferrerManagementAmount,
+          tpcpiManagementAmount,
+        } = managementFee;
+
+        promises.push(
+          ...[
+            this.mainTokenTransactionService.releasedManagementFee(
+              managementFee.mainTokenTransaction,
+              Allocation.ITManagement,
+              itManagementAmount,
+            ),
+            this.mainTokenTransactionService.releasedManagementFee(
+              managementFee.mainTokenTransaction,
+              Allocation.PartnersManagement,
+              partnersManagementAmount,
+            ),
+            this.mainTokenTransactionService.releasedManagementFee(
+              managementFee.mainTokenTransaction,
+              Allocation.TPCPIReferrerManagement,
+              tpcpiReferrerManagementAmount,
+            ),
+            this.mainTokenTransactionService.releasedManagementFee(
+              managementFee.mainTokenTransaction,
+              Allocation.TPCPIManagement,
+              tpcpiManagementAmount,
+            ),
+          ],
+        );
+      }
+
+      await Promise.all(promises);
+    });
+
+    return this.prisma.mainToken.update({
+      where: {
+        id: mainTokenId,
+      },
+      data: {
+        releaseManagementFee: new Date(),
       },
     });
   }
