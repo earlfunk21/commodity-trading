@@ -3,6 +3,13 @@
 import { updateComplan } from "@/actions/accounting/complan.action";
 import { Button } from "@/components/ui/button";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   Form,
   FormControl,
   FormField,
@@ -20,68 +27,34 @@ import * as z from "zod";
 const formSchema = z
   .object({
     name: z.string({ required_error: "Name of the complan is required" }),
-    referral: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    management: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    pooling: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    capital: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    itManagement: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    partnersManagement: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    tpcpiReferrerManagement: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
-    tpcpiManagement: z
-      .string()
-      .transform((value) => (value === "" ? "" : Number(value)))
-      .refine((value) => !isNaN(Number(value)), {
-        message: "Expected number, received string",
-      }),
+    commission: z.coerce.number(),
+    tax: z.coerce.number(),
+    referralCommission: z.coerce.number(),
+    pendingReferralCommission: z.coerce.number(),
+    managementFee: z.coerce.number(),
+    pendingManagementFee: z.coerce.number(),
+    capital: z.coerce.number(),
+    itManagement: z.coerce.number(),
+    partnersManagement: z.coerce.number(),
+    tpcpiReferrerManagement: z.coerce.number(),
+    tpcpiManagement: z.coerce.number(),
   })
   .refine(
     (data) => {
       const totalPercentage =
-        Number(data.referral) +
-        Number(data.management) +
-        Number(data.pooling) +
+        Number(data.commission) +
+        Number(data.tax) +
+        Number(data.referralCommission) +
+        Number(data.pendingReferralCommission) +
+        Number(data.managementFee) +
+        Number(data.pendingManagementFee) +
         Number(data.capital);
       return totalPercentage === 100;
     },
     {
       message:
-        "The sum of referral, management, pooling, and capital must be 100%",
-      path: ["referral"], // Show error on first field
+        "The sum of commission, tax, referral, management, and capital must be 100%",
+      path: ["commission"], // Updated to use an actual field name
     }
   )
   .refine(
@@ -96,7 +69,7 @@ const formSchema = z
     {
       message:
         "The sum of IT Management, Partners Management, TPCPI Referrer Management, and TPCPI Management must be 100%",
-      path: ["itManagement"], // Show error on first field
+      path: ["itManagement"],
     }
   );
 
@@ -109,6 +82,17 @@ export default function ComplanUpdateForm({ complan }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: complan.name,
+      commission: complan.commission,
+      tax: complan.tax,
+      referralCommission: complan.referralCommission,
+      pendingReferralCommission: complan.pendingReferralCommission,
+      managementFee: complan.managementFee,
+      pendingManagementFee: complan.pendingManagementFee,
+      capital: complan.capital,
+      itManagement: complan.itManagement,
+      partnersManagement: complan.partnersManagement,
+      tpcpiReferrerManagement: complan.tpcpiReferrerManagement,
+      tpcpiManagement: complan.tpcpiManagement,
     },
   });
 
@@ -127,170 +111,258 @@ export default function ComplanUpdateForm({ complan }: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem className="col-span-12">
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Enter complan name" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Basic Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Information</CardTitle>
+            <CardDescription>
+              Enter the name for this commission plan
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Enter complan name" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
 
-        <FormField
-          control={form.control}
-          name="referral"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>Referral</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter referral percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Commission Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Commission Distribution</CardTitle>
+            <CardDescription>
+              Define how the 100% of commission is distributed
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="commission"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commission (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter commission percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="management"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>Management</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter management percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="tax"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tax (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter tax percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="pooling"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>Pooling</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter pooling percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="referralCommission"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Referral Commission (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter referral commission percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="capital"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>Capital</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter capital percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="pendingReferralCommission"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pending Referral Commission (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter pending referral percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="itManagement"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>IT Management</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter IT management percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="managementFee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Management Fee (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter Management Fee percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="partnersManagement"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>Partners Management</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter partners management percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="pendingManagementFee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pending Management Fee (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter pending management fee percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="tpcpiReferrerManagement"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>TPCPI Referrer Management</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter TPCPI referrer management percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="capital"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>Capital (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter capital percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
 
-        <FormField
-          control={form.control}
-          name="tpcpiManagement"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-6">
-              <FormLabel>TPCPI Management</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder="Enter TPCPI management percentage"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Management Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Management Fee Distribution</CardTitle>
+            <CardDescription>
+              Define how the management fee is distributed (must total 100%)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="itManagement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>IT Management (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter IT management percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          className="w-full">
-          {form.formState.isSubmitting ? "Submitting..." : "Submit New Complan"}
-        </Button>
+            <FormField
+              control={form.control}
+              name="partnersManagement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Partners Management (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter partners management percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tpcpiReferrerManagement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>TPCPI Referrer Management (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter TPCPI referrer management percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tpcpiManagement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>TPCPI Management (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      placeholder="Enter TPCPI management percentage"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-end">
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting
+              ? "Submitting..."
+              : "Create new Complan"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

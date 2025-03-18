@@ -62,6 +62,36 @@ export async function updateMainToken(id: string, values: any) {
   });
 }
 
+export async function releasedReferralCommission(id: string) {
+  return apiRequest<MainToken>(
+    `/main-token/released-referral-commission/${id}`,
+    {
+      method: "PATCH",
+      afterRequest: ({ data, error }) => {
+        revalidateTag("main-token");
+        if (!error) {
+          revalidateTag(data.code);
+        }
+      },
+    }
+  );
+}
+
+export async function releasedManagementFee(id: string) {
+  return apiRequest<MainToken>(
+    `/main-token/released-management-fee/${id}`,
+    {
+      method: "PATCH",
+      afterRequest: ({ data, error }) => {
+        revalidateTag("main-token");
+        if (!error) {
+          revalidateTag(data.code);
+        }
+      },
+    }
+  );
+}
+
 export async function removeMainToken(code: string) {
   return apiRequest<MainToken>(`/main-token/remove/${code}`, {
     method: "DELETE",

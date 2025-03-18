@@ -28,7 +28,8 @@ export default function MainTokenCard({
     <Card className="border-none bg-gradient-to-br from-zinc-900 to-black shadow-xl">
       <CardHeader className="pb-3 grid grid-cols-2">
         <div>
-          <Link href={`/commodities/${commoditySlug}/${commodityTypeSlug}/${mainToken.code}`}>
+          <Link
+            href={`/commodities/${commoditySlug}/${commodityTypeSlug}/${mainToken.code}`}>
             <CardTitle className="text-xl font-medium text-white">
               {mainToken.name}
             </CardTitle>
@@ -99,8 +100,12 @@ export default function MainTokenCard({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-red-400">{mainToken.unitType}</span>
+              <span className="text-red-400">Value</span>
               <span>{mainToken.unitValue}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-red-400">Specs</span>
+              <span>{mainToken.specs}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-red-400">Trading Duration</span>

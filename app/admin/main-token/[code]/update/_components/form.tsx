@@ -31,7 +31,7 @@ const formSchema = z.object({
   commodityTypeId: z.string().min(1, "Commodity Type is required"),
   totalValue: z.coerce.number().min(1, "Total Value is required"),
   unitValue: z.coerce.number().min(1, "Unit Value is required"),
-  unitType: z.string().min(1, "Unit Type is required"),
+  specs: z.string().min(1, "Specss is required"),
   quantity: z.coerce.number().min(1, "Quantity is required"),
   totalTokens: z.coerce.number().min(1, "Total Tokens is required"),
   origin: z.string().min(1, "Origin is required"),
@@ -64,7 +64,7 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
       complanId: mainToken.complanId,
       totalValue: mainToken.totalValue,
       unitValue: mainToken.unitValue,
-      unitType: mainToken.unitType,
+      specs: mainToken.specs,
       quantity: mainToken.quantity,
       totalTokens: mainToken.totalTokens,
       origin: mainToken.origin,
@@ -259,12 +259,12 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
 
         <FormField
           control={form.control}
-          name="unitType"
+          name="specs"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Unit Type</FormLabel>
+              <FormLabel>Specs</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="ex. Karat" />
+                <Input {...field} placeholder="ex. 24Karat" />
               </FormControl>
               <FormMessage />
             </FormItem>

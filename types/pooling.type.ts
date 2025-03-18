@@ -76,13 +76,17 @@ export type MainToken = {
   tradingEnd: Date;
   _count: {
     subTokens: number;
+    pendingManagementFees: true;
+    referralCommissions: true;
   };
   last: number;
   change: number;
   volume: number;
-  unitType: string;
+  specs: string;
   complanId: string;
   complan: Complan;
+  releaseReferralCommission: Date;
+  releaseManagementFee: Date;
 };
 
 export type MainTokenTransaction = {
@@ -96,7 +100,21 @@ export type MainTokenTransaction = {
   user: User;
   amount: number;
   mainTokenId: string;
-  mainToken: MainToken
+  mainToken: MainToken;
+};
+
+export type TradeTransaction = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  complanId: string;
+  complan: Complan;
+  userId: string;
+  user: User;
+  amount: number;
+  mainTokenId: string;
+  mainToken: MainToken;
 };
 
 export type SubToken = {
@@ -136,7 +154,6 @@ export type PurchaseToken = {
   amount: number;
   capital: number;
   tokens: number;
-  status: PurchaseStatus;
   holderId: string;
   holder: Holder;
   approvedByAdminId?: string | null;
@@ -144,9 +161,3 @@ export type PurchaseToken = {
   subTokenId?: string | null;
   subToken?: SubToken | null;
 };
-
-export enum PurchaseStatus {
-  Pending = "Pending",
-  Approved = "Approved",
-  Declined = "Declined",
-}

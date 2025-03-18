@@ -11,20 +11,20 @@ import { Suspense } from "react";
 
 type Props = {
   params: {
-    id: string;
+    complanId: string;
   };
 };
 
 export default function ComplanUpdatePage({ params }: Props) {
   return (
-    <Card className="w-full max-w-md">
+    <Card>
       <CardHeader>
         <CardTitle>Complan Update Form</CardTitle>
         <CardDescription>Update the complan details below.</CardDescription>
       </CardHeader>
       <CardContent>
         <Suspense fallback={<LoadingIcon />}>
-          <ComplanUpdateData id={params.id} />
+          <ComplanUpdateData id={params.complanId} />
         </Suspense>
       </CardContent>
     </Card>

@@ -11,6 +11,7 @@ import { cn, currency } from "@/lib/utils";
 import { CommodityType } from "@/types/pooling.type";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import CommodityTypeEmptyCard from "../../_components/commodity-type-empty-card";
 
 type Props = {
   commoditySlug: string;
@@ -100,6 +101,9 @@ export default function CommodityTypeCard({
               </div>
             </CardContent>
           </Card>
+        ))}
+        {[...Array(4 - commodityType.mainTokens.length)].map((_, index) => (
+          <CommodityTypeEmptyCard key={index} />
         ))}
       </CardContent>
     </Card>

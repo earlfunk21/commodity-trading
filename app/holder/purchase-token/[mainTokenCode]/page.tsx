@@ -40,7 +40,7 @@ export default async function PurchaseMainTokenPage({ params }: Props) {
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink
-                href={`/sub-token/purchase/${params.mainTokenCode}`}
+                href={`/holder/purchase-token/${params.mainTokenCode}`}
                 className="font-medium bg-gradient-to-r from-red-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
                 Purchase Token
               </BreadcrumbLink>

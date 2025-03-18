@@ -20,9 +20,6 @@ export async function createCommodityType(values: any) {
 export async function getCommodityTypeList(query?: any) {
   const params = createURLParams(query);
   return apiRequest<CommodityType[]>(`/commodity-type/list?${params}`, {
-    next: {
-      tags: ["commodity-type"],
-    },
     cache: "no-store",
   });
 }
@@ -30,9 +27,6 @@ export async function getCommodityTypeList(query?: any) {
 export async function getCommodityTypeCount(query?: any) {
   const params = createURLParams(query);
   return apiRequest<number>(`/commodity-type/count?${params}`, {
-    next: {
-      tags: ["commodity-type"],
-    },
     cache: "no-store",
   });
 }

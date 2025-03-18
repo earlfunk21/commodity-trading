@@ -1,6 +1,7 @@
 import { getCommodityTypeList } from "@/actions/pooling/commodity-type.action";
-import CommodityTypeCard from "@/app/(main)/commodities/_components/commodity-type-card";
 import { Commodity } from "@/types/pooling.type";
+import CommodityTypeCard from "./commodity-type-card";
+import CommodityTypeEmptyCard from "./commodity-type-empty-card";
 
 type Props = {
   commodity: Commodity;
@@ -13,13 +14,16 @@ export default async function CommodityTypesData({ commodity }: Props) {
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <>
       {commodityTypes.map((commodityType) => (
         <CommodityTypeCard
           key={commodityType.id}
           commodityType={commodityType}
         />
       ))}
-    </div>
+      {[...Array(4 - commodityTypes.length)].map((_, index) => (
+        <CommodityTypeEmptyCard key={index} />
+      ))}
+    </>
   );
 }

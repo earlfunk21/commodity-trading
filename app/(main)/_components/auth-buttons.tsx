@@ -22,7 +22,7 @@ export default async function AuthButtons() {
       default:
         return (
           <Button asChild>
-            <Link href="/logout">Logout</Link>
+            <Link href="/holder">Go to Holder</Link>
           </Button>
         );
     }

@@ -1,20 +1,23 @@
 import { User } from "@/types/core.type";
+import { MainTokenTransaction, TradeTransaction } from "@/types/pooling.type";
 
 export type Complan = {
   id: string;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt?: Date | null;
+  deletedAt?: Date;
   name: string;
-  referral: number;
-  tpcpiReferrer: number;
-  management: number;
-  pooling: number;
-  capital: number;
+  commission: number;
+  tax: number;
+  referralCommission: number;
+  pendingReferralCommission: number;
+  managementFee: number;
+  pendingManagementFee: number;
   itManagement: number;
   partnersManagement: number;
   tpcpiReferrerManagement: number;
   tpcpiManagement: number;
+  capital: number;
 };
 
 export type Account = {
@@ -43,3 +46,35 @@ export enum DepositStatus {
   Approved = "Approved",
   Declined = "Declined",
 }
+
+export type AllocationAccount = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  allocation: Allocation;
+  balance: number;
+  transactions: AllocationAccountTransaction[];
+};
+
+export enum Allocation {
+  ITManagement = "ITManagement",
+  PartnersManagement = "PartnersManagement",
+  TPCPIReferrerManagement = "TPCPIReferrerManagement",
+  TPCPIManagement = "TPCPIManagement",
+}
+
+export type AllocationAccountTransaction = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  allocation: Allocation;
+  amount: number;
+  mainTokenTransactionId?: string;
+  mainTokenTransaction?: MainTokenTransaction;
+  accountId: string;
+  account: AllocationAccount;
+  tradeTransaction?: TradeTransaction;
+  tradeTransactionId?: string;
+};

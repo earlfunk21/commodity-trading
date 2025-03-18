@@ -49,7 +49,7 @@ export default function LoginForm({ callbackUrl }: Props) {
       toast.error(result.error, { description: result.message });
       return;
     }
-    router.push(callbackUrl ?? DEFAULT_REDIRECT);
+    router.replace(callbackUrl ?? DEFAULT_REDIRECT);
   };
 
   return (

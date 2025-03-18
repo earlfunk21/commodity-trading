@@ -1,3 +1,4 @@
+import AllocationAccountDropdownAction from "@/app/admin/allocation-account/_components/dropdown-action";
 import {
   Table,
   TableBody,
@@ -6,52 +7,60 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PurchaseToken } from "@/types/pooling.type";
+import { currency } from "@/lib/utils";
+import { AllocationAccount } from "@/types/accounting.type";
+import { format } from "date-fns";
 
 type Props = {
-  purchaseTokenList: PurchaseToken[];
+  allocationAccountList: AllocationAccount[];
 };
 
-export default function PurchaseTokenTable({ purchaseTokenList }: Props) {
+export default function AllocationAccountTable({
+  allocationAccountList,
+}: Props) {
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
-            <TableHead className="text-xs">ID</TableHead>
-            <TableHead className="text-xs">Amount</TableHead>
-            <TableHead className="text-xs">Capital</TableHead>
-            <TableHead className="text-xs">Tokens</TableHead>
+            <TableHead className="text-xs">Allocation</TableHead>
+            <TableHead className="text-xs">Balance</TableHead>
+            <TableHead className="text-xs">Date Updated</TableHead>
+            <TableHead className="sr-only">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {purchaseTokenList.map((purchaseToken) => (
+          {allocationAccountList.map((allocationAccount) => (
             <TableRow
-              key={purchaseToken.id}
+              key={allocationAccount.id}
               className="group flex flex-col md:table-row hover:bg-muted/50 transition-colors">
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  ID
+                  Allocation
                 </span>
-                {purchaseToken.id}
+                {allocationAccount.allocation}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Amount
+                  Balance
                 </span>
-                {purchaseToken.amount}
+                {currency(allocationAccount.balance)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Capital
+                  Date Updated
                 </span>
-                <span className="font-medium">{purchaseToken.capital}</span>
+                <span className="font-medium">
+                  {format(allocationAccount.updatedAt, "PPp")}
+                </span>
               </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell py-4">
+              <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Tokens
+                  Actions
                 </span>
-                <span className="font-medium">{purchaseToken.tokens}</span>
+                <AllocationAccountDropdownAction
+                  allocationAccount={allocationAccount}
+                />
               </TableCell>
             </TableRow>
           ))}

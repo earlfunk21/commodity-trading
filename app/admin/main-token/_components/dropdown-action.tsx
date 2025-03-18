@@ -1,5 +1,9 @@
 "use client";
-import { removeMainToken } from "@/actions/pooling/main-token.action";
+import {
+  releasedManagementFee,
+  releasedReferralCommission,
+  removeMainToken,
+} from "@/actions/pooling/main-token.action";
 import { useConfirm } from "@/components/ui-extension/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,6 +11,8 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MainToken } from "@/types/pooling.type";
@@ -38,6 +44,43 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
 
     toast.success("MainToken deleted successfully");
   };
+
+  const onReleaseReferralCommission = async () => {
+    const confirmResult = await confirm({
+      title: "Are you sure you want to release referral commission?",
+    });
+
+    if (!confirmResult) {
+      return;
+    }
+
+    const { error } = await releasedReferralCommission(mainToken.id);
+
+    if (error) {
+      return toast.error(error);
+    }
+
+    toast.success("Referral commission released successfully");
+  };
+
+  const onReleasedManagementFee = async () => {
+    const confirmResult = await confirm({
+      title: "Are you sure you want to release management fee?",
+    });
+
+    if (!confirmResult) {
+      return;
+    }
+
+    const { error } = await releasedManagementFee(mainToken.id);
+
+    if (error) {
+      return toast.error(error);
+    }
+
+    toast.success("Management fee released successfully");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,6 +91,9 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-xs text-muted-foreground">
+            Actions
+          </DropdownMenuLabel>
           <DropdownMenuItem onClick={onDeleteMainToken}>
             Delete Main Token
           </DropdownMenuItem>
@@ -63,6 +109,28 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
             <Link href={`./main-token/${mainToken.code}/transaction`}>
               Transactions
             </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-xs text-muted-foreground">
+            Complan Transaction
+          </DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={onReleaseReferralCommission}
+            disabled={!!mainToken.releaseReferralCommission}>
+            Release Referral Commission{" "}
+            <span className="px-2 py-1 text-xs leading-none bg-red-500 text-white rounded-full">
+              {mainToken._count.referralCommissions}
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={onReleasedManagementFee}
+            disabled={!!mainToken.releaseManagementFee}>
+            Release Management Fee
+            <span className="px-2 py-1 text-xs leading-none bg-red-500 text-white rounded-full">
+              {mainToken._count.pendingManagementFees}
+            </span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

@@ -44,7 +44,7 @@ const formSchema = z.object({
     .refine((value) => !isNaN(Number(value)), {
       message: "Expected number, received string",
     }),
-  unitType: z.string().min(1, "Unit Type is required"),
+  specs: z.string().min(1, "Unit Type is required"),
   totalTokens: z
     .string()
     .transform((value) => value.replace(/,/g, ""))
@@ -250,12 +250,12 @@ export default function MainTokenCreateForm() {
 
         <FormField
           control={form.control}
-          name="unitType"
+          name="specs"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Unit Type</FormLabel>
+              <FormLabel>Specifation</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="ex. Karat" />
+                <Input {...field} placeholder="ex. 24karat" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -415,61 +415,6 @@ export default function MainTokenCreateForm() {
           )}
         />
 
-        <div className="col-span-12 grid grid-cols-12 gap-8">
-          <FormField
-            control={form.control}
-            name="tradingDuration"
-            render={({ field }) => (
-              <FormItem className="flex flex-col  md:col-span-6">
-                <FormLabel>Trading Duration</FormLabel>
-                <FormControl>
-                  <DateTimePicker
-                    hourCycle={12}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="tradingStart"
-          render={({ field }) => (
-            <FormItem className="flex flex-col col-span-12 md:col-span-6">
-              <FormLabel>Trading Start Date</FormLabel>
-              <FormControl>
-                <DateTimePicker
-                  hourCycle={12}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="tradingEnd"
-          render={({ field }) => (
-            <FormItem className="flex flex-col col-span-12 md:col-span-6">
-              <FormLabel>Trading End Date</FormLabel>
-              <FormControl>
-                <DateTimePicker
-                  hourCycle={12}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <FormField
           control={form.control}
           name="poolingStart"
@@ -494,6 +439,60 @@ export default function MainTokenCreateForm() {
           render={({ field }) => (
             <FormItem className="flex flex-col col-span-12 md:col-span-6">
               <FormLabel>Pooling End Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tradingStart"
+          render={({ field }) => (
+            <FormItem className="flex flex-col col-span-12 md:col-span-6">
+              <FormLabel>Trading Start Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tradingEnd"
+          render={({ field }) => (
+            <FormItem className="flex flex-col col-span-12 md:col-span-6">
+              <FormLabel>Trading End Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tradingDuration"
+          render={({ field }) => (
+            <FormItem className="flex flex-col  md:col-span-6">
+              <FormLabel>Trading Duration</FormLabel>
               <FormControl>
                 <DateTimePicker
                   hourCycle={12}

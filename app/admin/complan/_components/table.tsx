@@ -20,13 +20,18 @@ export default function ComplanTable({ complanList }: Props) {
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
             <TableHead className="md:font-semibold">Name</TableHead>
-            <TableHead className="md:font-semibold">Referral (%)</TableHead>
-            <TableHead className="md:font-semibold">Management (%)</TableHead>
-            <TableHead className="md:font-semibold">Pooling (%)</TableHead>
-            <TableHead className="md:font-semibold">Capital (%)</TableHead>
+            <TableHead className="md:font-semibold">Commission (%)</TableHead>
+            <TableHead className="md:font-semibold">Tax (%)</TableHead>
+            <TableHead className="md:font-semibold">
+              Referral Commission (%)
+            </TableHead>
+            <TableHead className="md:font-semibold">
+              Management Fee (%)
+            </TableHead>
             <TableHead className="md:font-semibold">
               IT Management (%)
             </TableHead>
+            <TableHead className="md:font-semibold">Capital (%)</TableHead>
             <TableHead className="sr-only">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -43,33 +48,39 @@ export default function ComplanTable({ complanList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Referral
+                  Commission
                 </span>
-                {complan.referral}
+                {complan.commission}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Management
+                  Tax
                 </span>
-                {complan.management}
+                {complan.tax}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Pooling
+                  Referral Commission
                 </span>
-                {complan.pooling}
+                {complan.referralCommission}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Capital
+                  Management Fee
                 </span>
-                {complan.capital}
+                {complan.managementFee}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
                   IT Management
                 </span>
                 {complan.itManagement}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Capital
+                </span>
+                {complan.capital}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <ComplanDropdownAction complan={complan} />

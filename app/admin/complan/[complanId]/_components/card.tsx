@@ -28,20 +28,44 @@ export default function ComplanDetailsCard({ complan }: ComplanCardProps) {
           <div className="space-y-3">
             <h4 className="font-semibold flex items-center gap-2">
               <Percent className="h-4 w-4" />
-              Primary Complans
+              Primary Fees
             </h4>
             <div className="grid gap-3 text-sm">
               <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">Referral</span>
-                <span className="font-medium">{complan.referral}%</span>
+                <span className="text-muted-foreground">Commission</span>
+                <span className="font-medium">{complan.commission}%</span>
               </div>
               <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">Management</span>
-                <span className="font-medium">{complan.management}%</span>
+                <span className="text-muted-foreground">Tax</span>
+                <span className="font-medium">{complan.tax}%</span>
               </div>
               <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">Pooling</span>
-                <span className="font-medium">{complan.pooling}%</span>
+                <span className="text-muted-foreground">
+                  Referral Commission
+                </span>
+                <span className="font-medium">
+                  {complan.referralCommission}%
+                </span>
+              </div>
+              <div className="flex flex-col p-2 rounded-md bg-muted/50">
+                <span className="text-muted-foreground">
+                  Pending Referral Commission
+                </span>
+                <span className="font-medium">
+                  {complan.pendingReferralCommission}%
+                </span>
+              </div>
+              <div className="flex flex-col p-2 rounded-md bg-muted/50">
+                <span className="text-muted-foreground">Management Fee</span>
+                <span className="font-medium">{complan.managementFee}%</span>
+              </div>
+              <div className="flex flex-col p-2 rounded-md bg-muted/50">
+                <span className="text-muted-foreground">
+                  Pending Management Fee
+                </span>
+                <span className="font-medium">
+                  {complan.pendingManagementFee}%
+                </span>
               </div>
               <div className="flex flex-col p-2 rounded-md bg-muted/50">
                 <span className="text-muted-foreground">Capital</span>

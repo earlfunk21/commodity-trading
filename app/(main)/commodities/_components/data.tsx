@@ -1,6 +1,6 @@
-import { getCommodityTypeList } from "@/actions/pooling/commodity-type.action";
 import { getCommodityList } from "@/actions/pooling/commodity.action";
-import CommodityTypeCard from "@/app/(main)/commodities/_components/commodity-type-card";
+import CommodityTypesData from "@/app/(main)/commodities/_components/commodity-types-data";
+import LoadingIcon from "@/components/loading-icon";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,28 +11,15 @@ import {
 } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default async function CommodityListData() {
-  const { data } = await getCommodityList({
+  const { data: commodityList } = await getCommodityList({
     size: 3,
   });
 
-  const commodityList = await Promise.all(
-    data.map(async (commodity) => {
-      const { data: types } = await getCommodityTypeList({
-        size: 3,
-        commodityId: commodity.id,
-      });
-
-      return {
-        ...commodity,
-        types,
-      };
-    })
-  );
-
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       {commodityList.map((commodity) => (
         <Card
           key={commodity.id}
@@ -54,12 +41,9 @@ export default async function CommodityListData() {
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 col-span-8 grid-rows-2">
-            {commodity.types.map((commodityType) => (
-              <CommodityTypeCard
-                key={commodityType.id}
-                commodityType={commodityType}
-              />
-            ))}
+            <Suspense fallback={<LoadingIcon />}>
+              <CommodityTypesData key={commodity.id} commodity={commodity} />
+            </Suspense>
           </CardContent>
         </Card>
       ))}

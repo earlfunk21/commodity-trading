@@ -13,5 +13,7 @@ export default async function ComplanUpdateData({ id }: Props) {
     return <AlertError title={error} />;
   }
 
+  console.log(complan);
+
   return <ComplanUpdateForm complan={complan} />;
 }

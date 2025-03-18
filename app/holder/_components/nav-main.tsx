@@ -12,7 +12,12 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
 } from "@/components/ui/sidebar";
-import { ChevronRight, LayoutDashboard } from "lucide-react";
+import {
+  ChevronRight,
+  HandCoins,
+  HomeIcon,
+  LayoutDashboard,
+} from "lucide-react";
 import Link from "next/link";
 import { LuChartNoAxesCombined } from "react-icons/lu";
 
@@ -29,9 +34,19 @@ type ItemProps = {
 
 const items: ItemProps[] = [
   {
+    title: "Home",
+    icon: HomeIcon,
+    url: "/",
+  },
+  {
     title: "Dashboard",
     icon: LayoutDashboard,
     url: "/holder",
+  },
+  {
+    title: "Purchase Tokens",
+    icon: HandCoins,
+    url: "/holder/purchase-token",
   },
   {
     title: "Tokens",

@@ -12,7 +12,7 @@ type Props = {
 
 export default function ComplanDetailsPage({ params }: Props) {
   return (
-    <div className="space-y-8 w-full max-w-md">
+    <div className="space-y-8">
       <Suspense fallback={<LoadingIcon />}>
         <ComplanDetailsData id={params.complanId} />
         <Button asChild className="w-full">
