@@ -100,10 +100,10 @@ export class UserService {
     });
   }
 
-  update(username: string, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
     return this.prisma.user.update({
       where: {
-        username,
+        id,
       },
       data: updateUserDto,
       omit: {

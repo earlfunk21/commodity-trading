@@ -1,9 +1,14 @@
 import { PaginationQuery } from '@/common/pagination/pagination.query';
 import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { PurchaseStatus } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreatePurchaseTokenDto {
+  @IsString()
+  commodityId: string;
+
+  @IsString()
+  commodityTypeId: string;
+
   @IsString()
   mainTokenId: string;
 
@@ -13,7 +18,7 @@ export class CreatePurchaseTokenDto {
   @IsString()
   holderId: string;
 
-  capital: number;
+  mainTokenValueId: string;
   tokens: number;
 }
 
@@ -44,8 +49,4 @@ export class FindManyPurchaseTokenQuery extends PaginationQuery {
   @IsOptional()
   @IsString()
   holderId?: string;
-
-  @IsOptional()
-  @IsEnum(PurchaseStatus)
-  status?: PurchaseStatus;
 }

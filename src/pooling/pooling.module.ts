@@ -8,6 +8,7 @@ import { TradeModule } from './trade/trade.module';
 import { SubTokenModule } from './sub-token/sub-token.module';
 import { MainTokenTransactionModule } from './main-token-transaction/main-token-transaction.module';
 import { TradeTransactionModule } from './trade-transaction/trade-transaction.module';
+import { MainTokenValueModule } from './main-token-value/main-token-value.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TradeTransactionModule } from './trade-transaction/trade-transaction.mo
     SubTokenModule,
     MainTokenTransactionModule,
     TradeTransactionModule,
+    MainTokenValueModule,
   ],
 })
 export class poolingModule {}

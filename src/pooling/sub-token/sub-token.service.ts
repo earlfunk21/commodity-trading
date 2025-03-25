@@ -23,10 +23,42 @@ export class SubTokenService {
         ...this.searchQuery(query),
       },
       include: {
+        commodity: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        commodityType: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
         mainToken: {
           select: {
             id: true,
             code: true,
+            currentTokenValue: {
+              select: {
+                unitValue: true,
+              },
+            },
+          },
+        },
+        mainTokenValue: {
+          select: {
+            unitValue: true,
+            volume: true,
+            totalValue: true,
+            soldTokens: true,
+          },
+        },
+        _count: {
+          select: {
+            children: true,
           },
         },
       },

@@ -20,19 +20,40 @@ export class MainTokenService {
   }
 
   create(createMainTokenDto: CreateMainTokenDto) {
-    createMainTokenDto.lastValue = createMainTokenDto.unitValue;
-    createMainTokenDto.currentValue = createMainTokenDto.unitValue;
-    createMainTokenDto.quantity =
-      createMainTokenDto.totalValue / createMainTokenDto.unitValue;
-    createMainTokenDto.totalTokens =
-      createMainTokenDto.totalValue / createMainTokenDto.unitValue;
-    return this.prisma.mainToken.create({
-      data: createMainTokenDto,
+    return this.prisma.transaction(async (tx) => {
+      const { totalValue, unitValue, ...mainTokenInput } = createMainTokenDto;
+
+      const mainToken = await tx.mainToken.create({
+        data: mainTokenInput,
+      });
+
+      await tx.mainTokenValue.create({
+        data: {
+          commodityId: createMainTokenDto.commodityId,
+          commodityTypeId: createMainTokenDto.commodityTypeId,
+          mainTokenId: mainToken.id,
+          totalValue,
+          unitValue,
+          volume: totalValue / unitValue,
+          currentMainTokens: {
+            connect: {
+              id: mainToken.id,
+            },
+          },
+          lastMainTokens: {
+            connect: {
+              id: mainToken.id,
+            },
+          },
+        },
+      });
+
+      return mainToken;
     });
   }
 
   async findAll(query: FindManyMainTokenQuery) {
-    const args: Prisma.MainTokenFindManyArgs = {
+    const mainTokens = await this.prisma.mainToken.findMany({
       take: query.take,
       skip: query.skip,
       orderBy: {
@@ -83,31 +104,51 @@ export class MainTokenService {
             },
           },
         },
+        currentTokenValue: {
+          select: {
+            totalValue: true,
+            unitValue: true,
+            soldTokens: true,
+            volume: true,
+          },
+        },
+        lastTokenValue: {
+          select: {
+            unitValue: true,
+          },
+        },
       },
-    };
+    });
 
-    const mainTokens = await this.prisma.mainToken.findMany(args);
+    return mainTokens.map((mainToken) => {
+      const { currentTokenValue, lastTokenValue } = mainToken;
 
-    return Promise.all(
-      mainTokens.map(async (mainToken) => {
-        const unitValue = mainToken.unitValue || 0;
-        const lastValue = mainToken.lastValue || 0;
-        const usedTokens = mainToken.usedTokens || 0;
-        const totalTokens = mainToken.totalTokens || 0;
-        const change = ((unitValue - lastValue) / lastValue) * 100;
-        const volume = totalTokens - usedTokens;
-        const holderCount = await this.prisma.subToken.groupBy({
-          by: ['holderId'],
-        });
-        return {
-          ...mainToken,
-          last: lastValue,
-          change,
-          volume,
-          holderCount,
-        };
-      }),
-    );
+      let unitValue = 0;
+      let lastValue = 0;
+      let soldTokens = 0;
+      let volume = 0;
+
+      if (!!currentTokenValue) {
+        unitValue = currentTokenValue.unitValue;
+        soldTokens = currentTokenValue.soldTokens;
+        volume = currentTokenValue.volume;
+      }
+
+      if (!!lastTokenValue) {
+        lastValue = lastTokenValue.unitValue;
+      } else {
+        lastValue = unitValue;
+      }
+
+      const change = ((unitValue - lastValue) / lastValue) * 100;
+
+      return {
+        ...mainToken,
+        last: lastValue,
+        change,
+        volume: volume - soldTokens,
+      };
+    });
   }
 
   count(query: FindManyMainTokenQuery) {
@@ -185,33 +226,59 @@ export class MainTokenService {
             },
           },
         },
+        currentTokenValue: {
+          select: {
+            totalValue: true,
+            unitValue: true,
+            soldTokens: true,
+            volume: true,
+          },
+        },
+        lastTokenValue: {
+          select: {
+            unitValue: true,
+          },
+        },
       },
     });
 
-    const unitValue = mainToken.unitValue || 0;
-    const lastValue = mainToken.lastValue || 0;
-    const usedTokens = mainToken.usedTokens || 0;
-    const totalTokens = mainToken.totalTokens || 0;
+    const { currentTokenValue, lastTokenValue } = mainToken;
+
+    let unitValue = 0;
+    let lastValue = 0;
+    let soldTokens = 0;
+    let volume = 0;
+
+    if (!!currentTokenValue) {
+      unitValue = currentTokenValue.unitValue;
+      soldTokens = currentTokenValue.soldTokens;
+      volume = currentTokenValue.volume;
+    }
+
+    if (!!lastTokenValue) {
+      lastValue = lastTokenValue.unitValue;
+    } else {
+      lastValue = unitValue;
+    }
+
     const change = ((unitValue - lastValue) / lastValue) * 100;
-    const volume = totalTokens - usedTokens;
-    const holderCount = await this.prisma.subToken.groupBy({
-      by: ['holderId'],
-    });
+
     return {
       ...mainToken,
       last: lastValue,
       change,
-      volume,
-      holderCount,
+      volume: volume - soldTokens,
     };
   }
 
   update(id: string, updateMainTokenDto: UpdateMainTokenDto) {
+    const { totalValue, unitValue, ...mainTokenInput } = updateMainTokenDto;
+
     return this.prisma.mainToken.update({
       where: {
         id,
       },
-      data: updateMainTokenDto,
+      data: mainTokenInput,
     });
   }
 
@@ -259,12 +326,9 @@ export class MainTokenService {
       await Promise.all(promises);
     });
 
-    return this.prisma.mainToken.update({
+    return this.prisma.mainToken.findUnique({
       where: {
         id: mainTokenId,
-      },
-      data: {
-        releaseReferralCommission: new Date(),
       },
     });
   }
@@ -329,12 +393,9 @@ export class MainTokenService {
       await Promise.all(promises);
     });
 
-    return this.prisma.mainToken.update({
+    return this.prisma.mainToken.findUnique({
       where: {
         id: mainTokenId,
-      },
-      data: {
-        releaseManagementFee: new Date(),
       },
     });
   }

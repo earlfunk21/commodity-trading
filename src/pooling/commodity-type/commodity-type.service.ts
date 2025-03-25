@@ -52,65 +52,51 @@ export class CommodityTypeService {
             name: true,
           },
         },
-        mainTokens: {
-          take: 3,
-          select: {
-            code: true,
-            lastValue: true,
-            usedTokens: true,
-            unitValue: true,
-            totalTokens: true,
-          },
-        },
-        _count: {
-          select: {
-            mainTokens: true,
-          },
-        },
       },
     });
 
     return Promise.all(
       commodityTypes.map(async (commodityType) => {
-        const mainToken = await this.prisma.mainToken.aggregate({
-          where: {
-            commodityTypeId: commodityType.id,
-          },
-          _sum: {
-            lastValue: true,
-            usedTokens: true,
-            unitValue: true,
-            totalTokens: true,
-          },
-        });
-        const unitValue = mainToken._sum.unitValue || 0;
-        const lastValue = mainToken._sum.lastValue || 0;
-        const usedTokens = mainToken._sum.usedTokens || 0;
-        const totalTokens = mainToken._sum.totalTokens || 0;
-        const change = ((unitValue - lastValue) / lastValue) * 100;
-        const volume = totalTokens - usedTokens;
+        const [currentMainToken, lastMainToken] = await Promise.all([
+          this.prisma.mainTokenValue.aggregate({
+            where: {
+              currentMainTokens: {
+                some: {
+                  commodityTypeId: commodityType.id,
+                },
+              },
+            },
+            _sum: {
+              unitValue: true,
+              soldTokens: true,
+              volume: true,
+            },
+          }),
+          this.prisma.mainTokenValue.aggregate({
+            where: {
+              lastMainTokens: {
+                some: {
+                  commodityTypeId: commodityType.id,
+                },
+              },
+            },
+            _sum: {
+              unitValue: true,
+            },
+          }),
+        ]);
 
-        const mainTokens = commodityType.mainTokens.map((mainToken) => {
-          const unitValue = mainToken.unitValue || 0;
-          const lastValue = mainToken.lastValue || 0;
-          const usedTokens = mainToken.usedTokens || 0;
-          const totalTokens = mainToken.totalTokens || 0;
-          const change = ((unitValue - lastValue) / lastValue) * 100;
-          const volume = totalTokens - usedTokens;
-          return {
-            code: mainToken.code,
-            last: lastValue,
-            change,
-            volume,
-          };
-        });
+        const unitValue = currentMainToken._sum.unitValue || 0;
+        const lastValue = lastMainToken._sum.unitValue || unitValue;
+        const change = ((unitValue - lastValue) / lastValue) * 100;
+        const soldTokens = currentMainToken._sum.soldTokens || 0;
+        const volume = currentMainToken._sum.volume || 0;
 
         return {
           ...commodityType,
-          mainTokens,
           last: lastValue,
           change,
-          volume,
+          volume: volume - soldTokens,
         };
       }),
     );
@@ -173,31 +159,46 @@ export class CommodityTypeService {
       },
     });
 
-    const mainToken = await this.prisma.mainToken.aggregate({
-      where: {
-        commodityType: {
-          slug,
+    const [currentMainToken, lastMainToken] = await Promise.all([
+      this.prisma.mainTokenValue.aggregate({
+        where: {
+          currentMainTokens: {
+            some: {
+              commodityTypeId: commodityType.id,
+            },
+          },
         },
-      },
-      _sum: {
-        lastValue: true,
-        usedTokens: true,
-        unitValue: true,
-        totalTokens: true,
-      },
-    });
-    const unitValue = mainToken._sum.unitValue || 0;
-    const lastValue = mainToken._sum.lastValue || 0;
-    const usedTokens = mainToken._sum.usedTokens || 0;
-    const totalTokens = mainToken._sum.totalTokens || 0;
+        _sum: {
+          unitValue: true,
+          soldTokens: true,
+          volume: true,
+        },
+      }),
+      this.prisma.mainTokenValue.aggregate({
+        where: {
+          lastMainTokens: {
+            some: {
+              commodityTypeId: commodityType.id,
+            },
+          },
+        },
+        _sum: {
+          unitValue: true,
+        },
+      }),
+    ]);
+
+    const unitValue = currentMainToken._sum.unitValue || 0;
+    const lastValue = lastMainToken._sum.unitValue || 0;
     const change = ((unitValue - lastValue) / lastValue) * 100;
-    const volume = totalTokens - usedTokens;
+    const soldTokens = currentMainToken._sum.soldTokens || 0;
+    const volume = currentMainToken._sum.volume || 0;
 
     return {
       ...commodityType,
       last: lastValue,
       change,
-      volume,
+      volume: volume - soldTokens,
     };
   }
 

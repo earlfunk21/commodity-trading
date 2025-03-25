@@ -28,6 +28,15 @@ export class PurchaseTokenService {
       where: {
         id: createPurchaseTokenDto.mainTokenId,
       },
+      select: {
+        complanId: true,
+        currentTokenValue: {
+          select: {
+            id: true,
+            unitValue: true,
+          },
+        },
+      },
     });
 
     const holder = await this.prisma.holder.findUniqueOrThrow({
@@ -59,10 +68,15 @@ export class PurchaseTokenService {
     return this.prisma.transaction(async (tx) => {
       this.mainTokenTransactionService.setPrisma(tx);
 
-      createPurchaseTokenDto.capital =
-        createPurchaseTokenDto.amount * (complan.capital / 100);
+      if (!mainToken.currentTokenValue) {
+        throw new NotFoundException('Main token value not found');
+      }
+
+      createPurchaseTokenDto.mainTokenValueId = mainToken.currentTokenValue.id;
+
+      const capital = createPurchaseTokenDto.amount * (complan.capital / 100);
       createPurchaseTokenDto.tokens =
-        createPurchaseTokenDto.capital / mainToken.unitValue;
+        capital / mainToken.currentTokenValue.unitValue;
 
       const [purchaseToken] = await Promise.all([
         tx.purchaseToken.create({
@@ -92,11 +106,24 @@ export class PurchaseTokenService {
         }),
         tx.subToken.create({
           data: {
-            amount: createPurchaseTokenDto.capital,
-            tokens: createPurchaseTokenDto.tokens,
+            commodityId: createPurchaseTokenDto.commodityId,
+            commodityTypeId: createPurchaseTokenDto.commodityTypeId,
             mainTokenId: createPurchaseTokenDto.mainTokenId,
+            mainTokenValueId: mainToken.currentTokenValue.id,
+            amount: capital,
+            tokens: createPurchaseTokenDto.tokens,
             status: SubTokenStatus.Active,
             holderId: createPurchaseTokenDto.holderId,
+          },
+        }),
+        tx.mainTokenValue.update({
+          where: {
+            id: mainToken.currentTokenValue.id,
+          },
+          data: {
+            soldTokens: {
+              increment: createPurchaseTokenDto.tokens,
+            },
           },
         }),
       ]);

@@ -1,15 +1,18 @@
 model CommodityType {
-  id          String      @id @default(nanoid(16))
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  deletedAt   DateTime?
-  name        String      @unique
-  description String
-  slug        String      @unique
-  commodityId String
-  commodity   Commodity   @relation(fields: [commodityId], references: [id])
-  images      String[]
-  videos      String[]
-  documents   String[]
-  mainTokens  MainToken[]
+  id              String           @id @default(nanoid(16))
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+  name            String           @unique
+  description     String
+  slug            String           @unique
+  commodityId     String
+  commodity       Commodity        @relation(fields: [commodityId], references: [id])
+  images          String[]
+  videos          String[]
+  documents       String[]
+  mainTokens      MainToken[]
+  purchaseTokens  PurchaseToken[]
+  subTokens       SubToken[]
+  mainTokenValues MainTokenValue[]
 }

@@ -1,19 +1,25 @@
 model SubToken {
-  id             String          @id @default(nanoid())
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  deletedAt      DateTime?
-  amount         Float
-  tokens         Float
-  mainTokenId    String
-  mainToken      MainToken       @relation(fields: [mainTokenId], references: [id])
-  status         SubTokenStatus
-  parentTokenId  String?
-  holderId       String
-  holder         Holder          @relation(fields: [holderId], references: [id])
-  parentToken    SubToken?       @relation("SubTokenParent", fields: [parentTokenId], references: [id])
-  childTokens    SubToken[]      @relation("SubTokenParent")
-  purchaseTokens PurchaseToken[]
+  id               String          @id @default(nanoid())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  deletedAt        DateTime?
+  amount           Float
+  tokens           Float
+  commodityId      String
+  commodity        Commodity       @relation(fields: [commodityId], references: [id])
+  commodityTypeId  String
+  commodityType    CommodityType   @relation(fields: [commodityTypeId], references: [id])
+  mainTokenId      String
+  mainToken        MainToken       @relation(fields: [mainTokenId], references: [id])
+  mainTokenValue   MainTokenValue  @relation(fields: [mainTokenValueId], references: [id])
+  mainTokenValueId String
+  status           SubTokenStatus
+  holderId         String
+  holder           Holder          @relation(fields: [holderId], references: [id])
+  parentTokenId    String?
+  parent           SubToken?       @relation("SubTokenParent", fields: [parentTokenId], references: [id])
+  children         SubToken[]      @relation("SubTokenParent")
+  purchaseTokens   PurchaseToken[]
 }
 
 enum SubTokenStatus {

@@ -44,13 +44,13 @@ export class UserController {
     return this.userService.findOne(user.username);
   }
 
-  @Patch('update/:username')
+  @Patch('update/:id')
   @UseAdmin('update-user')
   update(
-    @Param('username') username: string,
+    @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.userService.update(username, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Patch('update-new-password')

@@ -66,13 +66,9 @@ export class CreateMainTokenDto {
   @IsString()
   complanId: string;
 
-  quantity: number;
+  currentTokenValueId: string;
 
-  totalTokens: number;
-
-  lastValue: number;
-
-  currentValue: number;
+  lastTokenValueId: string;
 }
 
 export class UpdateMainTokenDto extends PartialType(CreateMainTokenDto) {}
