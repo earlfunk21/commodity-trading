@@ -1,8 +1,9 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { Duration, formatDuration, intervalToDuration } from "date-fns";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function delay(time: number) {
@@ -23,7 +24,7 @@ export function currency(value: number) {
   }).format(value);
 }
 
-export function formatNumber (value: string | number) {
+export function formatNumber(value: string | number) {
   const num = String(value);
 
   // Remove existing commas and non-numeric characters except decimal point
@@ -41,8 +42,7 @@ export function formatNumber (value: string | number) {
   }
 
   return parts[0];
-};
-
+}
 
 export function createURLParams(query: any) {
   if (!query) {
@@ -60,19 +60,47 @@ export function createURLParams(query: any) {
 export function formatBytes(
   bytes: number,
   opts: {
-    decimals?: number
-    sizeType?: "accurate" | "normal"
+    decimals?: number;
+    sizeType?: "accurate" | "normal";
   } = {}
 ) {
-  const { decimals = 0, sizeType = "normal" } = opts
+  const { decimals = 0, sizeType = "normal" } = opts;
 
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
-  const accurateSizes = ["Bytes", "KiB", "MiB", "GiB", "TiB"]
-  if (bytes === 0) return "0 Byte"
-  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const accurateSizes = ["Bytes", "KiB", "MiB", "GiB", "TiB"];
+  if (bytes === 0) return "0 Byte";
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
-    sizeType === "accurate"
-      ? (accurateSizes[i] ?? "Bytes")
-      : (sizes[i] ?? "Bytes")
-  }`
+    sizeType === "accurate" ? accurateSizes[i] ?? "Bytes" : sizes[i] ?? "Bytes"
+  }`;
+}
+
+export function dateRemianing(
+  startDate: Date,
+  endDate: Date,
+  slice: number = 3
+) {
+  let duration = intervalToDuration({
+    start: startDate,
+    end: endDate,
+  });
+
+  // take the first three nonzero units
+  const units: (keyof Duration)[] = [
+    "years",
+    "months",
+    "weeks",
+    "days",
+    "hours",
+    "minutes",
+    "seconds",
+  ];
+  const nonzero = Object.entries(duration)
+    .filter(([_, value]) => value || 0 > 0)
+    .map(([unit, _]) => unit);
+
+  return formatDuration(duration, {
+    format: units.filter((i) => new Set(nonzero).has(i)).slice(0, slice),
+    delimiter: ", ",
+  });
 }

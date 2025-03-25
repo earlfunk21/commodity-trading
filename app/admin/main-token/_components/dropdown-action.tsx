@@ -113,6 +113,19 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href={`./main-token/${mainToken.code}/value`}>
+              Token Values
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`./main-token/${mainToken.code}/value/create`}>
+              New Token Value
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
           <DropdownMenuLabel className="text-xs text-muted-foreground">
             Complan Transaction
           </DropdownMenuLabel>

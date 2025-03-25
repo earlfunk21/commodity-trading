@@ -29,11 +29,7 @@ const formSchema = z.object({
   complanId: z.string({ required_error: "Complan is required" }),
   commodityId: z.string().min(1, "Commodity is required"),
   commodityTypeId: z.string().min(1, "Commodity Type is required"),
-  totalValue: z.coerce.number().min(1, "Total Value is required"),
-  unitValue: z.coerce.number().min(1, "Unit Value is required"),
   specs: z.string().min(1, "Specss is required"),
-  quantity: z.coerce.number().min(1, "Quantity is required"),
-  totalTokens: z.coerce.number().min(1, "Total Tokens is required"),
   origin: z.string().min(1, "Origin is required"),
   performanceBondNumber: z
     .string()
@@ -49,6 +45,15 @@ const formSchema = z.object({
   tradingEnd: z.date({
     required_error: "Trading end date is required",
   }),
+  poolingStart: z.date({
+    required_error: "Pooling start date is required",
+  }),
+  poolingEnd: z.date({
+    required_error: "Pooling end date is required",
+  }),
+  tradingDuration: z.date({
+    required_error: "Trading duration is required",
+  }),
 });
 
 type Props = {
@@ -62,11 +67,7 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
       name: mainToken.name,
       code: mainToken.code,
       complanId: mainToken.complanId,
-      totalValue: mainToken.totalValue,
-      unitValue: mainToken.unitValue,
       specs: mainToken.specs,
-      quantity: mainToken.quantity,
-      totalTokens: mainToken.totalTokens,
       origin: mainToken.origin,
       commodityId: mainToken.commodityId,
       commodityTypeId: mainToken.commodityTypeId,
@@ -76,6 +77,9 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
       CADTNumber: mainToken.CADTNumber,
       tradingStart: new Date(mainToken.tradingStart),
       tradingEnd: new Date(mainToken.tradingEnd),
+      poolingStart: new Date(mainToken.poolingStart),
+      poolingEnd: new Date(mainToken.poolingEnd),
+      tradingDuration: new Date(mainToken.tradingDuration),
     },
   });
 
@@ -223,80 +227,12 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
 
         <FormField
           control={form.control}
-          name="totalValue"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Total Value</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Enter total value"
-                  type="number"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="unitValue"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Unit Value</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Enter total value"
-                  type="number"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="specs"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-3">
               <FormLabel>Specs</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="ex. 24Karat" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="quantity"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Quantity</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Enter quantity" type="number" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="totalTokens"
-          render={({ field }) => (
-            <FormItem className="col-span-12 md:col-span-3">
-              <FormLabel>Total Tokens</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Enter total tokens"
-                  type="number"
-                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -378,6 +314,43 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
           )}
         />
 
+        
+<FormField
+          control={form.control}
+          name="poolingStart"
+          render={({ field }) => (
+            <FormItem className="flex flex-col col-span-12 md:col-span-6">
+              <FormLabel>Pooling Start Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="poolingEnd"
+          render={({ field }) => (
+            <FormItem className="flex flex-col col-span-12 md:col-span-6">
+              <FormLabel>Pooling End Date</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="tradingStart"
@@ -385,12 +358,17 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
             <FormItem className="flex flex-col col-span-12 md:col-span-6">
               <FormLabel>Trading Start Date</FormLabel>
               <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="tradingEnd"
@@ -398,7 +376,29 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
             <FormItem className="flex flex-col col-span-12 md:col-span-6">
               <FormLabel>Trading End Date</FormLabel>
               <FormControl>
-                <DateTimePicker hourCycle={12} {...field} />
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tradingDuration"
+          render={({ field }) => (
+            <FormItem className="flex flex-col  md:col-span-6">
+              <FormLabel>Trading Duration</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  hourCycle={12}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

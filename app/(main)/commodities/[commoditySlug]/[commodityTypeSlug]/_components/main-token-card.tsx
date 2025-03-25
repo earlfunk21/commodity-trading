@@ -7,10 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn, currency } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn, currency, dateRemianing } from "@/lib/utils";
 import { MainToken } from "@/types/pooling.type";
-import { differenceInMilliseconds, format } from "date-fns";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowDown, ArrowUp, Info } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -34,7 +40,12 @@ export default function MainTokenCard({
               {mainToken.name}
             </CardTitle>
           </Link>
-          <CardDescription>{mainToken.code}</CardDescription>
+          <CardDescription className="flex items-center gap-1">
+            {mainToken.code}
+            <span className="text-xs text-gray-400 ml-2">
+              ({mainToken.origin})
+            </span>
+          </CardDescription>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -94,53 +105,67 @@ export default function MainTokenCard({
               <span className="text-white">{mainToken.id}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-red-400">Currency</span>
-              <span className="text-white">
-                {currency(mainToken.totalValue)}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-red-400">Value</span>
-              <span>{mainToken.unitValue}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-red-400">Specs</span>
-              <span>{mainToken.specs}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-red-400">Trading Duration</span>
-              <span>
-                {differenceInMilliseconds(
-                  mainToken.tradingEnd,
-                  mainToken.tradingStart
-                )}
-              </span>
-            </div>
-            <div className="flex justify-between">
               <span className="text-red-400">Insurance Company</span>
               <span>{mainToken.insurerCompany}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-red-400">Certificate of Stock No.</span>
+              <span className="text-red-400">Certificate No.</span>
               <span>{mainToken.certificateOfStockNumber}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-red-400">CADT Number</span>
+              <span>{mainToken.CADTNumber}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-red-400">P-Bond No.</span>
+              <span>{mainToken.performanceBondNumber}</span>
             </div>
           </div>
 
-          <div className="space-y-2">
-            {/* Right column details */}
-            <div className="flex justify-between">
-              <span className="text-red-400">Trading Start</span>
-              <span className="text-white">
-                {format(mainToken.tradingStart, "PPp")}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-red-400">Trading End</span>
-              <span>{format(mainToken.tradingEnd, "PPp")}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-red-400">SEC Backed STID Count</span>
-              <span>{mainToken._count.subTokens}</span>
+          <div className="flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-red-400">Trading Duration</span>
+                <span>
+                  {dateRemianing(new Date(), mainToken.tradingDuration, 1)} left
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-red-400">Trading Period</span>
+                <span>
+                  {format(new Date(mainToken.tradingStart), "PP")} -{" "}
+                  {format(new Date(mainToken.tradingEnd), "PP")}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-red-400">Pooling Period</span>
+                <span>
+                  {format(new Date(mainToken.poolingStart), "PP")} -{" "}
+                  {format(new Date(mainToken.poolingEnd), "PP")}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-red-400">SEC Backed STID</span>
+                <span>{mainToken._count.subTokens}</span>
+              </div>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex justify-between cursor-help">
+                      <span className="text-red-400 flex items-center gap-1">
+                        Specs <Info size={12} />
+                      </span>
+                      <span className="truncate max-w-[180px]">
+                        {mainToken.specs}
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-[300px]">{mainToken.specs}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>

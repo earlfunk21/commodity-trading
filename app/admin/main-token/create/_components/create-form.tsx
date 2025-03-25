@@ -45,13 +45,6 @@ const formSchema = z.object({
       message: "Expected number, received string",
     }),
   specs: z.string().min(1, "Unit Type is required"),
-  totalTokens: z
-    .string()
-    .transform((value) => value.replace(/,/g, ""))
-    .transform((value) => (value === "" ? "" : Number(value)))
-    .refine((value) => !isNaN(Number(value)), {
-      message: "Expected number, received string",
-    }),
   origin: z.string().min(1, "Origin is required"),
   performanceBondNumber: z
     .string()
@@ -87,9 +80,9 @@ export default function MainTokenCreateForm() {
     defaultValues: {
       name: "",
       code: "",
+      specs: "",
       totalValue: "",
       unitValue: "",
-      totalTokens: "",
       origin: "",
       performanceBondNumber: "",
       insurerCompany: "",

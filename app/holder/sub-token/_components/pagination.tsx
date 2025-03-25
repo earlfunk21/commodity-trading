@@ -14,6 +14,11 @@ export default async function SubTokenPagination({ searchParams }: Props) {
   }
 
   return (
-    <Pagination total={result.data} page={Number(searchParams.page || 1)} />
+    <Pagination
+      total={result.data}
+      page={Number(searchParams.page || 1)}
+      hideInfinite
+      hideSizes
+    />
   );
 }

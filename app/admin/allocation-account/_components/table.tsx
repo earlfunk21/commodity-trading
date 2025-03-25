@@ -1,4 +1,4 @@
-import AllocationAccountDropdownAction from "@/app/admin/allocation-account/_components/dropdown-action";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,6 +10,8 @@ import {
 import { currency } from "@/lib/utils";
 import { AllocationAccount } from "@/types/accounting.type";
 import { format } from "date-fns";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   allocationAccountList: AllocationAccount[];
@@ -58,9 +60,13 @@ export default function AllocationAccountTable({
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Actions
                 </span>
-                <AllocationAccountDropdownAction
-                  allocationAccount={allocationAccount}
-                />
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    href={`./allocation-account/${allocationAccount.allocation}/transaction`}>
+                    Transactions
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </Button>
               </TableCell>
             </TableRow>
           ))}

@@ -63,10 +63,6 @@ export type MainToken = {
   commodity: Commodity;
   commodityTypeId: string;
   commodityType: CommodityType;
-  totalValue: number;
-  unitValue: number;
-  quantity: number;
-  totalTokens: number;
   origin: string;
   performanceBondNumber: string;
   insurerCompany: string;
@@ -74,6 +70,9 @@ export type MainToken = {
   CADTNumber: string;
   tradingStart: Date;
   tradingEnd: Date;
+  poolingStart: Date;
+  poolingEnd: Date;
+  tradingDuration: Date;
   _count: {
     subTokens: number;
     pendingManagementFees: true;
@@ -87,6 +86,25 @@ export type MainToken = {
   complan: Complan;
   releaseReferralCommission: Date;
   releaseManagementFee: Date;
+  currentTokenValue?: MainTokenValue;
+  lastTokenValue?: MainTokenValue;
+};
+
+export type MainTokenValue = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  commodityId: string;
+  commodity: Commodity;
+  commodityTypeId: string;
+  commodityType: CommodityType;
+  mainToken: MainToken;
+  mainTokenId: string;
+  totalValue: number;
+  unitValue: number;
+  volume: number;
+  soldTokens: number;
 };
 
 export type MainTokenTransaction = {
@@ -124,15 +142,22 @@ export type SubToken = {
   deletedAt?: Date | null;
   amount: number;
   tokens: number;
+  commodityId: string;
+  commodity: Commodity;
+  commodityTypeId: string;
+  commodityType: CommodityType;
   mainTokenId: string;
   mainToken: MainToken;
+  mainTokenValue: MainTokenValue;
+  mainTokenValueId: string;
   status: SubTokenStatus;
-  parentTokenId?: string | null;
   holderId: string;
   holder: Holder;
-  parentToken?: SubToken | null;
-  childTokens: SubToken[];
-  purchaseTokens: PurchaseToken[];
+  parentTokenId?: string | null;
+  parent?: SubToken | null;
+  _count: {
+    children: number;
+  };
 };
 
 export enum SubTokenStatus {

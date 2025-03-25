@@ -1,6 +1,6 @@
 "use client";
 
-import { createPurchaseTokenByHolder } from "@/actions/pooling/purchase-token.action";
+import { createMainTokenValue } from "@/actions/pooling/main-token-value.action";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formatNumber } from "@/lib/utils";
-import { Complan } from "@/types/accounting.type";
 import { MainToken } from "@/types/pooling.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,33 +22,29 @@ const formSchema = z.object({
   commodityId: z.string({ required_error: "Commodity is required" }),
   commodityTypeId: z.string({ required_error: "Commodity Type is required" }),
   mainTokenId: z.string({ required_error: "Main Token is required" }),
-  amount: z
+  unitValue: z
     .string()
     .transform((value) => value.replace(/,/g, ""))
-    .transform((value) => (value === "" ? "" : Number(value)))
-    .refine((value) => !isNaN(Number(value)), {
-      message: "Expected number, received string",
-    }),
+    .transform((value) => (value === "" ? "" : Number(value))),
 });
 
 type Props = {
   mainToken: MainToken;
-  complan: Complan;
 };
 
-export default function PurchaseTokenForm({ mainToken, complan }: Props) {
+export default function MainTokenValueCreateForm({ mainToken }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       commodityId: mainToken.commodityId,
       commodityTypeId: mainToken.commodityTypeId,
       mainTokenId: mainToken.id,
-      amount: "",
+      unitValue: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const result = await createPurchaseTokenByHolder(values);
+    const result = await createMainTokenValue(values);
 
     if (result.error) {
       toast.error(result.error);
@@ -60,23 +55,40 @@ export default function PurchaseTokenForm({ mainToken, complan }: Props) {
     form.reset();
   }
 
-  const amount = form.watch("amount");
+  const unitValue = form.watch("unitValue");
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-12 gap-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormItem className="col-span-12 md:col-span-3">
+          <FormLabel>Total Value</FormLabel>
+          <FormControl>
+            <Input
+              value={
+                !!mainToken.currentTokenValue
+                  ? formatNumber(mainToken.currentTokenValue.totalValue)
+                  : ""
+              }
+              readOnly
+              placeholder="Enter total value"
+              type="text"
+              pattern="^[0-9,]*\.?[0-9]*$"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+
         <FormField
           control={form.control}
-          name="amount"
+          name="unitValue"
           render={({ field }) => (
-            <FormItem className="col-span-12">
-              <FormLabel>Purchase Amount</FormLabel>
+            <FormItem className="col-span-12 md:col-span-3">
+              <FormLabel>Unit Value</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="Enter amount"
+                  value={formatNumber(field.value)}
+                  placeholder="Enter unit value"
                   type="text"
                   pattern="^[0-9,]*\.?[0-9]*$"
                   onChange={(e) => field.onChange(formatNumber(e.target.value))}
@@ -87,16 +99,15 @@ export default function PurchaseTokenForm({ mainToken, complan }: Props) {
           )}
         />
 
-        <FormItem className="col-span-12">
-          <FormLabel>Number of Tokens</FormLabel>
+        <FormItem className="col-span-12 md:col-span-3">
+          <FormLabel>Quantity/Tokens</FormLabel>
           <FormControl>
             <Input
               value={
-                !!mainToken.currentTokenValue && !!amount
+                !!mainToken.currentTokenValue && !!unitValue
                   ? formatNumber(
-                      (Number(String(amount).replace(/,/g, "")) *
-                        (complan.capital / 100)) /
-                        mainToken.currentTokenValue.unitValue
+                      (mainToken.currentTokenValue.totalValue - (mainToken.currentTokenValue.soldTokens * mainToken.currentTokenValue.unitValue)) /
+                        Number(String(unitValue).replace(/,/g, ""))
                     )
                   : ""
               }
@@ -105,13 +116,19 @@ export default function PurchaseTokenForm({ mainToken, complan }: Props) {
               placeholder="Calculated automatically"
             />
           </FormControl>
+          <p className="text-sm text-muted-foreground">
+            Auto-calculated from Total Value / Unit Value
+          </p>
         </FormItem>
 
-        <div className="col-span-12 flex justify-end">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Submitting..." : "Purchase token"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="w-full">
+          {form.formState.isSubmitting
+            ? "Submitting..."
+            : "Create new Commodity Type"}
+        </Button>
       </form>
     </Form>
   );

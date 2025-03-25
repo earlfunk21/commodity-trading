@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ChevronsRight } from "lucide-react";
 import { Suspense } from "react";
+import MainTokenValueChart from "./_components/main-token-value-chart";
 
 type Props = {
   params: {
@@ -65,13 +66,20 @@ export default function MainTokenPage({ params }: Props) {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <Suspense fallback={<LoadingIcon />}>
-          <MainTokenData
-            commodityTypeSlug={params.commodityTypeSlug}
-            commoditySlug={params.commoditySlug}
-            mainTokenCode={params.mainTokenCode}
-          />
-        </Suspense>
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-5">
+            <Suspense fallback={<LoadingIcon />}>
+              <MainTokenData
+                commodityTypeSlug={params.commodityTypeSlug}
+                commoditySlug={params.commoditySlug}
+                mainTokenCode={params.mainTokenCode}
+              />
+            </Suspense>
+          </div>
+          <div className="col-span-7">
+            <MainTokenValueChart />
+          </div>
+        </div>
       </div>
     </main>
   );

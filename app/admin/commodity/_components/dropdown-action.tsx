@@ -53,12 +53,12 @@ export default function CommodityDropdownAction({ commodity }: Props) {
             Delete Commodity
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/commodity/${commodity.slug}/update`}>
+            <Link href={`./commodity/${commodity.slug}/update`}>
               Update Commodity
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/commodity/${commodity.slug}`}>View Details</Link>
+            <Link href={`./commodity/${commodity.slug}`}>View Details</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

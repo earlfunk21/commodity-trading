@@ -41,8 +41,8 @@ export async function getMainToken(code: string) {
   return apiRequest<MainToken>(`/main-token/get/${code}`, {
     next: {
       tags: [code],
-      revalidate: 300,
     },
+    cache: "no-store",
   });
 }
 
@@ -78,18 +78,15 @@ export async function releasedReferralCommission(id: string) {
 }
 
 export async function releasedManagementFee(id: string) {
-  return apiRequest<MainToken>(
-    `/main-token/released-management-fee/${id}`,
-    {
-      method: "PATCH",
-      afterRequest: ({ data, error }) => {
-        revalidateTag("main-token");
-        if (!error) {
-          revalidateTag(data.code);
-        }
-      },
-    }
-  );
+  return apiRequest<MainToken>(`/main-token/released-management-fee/${id}`, {
+    method: "PATCH",
+    afterRequest: ({ data, error }) => {
+      revalidateTag("main-token");
+      if (!error) {
+        revalidateTag(data.code);
+      }
+    },
+  });
 }
 
 export async function removeMainToken(code: string) {

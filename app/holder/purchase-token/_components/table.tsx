@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PurchaseToken } from "@/types/pooling.type";
+import { format } from "date-fns";
 
 type Props = {
   purchaseTokenList: PurchaseToken[];
@@ -20,8 +21,8 @@ export default function PurchaseTokenTable({ purchaseTokenList }: Props) {
           <TableRow className="hidden md:table-row bg-muted/50">
             <TableHead className="text-xs">ID</TableHead>
             <TableHead className="text-xs">Amount</TableHead>
-            <TableHead className="text-xs">Capital</TableHead>
             <TableHead className="text-xs">Tokens</TableHead>
+            <TableHead className="text-xs">Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -43,15 +44,15 @@ export default function PurchaseTokenTable({ purchaseTokenList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Capital
-                </span>
-                <span className="font-medium">{purchaseToken.capital}</span>
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell py-4">
-                <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Tokens
                 </span>
                 <span className="font-medium">{purchaseToken.tokens}</span>
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell py-4">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Date
+                </span>
+                {format(purchaseToken.createdAt, "PPp")}
               </TableCell>
             </TableRow>
           ))}

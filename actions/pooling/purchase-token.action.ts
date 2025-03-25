@@ -2,7 +2,7 @@
 import { apiRequest } from "@/lib/fetch";
 import { createURLParams } from "@/lib/utils";
 import { PurchaseToken } from "@/types/pooling.type";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createPurchaseToken(values: any) {
   return apiRequest<PurchaseToken>("/purchase-token/create", {
@@ -26,6 +26,7 @@ export async function createPurchaseTokenByHolder(values: any) {
     },
     afterRequest: () => {
       revalidateTag("purchase-token");
+      revalidatePath("/holder/purchase-token/[mainTokenCode]");
     },
   });
 }

@@ -62,16 +62,16 @@ export default function AdminDropdownAction({ admin }: Props) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`/admin/${admin.id}/permissions`}>Permissions</Link>
+            <Link href={`/admin/admin/${admin.id}/permissions`}>Permissions</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`/user/${admin.userId}`}>View User</Link>
+            <Link href={`/admin/user/${admin.userId}`}>View User</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/user/${admin.userId}/update`}>Update User</Link>
+            <Link href={`/admin/user/${admin.userId}/update`}>Update User</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

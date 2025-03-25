@@ -1,5 +1,5 @@
 import { getSubTokenList } from "@/actions/pooling/sub-token.action";
-import SubTokenTable from "@/app/holder/sub-token/_components/table";
+import SubTokenCard from "@/app/holder/sub-token/_components/sub-token-card";
 import { AlertError, AlertInfo } from "@/components/ui-extension/alerts";
 
 type Props = {
@@ -17,5 +17,5 @@ export default async function SubTokenListData({ searchParams }: Props) {
     return <AlertInfo title="No sub tokens found" />;
   }
 
-  return <SubTokenTable subTokenList={subTokenList} />;
+  return <SubTokenCard subTokenList={subTokenList} />;
 }

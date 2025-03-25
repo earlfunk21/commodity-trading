@@ -80,7 +80,6 @@ export async function uploadCommodityTypeImages(
 }
 
 export async function removeCommodityTypeImage(slug: string, key: string) {
-  console.log(slug);
   return apiRequest<CommodityType>(
     `/commodity-type/remove-image/${slug}/${encodeURI(key)}`,
     {
