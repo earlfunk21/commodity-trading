@@ -30,12 +30,8 @@ import * as React from "react";
 
 export default async function MainLayout({
   children,
-  modal,
-  breadcrumbs,
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
-  breadcrumbs: React.ReactNode;
 }) {
   const result = await getCurrentUser();
 

@@ -58,48 +58,6 @@ export default function MainTokenCard({ mainToken }: MainTokenCardProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-lg bg-card p-4 border shadow-sm">
             <div className="flex items-center gap-2">
-              <Wallet className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Total Value</span>
-            </div>
-            <div className="mt-2 text-2xl font-bold">
-              {mainToken.totalValue.toLocaleString()}
-            </div>
-          </div>
-          <div className="rounded-lg bg-card p-4 border shadow-sm">
-            <div className="flex items-center gap-2">
-              <Banknote className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Unit Value</span>
-            </div>
-            <div className="mt-2 text-2xl font-bold">
-              {mainToken.unitValue.toLocaleString()}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-lg bg-card p-4 border shadow-sm">
-            <div className="flex items-center gap-2">
-              <Box className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Quantity</span>
-            </div>
-            <div className="mt-2 text-2xl font-bold">
-              {mainToken.quantity.toLocaleString()}
-            </div>
-          </div>
-          <div className="rounded-lg bg-card p-4 border shadow-sm">
-            <div className="flex items-center gap-2">
-              <Wallet className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Total Tokens</span>
-            </div>
-            <div className="mt-2 text-2xl font-bold">
-              {mainToken.totalTokens.toLocaleString()}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-lg bg-card p-4 border shadow-sm">
-            <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium">Trading Period</span>
             </div>

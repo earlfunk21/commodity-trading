@@ -1,17 +1,13 @@
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-import { JetBrains_Mono, Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-export const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
-
-export const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const jetbrainsMono = localFont({
+  src: "./fonts/JetBrainsMono-Regular.woff2",
+  variable: "--font-jetbrains-mono",
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${jetbrainsMono.variable}`}
+      suppressHydrationWarning>
       <body className="font-sans">
         <Providers>{children}</Providers>
         <Toaster />
