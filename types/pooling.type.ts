@@ -121,6 +121,24 @@ export type MainTokenTransaction = {
   mainToken: MainToken;
 };
 
+export type Trade = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  mainTokenId: string;
+  mainToken: MainToken;
+  mainTokenValueId: string;
+  mainTokenValue: MainTokenValue;
+  capital: number;
+  soldAmount: number;
+  quantity: number;
+  grossSales: number;
+  transactionId?: string | null;
+  transaction?: TradeTransaction | null;
+  processedAt?: Date | null;
+};
+
 export type TradeTransaction = {
   id: string;
   createdAt: Date;
@@ -185,4 +203,17 @@ export type PurchaseToken = {
   approvedByAdmin?: Admin | null;
   subTokenId?: string | null;
   subToken?: SubToken | null;
+};
+
+export type Blog = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  commodityId: string;
+  commodity: Commodity;
+  title: string;
+  content: string;
+  slug: string;
+  show: boolean;
 };

@@ -94,3 +94,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+.prose :where(*):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}

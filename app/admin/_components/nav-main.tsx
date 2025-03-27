@@ -51,6 +51,7 @@ const items: ItemProps[] = [
     title: "Pooling",
     icon: LuChartNoAxesCombined,
     items: [
+      { title: "All Blogs", url: "/admin/blog" },
       { title: "All Commodities", url: "/admin/commodity" },
       { title: "All Types", url: "/admin/commodity-type" },
       { title: "All Main Tokens", url: "/admin/main-token" },

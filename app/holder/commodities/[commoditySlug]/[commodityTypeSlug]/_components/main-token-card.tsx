@@ -20,13 +20,11 @@ import { ArrowDown, ArrowUp, Info } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
-  commoditySlug: string;
   commodityTypeSlug: string;
   mainToken: MainToken;
 };
 
 export default function MainTokenCard({
-  commoditySlug,
   commodityTypeSlug,
   mainToken,
 }: Props) {
@@ -34,8 +32,7 @@ export default function MainTokenCard({
     <Card className="border-none bg-gradient-to-br from-zinc-900 to-black shadow-xl">
       <CardHeader className="pb-3 grid grid-cols-2">
         <div>
-          <Link
-            href={`/commodities/${commoditySlug}/${commodityTypeSlug}/${mainToken.code}`}>
+          <Link href={`${commodityTypeSlug}/${mainToken.code}`}>
             <CardTitle className="text-xl font-medium text-white">
               {mainToken.name}
             </CardTitle>

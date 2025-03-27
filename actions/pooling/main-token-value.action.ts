@@ -37,6 +37,15 @@ export async function getMainTokenValueCount(query?: any) {
   });
 }
 
+export async function getTokenValuesByMinute() {
+  return apiRequest<any[]>("/main-token-value/token-values-by-minute", {
+    next: {
+      tags: ["main-token-value"],
+    },
+    cache: "no-store",
+  });
+}
+
 export async function getTokenValuesByHour() {
   return apiRequest<any[]>("/main-token-value/token-values-by-hour", {
     next: {

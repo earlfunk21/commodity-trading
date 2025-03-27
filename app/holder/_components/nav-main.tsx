@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { LuChartNoAxesCombined } from "react-icons/lu";
+import { TbCameraBitcoin } from "react-icons/tb";
 
 type ItemProps = {
   title: string;
@@ -52,6 +53,11 @@ const items: ItemProps[] = [
     title: "Tokens",
     icon: LuChartNoAxesCombined,
     url: "/holder/sub-token",
+  },
+  {
+    title: "Commodities",
+    icon: TbCameraBitcoin,
+    url: "/holder/commodities",
   },
 ];
 

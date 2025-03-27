@@ -1,5 +1,5 @@
 import { getMainToken } from "@/actions/pooling/main-token.action";
-import MainTokenCard from "@/app/(main)/commodities/[commoditySlug]/[commodityTypeSlug]/[mainTokenCode]/_components/main-token-card";
+import MainTokenCard from "./main-token-card";
 
 type Props = {
   commoditySlug: string;
