@@ -1,19 +1,17 @@
 model Trade {
-  id            String             @id @default(nanoid())
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  deletedAt     DateTime?
-  mainTokenId   String
-  mainToken     MainToken          @relation(fields: [mainTokenId], references: [id])
-  capital       Float
-  unitValue     Float
-  soldValue     Float
-  quantity      Float
-  grossSales    Float
-  managementFee Float
-  grossIncome   Float
-  tax           Float
-  netIncome     Float
-  tokenValue    Float
-  transactions  TradeTransaction[]
+  id               String            @id @default(nanoid())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+  mainTokenId      String
+  mainToken        MainToken         @relation(fields: [mainTokenId], references: [id])
+  mainTokenValueId String
+  mainTokenValue   MainTokenValue    @relation(fields: [mainTokenValueId], references: [id])
+  capital          Float
+  soldAmount       Float
+  quantity         Float
+  grossSales       Float
+  transactionId    String?
+  transaction      TradeTransaction? @relation(fields: [transactionId], references: [id])
+  processedAt      DateTime?
 }

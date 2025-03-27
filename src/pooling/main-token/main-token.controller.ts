@@ -28,14 +28,12 @@ export class MainTokenController {
 
   @Get('list')
   @Pagination()
-  @Public()
   findAll(@Query() query: FindManyMainTokenQuery) {
     return this.mainTokenService.findAll(query);
   }
 
   @Get('count')
   @Pagination()
-  @Public()
   count(@Query() query: FindManyMainTokenQuery) {
     return this.mainTokenService.count(query);
   }

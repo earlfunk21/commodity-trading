@@ -113,71 +113,102 @@ export class MainTokenValueService {
   tokenValuesByMinute() {
     return this.prisma.$queryRaw`
       SELECT
-        SUM(MAINTOKENVALUE."unitValue") AS TOTAL,
-        EXTRACT(MINUTE FROM MAINTOKENVALUE."createdAt") AS MINUTE,
-        EXTRACT(HOUR FROM MAINTOKENVALUE."createdAt") AS HOUR,
-        EXTRACT(DAY FROM MAINTOKENVALUE."createdAt") AS DAY,
-        EXTRACT(MONTH FROM MAINTOKENVALUE."createdAt") AS MONTH,
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") AS YEAR
-      FROM PUBLIC."MainTokenValue" AS MAINTOKENVALUE
+          SUM("unitValue") AS value,
+          EXTRACT(MINUTE FROM date_trunc('minute', "createdAt")) AS minute,
+          EXTRACT(HOUR FROM date_trunc('hour', "createdAt")) AS hour,
+          EXTRACT(DAY FROM date_trunc('day', "createdAt")) AS day,
+          EXTRACT(MONTH FROM date_trunc('month', "createdAt")) AS month,
+          EXTRACT(YEAR FROM date_trunc('year', "createdAt")) AS year,
+          date_trunc('minute', "createdAt") AS date
+      FROM
+          public."MainTokenValue"
       WHERE
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
-      GROUP BY MINUTE, HOUR, DAY, MONTH, YEAR
-      ORDER BY YEAR, MONTH, DAY, HOUR, MINUTE
+          EXTRACT(YEAR FROM "createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
+      GROUP BY
+          EXTRACT(MINUTE FROM date_trunc('minute', "createdAt")),
+          EXTRACT(HOUR FROM date_trunc('hour', "createdAt")),
+          EXTRACT(DAY FROM date_trunc('day', "createdAt")),
+          EXTRACT(MONTH FROM date_trunc('month', "createdAt")),
+          EXTRACT(YEAR FROM date_trunc('year', "createdAt")),
+          date_trunc('minute', "createdAt")
+      ORDER BY
+          date_trunc('minute', "createdAt");
     `;
   }
 
   tokenValuesByHour() {
     return this.prisma.$queryRaw`
       SELECT
-        SUM(MAINTOKENVALUE."unitValue") AS TOTAL,
-        EXTRACT(HOUR FROM MAINTOKENVALUE."createdAt") AS HOUR,
-        EXTRACT(DAY FROM MAINTOKENVALUE."createdAt") AS DAY,
-        EXTRACT(MONTH FROM MAINTOKENVALUE."createdAt") AS MONTH,
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") AS YEAR
-      FROM PUBLIC."MainTokenValue" AS MAINTOKENVALUE
+        SUM("unitValue") AS value,
+        EXTRACT(HOUR FROM date_trunc('hour', "createdAt")) AS hour,
+        EXTRACT(DAY FROM date_trunc('day', "createdAt")) AS day,
+        EXTRACT(MONTH FROM date_trunc('month', "createdAt")) AS month,
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")) AS year,
+        date_trunc('hour', "createdAt") AS date
+      FROM public."MainTokenValue"
       WHERE
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
-      GROUP BY HOUR, DAY, MONTH, YEAR
-      ORDER BY YEAR, MONTH, DAY, HOUR
+        EXTRACT(YEAR FROM "createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
+      GROUP BY
+        EXTRACT(HOUR FROM date_trunc('hour', "createdAt")),
+        EXTRACT(DAY FROM date_trunc('day', "createdAt")),
+        EXTRACT(MONTH FROM date_trunc('month', "createdAt")),
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")),
+        date_trunc('hour', "createdAt")
+      ORDER BY
+        date_trunc('hour', "createdAt");
     `;
   }
 
   tokenValuesByDay() {
     return this.prisma.$queryRaw`
       SELECT
-        SUM(MAINTOKENVALUE."unitValue") AS TOTAL,
-        EXTRACT(DAY FROM MAINTOKENVALUE."createdAt") AS DAY,
-        EXTRACT(MONTH FROM MAINTOKENVALUE."createdAt") AS MONTH,
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") AS YEAR
-      FROM PUBLIC."MainTokenValue" AS MAINTOKENVALUE
+        SUM("unitValue") AS value,
+        EXTRACT(DAY FROM date_trunc('day', "createdAt")) AS day,
+        EXTRACT(MONTH FROM date_trunc('month', "createdAt")) AS month,
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")) AS year,
+        date_trunc('day', "createdAt") AS date
+      FROM public."MainTokenValue"
       WHERE
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
-      GROUP BY DAY, MONTH, YEAR
-      ORDER BY YEAR, MONTH, DAY
+        EXTRACT(YEAR FROM "createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
+      GROUP BY
+        EXTRACT(DAY FROM date_trunc('day', "createdAt")),
+        EXTRACT(MONTH FROM date_trunc('month', "createdAt")),
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")),
+        date_trunc('day', "createdAt")
+      ORDER BY
+        date_trunc('day', "createdAt");
     `;
   }
 
   tokenValuesByMonth() {
     return this.prisma.$queryRaw`
       SELECT
-        SUM(MAINTOKENVALUE."unitValue") AS TOTAL,
-        EXTRACT(MONTH FROM MAINTOKENVALUE."createdAt") AS MONTH,
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") AS YEAR
-      FROM PUBLIC."MainTokenValue" AS MAINTOKENVALUE
-      GROUP BY MONTH, YEAR
-      ORDER BY YEAR, MONTH
+        SUM("unitValue") AS value,
+        EXTRACT(MONTH FROM date_trunc('month', "createdAt")) AS month,
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")) AS year,
+        date_trunc('month', "createdAt") AS date
+      FROM public."MainTokenValue"
+      GROUP BY
+        EXTRACT(MONTH FROM date_trunc('month', "createdAt")),
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")),
+        date_trunc('month', "createdAt")
+      ORDER BY
+        date_trunc('month', "createdAt");
     `;
   }
 
   tokenValuesByYear() {
     return this.prisma.$queryRaw`
       SELECT
-        SUM(MAINTOKENVALUE."unitValue") AS TOTAL,
-        EXTRACT(YEAR FROM MAINTOKENVALUE."createdAt") AS YEAR
-      FROM PUBLIC."MainTokenValue" AS MAINTOKENVALUE
-      GROUP BY YEAR
-      ORDER BY YEAR
+        SUM("unitValue") AS value,
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")) AS year,
+        date_trunc('year', "createdAt") AS date
+      FROM public."MainTokenValue"
+      GROUP BY
+        EXTRACT(YEAR FROM date_trunc('year', "createdAt")),
+        date_trunc('year', "createdAt")
+      ORDER BY
+        date_trunc('year', "createdAt");
     `;
   }
 }

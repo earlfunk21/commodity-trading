@@ -17,4 +17,5 @@ model MainTokenValue {
   subTokens         SubToken[]
   currentMainTokens MainToken[]     @relation("CurrentTokenValue")
   lastMainTokens    MainToken[]     @relation("LastTokenValue")
+  trades            Trade[]
 }

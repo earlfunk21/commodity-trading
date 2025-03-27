@@ -1,0 +1,12 @@
+model Blog {
+  id          String    @id @default(nanoid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  title       String
+  content     String    @db.Text
+  slug        String    @unique
+  commodityId String    @unique
+  commodity   Commodity @relation(fields: [commodityId], references: [id], onDelete: Cascade)
+  show        Boolean   @default(true)
+}

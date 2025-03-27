@@ -36,14 +36,12 @@ export class CommodityController {
 
   @Get('list')
   @Pagination()
-  @Public()
   findAll(@Query() query: FindManyCommodityQuery) {
     return this.commodityService.findAll(query);
   }
 
   @Get('count')
   @Pagination()
-  @Public()
   count(@Query() query: FindManyCommodityQuery) {
     return this.commodityService.count(query);
   }

@@ -1,5 +1,10 @@
 import { PrismaService } from '@/common/prisma/prisma.service';
-import { Injectable, Scope } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Scope,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Prisma, Trade } from '@prisma/client';
 import {
   CreateTradeDto,
@@ -15,7 +20,26 @@ export class TradeService {
     this.prisma = prisma;
   }
 
-  create(createTradeDto: CreateTradeDto) {
+  async create(createTradeDto: CreateTradeDto) {
+    createTradeDto.grossSales =
+      createTradeDto.soldAmount * createTradeDto.quantity;
+
+    const mainTokenValue = await this.prisma.mainTokenValue.findFirst({
+      where: {
+        currentMainTokens: {
+          some: {
+            id: createTradeDto.mainTokenId,
+          },
+        },
+      },
+    });
+
+    if (!mainTokenValue) {
+      throw new NotFoundException('Main token value not found');
+    }
+
+    createTradeDto.mainTokenValueId = mainTokenValue.id;
+
     return this.prisma.trade.create({
       data: createTradeDto,
     });
@@ -29,6 +53,9 @@ export class TradeService {
         [query.orderBy]: query.sortBy,
       },
       where: {
+        ...(query.processed !== undefined && {
+          processedAt: query.processed ? { not: null } : null,
+        }),
         ...this.searchQuery(query),
       },
     };
@@ -39,6 +66,9 @@ export class TradeService {
   count(query: FindManyTradeQuery) {
     const args: Prisma.TradeCountArgs = {
       where: {
+        ...(query.processed !== undefined && {
+          processedAt: query.processed ? { not: null } : null,
+        }),
         ...this.searchQuery(query),
       },
     };
@@ -72,7 +102,23 @@ export class TradeService {
     });
   }
 
-  update(id: string, updateTradeDto: UpdateTradeDto) {
+  async update(id: string, updateTradeDto: UpdateTradeDto) {
+    const trade = await this.prisma.trade.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    });
+
+    if (!trade) {
+      throw new NotFoundException('Trade not found');
+    }
+
+    if (!!trade.processedAt) {
+      throw new UnprocessableEntityException(
+        'Trade already processed and cannot be updated',
+      );
+    }
+
     return this.prisma.trade.update({
       where: {
         id,
@@ -81,7 +127,23 @@ export class TradeService {
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    const trade = await this.prisma.trade.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    });
+
+    if (!trade) {
+      throw new NotFoundException('Trade not found');
+    }
+
+    if (!!trade.processedAt) {
+      throw new UnprocessableEntityException(
+        'Trade already processed and cannot be deleted',
+      );
+    }
+
     return this.prisma.trade.delete({
       where: {
         id,

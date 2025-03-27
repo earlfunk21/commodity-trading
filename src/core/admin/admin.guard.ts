@@ -35,12 +35,17 @@ export class AdminGuard extends AuthGuard('jwt') {
 
     request.admin = admin;
 
-    if (user.role === UserRole.Owner) {
-      return true;
-    }
-
     if (user.role !== UserRole.Admin) {
       throw new ForbiddenException('Invalid role for admin access.');
+    }
+
+    const hasSuperAdminPermission = await this.getAdminPermissionExists(
+      admin.id,
+      '_all_',
+    );
+
+    if (hasSuperAdminPermission) {
+      return true;
     }
 
     const adminPermission = this.getReflector<string>(
@@ -94,7 +99,7 @@ export class AdminGuard extends AuthGuard('jwt') {
     return this.cachingService.fetch<boolean>(key, 10000, () =>
       this.prisma.adminPermission.extsts({
         where: {
-          id: adminId,
+          adminId,
           permission,
         },
       }),

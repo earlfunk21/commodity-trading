@@ -26,5 +26,4 @@ enum UserStatus {
 enum UserRole {
   Holder
   Admin
-  Owner
 }

@@ -8,15 +8,20 @@ async function main() {
   if (!adminExists) {
     await prisma.admin.create({
       data: {
-        firstName: process.env.OWNER_FIRST_NAME!,
-        lastName: process.env.OWNER_LAST_NAME!,
+        firstName: process.env.SUPER_ADMIN_FIRST_NAME!,
+        lastName: process.env.SUPER_ADMIN_LAST_NAME!,
         user: {
           create: {
-            username: process.env.OWNER_USERNAME!,
-            email: process.env.OWNER_EMAIL!,
-            password: bcrypt.hashSync(process.env.OWNER_PASSWORD!, 10),
-            role: UserRole.Owner,
+            username: process.env.SUPER_ADMIN_USERNAME!,
+            email: process.env.SUPER_ADMIN_EMAIL!,
+            password: bcrypt.hashSync(process.env.SUPER_ADMIN_PASSWORD!, 10),
+            role: UserRole.Admin,
             status: UserStatus.Active,
+          },
+        },
+        permissions: {
+          create: {
+            permission: '_all_',
           },
         },
       },

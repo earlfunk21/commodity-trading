@@ -12,4 +12,5 @@ model Commodity {
   purchaseTokens  PurchaseToken[]
   subTokens       SubToken[]
   mainTokenValues MainTokenValue[]
+  blog            Blog?
 }

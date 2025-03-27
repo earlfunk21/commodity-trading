@@ -42,9 +42,4 @@ export class TradeController {
   remove(@Param('id') id: string) {
     return this.tradeService.remove(id);
   }
-
-  @Get('graph-by-main-token/:mainTokenId')
-  graphByMainToken(@Param('mainTokenId') mainTokenId: string) {
-    return this.tradeService.graphByMainToken(mainTokenId);
-  }
 }

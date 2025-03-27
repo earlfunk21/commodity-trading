@@ -1,37 +1,30 @@
 import { PaginationQuery } from '@/common/pagination/pagination.query';
 import { PartialType } from '@nestjs/mapped-types';
-import { IsNumber, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTradeDto {
   @IsString()
   mainTokenId: string;
 
   @IsNumber()
-  totalTrade: number;
-
-  @IsNumber()
   capital: number;
 
   @IsNumber()
-  unitValue: number;
-
-  @IsNumber()
-  soldValue: number;
+  soldAmount: number;
 
   @IsNumber()
   quantity: number;
 
-  @IsString()
-  complanId: string;
-
+  mainTokenValueId: string;
   grossSales: number;
-  managementFee: number;
-  grossIncome: number;
-  tax: number;
-  netIncome: number;
-  tokenValue: number;
 }
 
 export class UpdateTradeDto extends PartialType(CreateTradeDto) {}
 
-export class FindManyTradeQuery extends PaginationQuery {}
+export class FindManyTradeQuery extends PaginationQuery {
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  processed?: boolean;
+}

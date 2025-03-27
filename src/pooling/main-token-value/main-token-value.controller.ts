@@ -32,6 +32,11 @@ export class MainTokenValueController {
     return this.mainTokenValueService.findOne(id);
   }
 
+  @Get('token-values-by-minute')
+  tokenValuesByMinute() {
+    return this.mainTokenValueService.tokenValuesByMinute();
+  }
+
   @Get('token-values-by-hour')
   tokenValuesByHour() {
     return this.mainTokenValueService.tokenValuesByHour();
