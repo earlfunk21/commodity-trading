@@ -126,6 +126,10 @@ export type Trade = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
+  commodityId: string;
+  commodity: Commodity;
+  commodityTypeId: string;
+  commodityType: CommodityType;
   mainTokenId: string;
   mainToken: MainToken;
   mainTokenValueId: string;
@@ -143,15 +147,20 @@ export type TradeTransaction = {
   id: string;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt?: Date;
+  deletedAt?: Date | null;
   complanId: string;
   complan: Complan;
-  userId: string;
-  user: User;
-  amount: number;
-  mainTokenId: string;
   mainToken: MainToken;
-};
+  mainTokenId: string;
+  managementFee: number;
+  totalGrossSales: number;
+  totalUnitQuantity: number;
+  capital: number;
+  grossIncome: number;
+  tax: number;
+  netIncome: number;
+  tokenValue: number;
+}
 
 export type SubToken = {
   id: string;

@@ -31,6 +31,7 @@ type Props<T> = {
   onSelectItem?: (value: T) => void;
   disabled?: boolean;
   initialData?: T[];
+  placeholder?: string | ((value?: T) => string);
 };
 
 export const AutoComplete = <T,>({
@@ -47,7 +48,7 @@ export const AutoComplete = <T,>({
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { data, isLoading } = useSWR(
+  const { data } = useSWR(
     open && `/auto-complete/${name}/${debouncedSearchValue}`,
     () => getData(debouncedSearchValue),
     {

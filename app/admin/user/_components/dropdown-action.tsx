@@ -27,10 +27,10 @@ export default function UserDropdownAction({ user }: Props) {
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`./user/${user.username}/update`}>Update User</Link>
+            <Link href={`user/${user.username}/update`}>Update User</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`./user/${user.username}`}>View Details</Link>
+            <Link href={`user/${user.username}`}>View Details</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

@@ -9,6 +9,7 @@ import {
 import { currency } from "@/lib/utils";
 import { MainTokenTransaction } from "@/types/pooling.type";
 import { format } from "date-fns";
+import Link from "next/link";
 
 type Props = {
   mainTokenTransactionList: MainTokenTransaction[];
@@ -37,18 +38,21 @@ export default function MainTokenTransactionTable({
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
                   User
                 </span>
-                {mainTokenTransaction.user.username}
+                <Link
+                  href={`/admin/user/${mainTokenTransaction.user.username}`}
+                  className="text-blue-600 hover:underline">
+                  {mainTokenTransaction.user.username}
+                </Link>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
                   MainToken
                 </span>
-                <div>
-                  <div>{mainTokenTransaction.mainToken.name}</div>
-                  <div className="text-muted-foreground text-xs">
-                    {mainTokenTransaction.mainTokenId}
-                  </div>
-                </div>
+                <Link
+                  href={`/admin/complan/${mainTokenTransaction.mainToken.code}`}
+                  className="text-blue-600 hover:underline">
+                  {mainTokenTransaction.mainToken.code}
+                </Link>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">

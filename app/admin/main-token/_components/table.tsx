@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MainToken } from "@/types/pooling.type";
+import Link from "next/link";
 
 type Props = {
   mainTokenList: MainToken[];
@@ -49,19 +50,25 @@ export default function MainTokenTable({ mainTokenList }: Props) {
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Commodity
                 </span>
-                <span className="font-medium">{mainToken.commodity.name}</span>
+                <Link
+                  href={`/admin/commodity/${mainToken.commodity.slug}`}
+                  className="text-blue-600 hover:underline">
+                  {mainToken.commodity.name}
+                </Link>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Commodity Type
                 </span>
-                <span className="font-medium">
+                <Link
+                  href={`/admin/commodity-type/${mainToken.commodityType.slug}`}
+                  className="text-blue-600 hover:underline">
                   {mainToken.commodityType.name}
-                </span>
+                </Link>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Commodity Type
+                  No. of Sub Tokens
                 </span>
                 <Badge className="cursor-pointer">
                   {mainToken._count.subTokens}

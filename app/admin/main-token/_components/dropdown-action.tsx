@@ -11,12 +11,26 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { MainToken } from "@/types/pooling.type";
-import { MoreHorizontal } from "lucide-react";
+import {
+  BadgePercent,
+  BarChart3,
+  BarChartHorizontal,
+  CreditCard,
+  DollarSign,
+  Edit,
+  Eye,
+  PlusCircle,
+  ReceiptText,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -84,67 +98,145 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
+        <Button variant="outline" size="sm">
+          Actions
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-xs text-muted-foreground">
-            Actions
-          </DropdownMenuLabel>
-          <DropdownMenuItem onClick={onDeleteMainToken}>
+          <DropdownMenuItem
+            onClick={onDeleteMainToken}
+            className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+            <Trash2 className="h-4 w-4" />
             Delete Main Token
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`./main-token/${mainToken.code}/update`}>
+            <Link
+              href={`./main-token/${mainToken.code}/update`}
+              className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+              <Edit className="h-4 w-4" />
               Update Main Token
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`./main-token/${mainToken.code}`}>View Details</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`./main-token/${mainToken.code}/transaction`}>
-              Transactions
+            <Link
+              href={`./main-token/${mainToken.code}`}
+              className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+              <Eye className="h-4 w-4" />
+              View Details
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="my-1" />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href={`./main-token/${mainToken.code}/value`}>
-              Token Values
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={`./main-token/${mainToken.code}/value/create`}>
-              New Token Value
-            </Link>
-          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+              <BarChart3 className="h-4 w-4" />
+              Token Actions
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`./main-token/${mainToken.code}/value`}
+                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                  <BarChartHorizontal className="h-4 w-4" />
+                  View Token Values
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`./main-token/${mainToken.code}/value/create`}
+                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                  <PlusCircle className="h-4 w-4" />
+                  New Token Value
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="my-1" />
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-xs text-muted-foreground">
-            Complan Transaction
-          </DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={onReleaseReferralCommission}
-            disabled={!!mainToken.releaseReferralCommission}>
-            Release Referral Commission{" "}
-            <span className="px-2 py-1 text-xs leading-none bg-red-500 text-white rounded-full">
-              {mainToken._count.referralCommissions}
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={onReleasedManagementFee}
-            disabled={!!mainToken.releaseManagementFee}>
-            Release Management Fee
-            <span className="px-2 py-1 text-xs leading-none bg-red-500 text-white rounded-full">
-              {mainToken._count.pendingManagementFees}
-            </span>
-          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+              <CreditCard className="h-4 w-4" />
+              Trade Actions
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`./main-token/${mainToken.code}/trade`}
+                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                  <Eye className="h-4 w-4" />
+                  View Trades
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`./main-token/${mainToken.code}/trade-transaction`}
+                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                  <ReceiptText className="h-4 w-4" />
+                  View Trade Transactions
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuGroup>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+              <DollarSign className="h-4 w-4" />
+              Complan Actions
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={`./main-token/${mainToken.code}/transaction`}
+                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                  <ReceiptText className="h-4 w-4" />
+                  View Complan Transactions
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={onReleaseReferralCommission}
+                disabled={!!mainToken.releaseReferralCommission}
+                className={cn(
+                  "px-3 py-2 flex items-center justify-between cursor-pointer",
+                  !!mainToken.releaseReferralCommission
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                )}>
+                <div className="flex items-center gap-2">
+                  <BadgePercent className="h-4 w-4" />
+                  Release Referral Commission
+                </div>
+                {!!mainToken._count.referralCommissions && (
+                  <span className="px-2 py-0.5 text-xs leading-none bg-gradient-to-r from-red-500 to-pink-500 dark:from-red-600 dark:to-pink-600 text-white rounded-full shadow-sm dark:shadow-slate-900/30">
+                    {mainToken._count.referralCommissions}
+                  </span>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={onReleasedManagementFee}
+                disabled={!!mainToken.releaseManagementFee}
+                className={cn(
+                  "px-3 py-2 flex items-center justify-between cursor-pointer",
+                  !!mainToken.releaseManagementFee
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                )}>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Release Management Fee
+                </div>
+                {!!mainToken._count.pendingManagementFees && (
+                  <span className="px-2 py-0.5 text-xs leading-none bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 text-white rounded-full shadow-sm dark:shadow-slate-900/30">
+                    {mainToken._count.pendingManagementFees}
+                  </span>
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

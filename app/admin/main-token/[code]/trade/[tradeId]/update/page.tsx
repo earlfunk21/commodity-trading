@@ -1,4 +1,4 @@
-import HolderUpdateData from "@/app/admin/holder/[holderId]/update/_components/data";
+import TradeUpdateData from "@/app/admin/main-token/[code]/trade/[tradeId]/update/_components/data";
 import LoadingIcon from "@/components/loading-icon";
 import {
   Card,
@@ -11,20 +11,20 @@ import { Suspense } from "react";
 
 type Props = {
   params: {
-    holderId: string;
+    tradeId: string;
   };
 };
 
-export default function HolderUpdatePage({ params }: Props) {
+export default function TradeUpdatePage({ params }: Props) {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Holder Update Form</CardTitle>
-        <CardDescription>Update the holder details below.</CardDescription>
+        <CardTitle>Trade Update Form</CardTitle>
+        <CardDescription>Update the trade details below.</CardDescription>
       </CardHeader>
       <CardContent>
         <Suspense fallback={<LoadingIcon />}>
-          <HolderUpdateData holderId={params.holderId} />
+          <TradeUpdateData tradeId={params.tradeId} />
         </Suspense>
       </CardContent>
     </Card>

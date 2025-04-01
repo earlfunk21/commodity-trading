@@ -54,19 +54,19 @@ export default function HolderDropdownAction({ holder }: Props) {
             Delete Holder
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/holder/${holder.id}/update`}>Update Holder</Link>
+            <Link href={`holder/${holder.id}/update`}>Update Holder</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/holder/${holder.id}`}>View Details</Link>
+            <Link href={`holder/${holder.id}`}>View Details</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`/user/${holder.userId}`}>View User</Link>
+            <Link href={`user/${holder.userId}`}>View User</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/user/${holder.userId}/update`}>Update User</Link>
+            <Link href={`user/${holder.userId}/update`}>Update User</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

@@ -14,15 +14,19 @@ export default async function AuthButtons() {
       case UserRole.Owner:
       case UserRole.Admin:
         return (
-          <Button asChild className="rounded-lg">
-            <Link href="/admin">Go to admin</Link>
+          <Button
+            className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-opacity"
+            asChild>
+            <Link href="/admin">Go to Dashboard</Link>
           </Button>
         );
 
       default:
         return (
-          <Button asChild>
-            <Link href="/holder">Go to Holder</Link>
+          <Button
+            className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-opacity"
+            asChild>
+            <Link href="/holder">Go to Dashboard</Link>
           </Button>
         );
     }

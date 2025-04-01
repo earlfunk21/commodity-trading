@@ -1,4 +1,4 @@
-import { getHolderCount } from "@/actions/pooling/holder.action";
+import { getTradeCount } from "@/actions/pooling/trade.action";
 import { AlertError } from "@/components/ui-extension/alerts";
 import Pagination from "@/components/ui-extension/pagination";
 
@@ -6,8 +6,8 @@ type Props = {
   searchParams: any;
 };
 
-export default async function HolderPagination({ searchParams }: Props) {
-  const result = await getHolderCount(searchParams);
+export default async function TradePagination({ searchParams }: Props) {
+  const result = await getTradeCount(searchParams);
 
   if (result.error) {
     return <AlertError title={result.error} />;
