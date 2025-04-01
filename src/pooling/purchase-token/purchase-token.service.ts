@@ -34,6 +34,8 @@ export class PurchaseTokenService {
           select: {
             id: true,
             unitValue: true,
+            volume: true,
+            soldTokens: true,
           },
         },
       },
@@ -70,6 +72,14 @@ export class PurchaseTokenService {
 
       if (!mainToken.currentTokenValue) {
         throw new NotFoundException('Main token value not found');
+      }
+
+      const totalVolume =
+        mainToken.currentTokenValue.volume -
+        mainToken.currentTokenValue.soldTokens;
+
+      if (createPurchaseTokenDto.tokens > totalVolume) {
+        throw new Error('Insufficient volume for purchase token');
       }
 
       createPurchaseTokenDto.mainTokenValueId = mainToken.currentTokenValue.id;

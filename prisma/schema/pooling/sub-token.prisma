@@ -1,25 +1,29 @@
 model SubToken {
-  id               String          @id @default(nanoid())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  id               String                @id @default(nanoid())
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
   deletedAt        DateTime?
   amount           Float
   tokens           Float
   commodityId      String
-  commodity        Commodity       @relation(fields: [commodityId], references: [id])
+  commodity        Commodity             @relation(fields: [commodityId], references: [id])
   commodityTypeId  String
-  commodityType    CommodityType   @relation(fields: [commodityTypeId], references: [id])
+  commodityType    CommodityType         @relation(fields: [commodityTypeId], references: [id])
   mainTokenId      String
-  mainToken        MainToken       @relation(fields: [mainTokenId], references: [id])
-  mainTokenValue   MainTokenValue  @relation(fields: [mainTokenValueId], references: [id])
+  mainToken        MainToken             @relation(fields: [mainTokenId], references: [id])
+  mainTokenValue   MainTokenValue        @relation(fields: [mainTokenValueId], references: [id])
   mainTokenValueId String
   status           SubTokenStatus
   holderId         String
-  holder           Holder          @relation(fields: [holderId], references: [id])
+  holder           Holder                @relation(fields: [holderId], references: [id])
   parentTokenId    String?
-  parent           SubToken?       @relation("SubTokenParent", fields: [parentTokenId], references: [id])
-  children         SubToken[]      @relation("SubTokenParent")
+  parent           SubToken?             @relation("SubTokenParent", fields: [parentTokenId], references: [id])
+  children         SubToken[]            @relation("SubTokenParent")
   purchaseTokens   PurchaseToken[]
+  transactions     SubTokenTransaction[]
+
+  @@index([holderId])
+  @@index([mainTokenId])
 }
 
 enum SubTokenStatus {

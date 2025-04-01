@@ -354,7 +354,7 @@ export class MainTokenTransactionService {
         },
         mainToken: {
           select: {
-            name: true,
+            code: true,
           },
         },
       },

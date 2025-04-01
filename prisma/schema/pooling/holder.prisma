@@ -10,4 +10,6 @@ model Holder {
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   subTokens       SubToken[]
   purchasedTokens PurchaseToken[]
+
+  @@index([userId])
 }

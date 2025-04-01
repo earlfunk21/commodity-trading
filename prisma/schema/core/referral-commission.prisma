@@ -11,6 +11,8 @@ model ReferralCommission {
   mainTokenId            String?
   mainToken              MainToken?            @relation(fields: [mainTokenId], references: [id])
   releasedAt             DateTime?
+  tradeTransactionId     String?
+  tradeTransaction       TradeTransaction?     @relation(fields: [tradeTransactionId], references: [id])
 
   @@index([releasedAt])
   @@index([userId])

@@ -16,6 +16,8 @@ model User {
   account               Account?
   mainTokenTransactions MainTokenTransaction[]
   referralCommissions   ReferralCommission[]
+
+  @@index([uplineId])
 }
 
 enum UserStatus {

@@ -27,4 +27,8 @@ export class FindManyTradeQuery extends PaginationQuery {
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   processed?: boolean;
+
+  @IsOptional()
+  @IsString()
+  mainTokenId?: string;
 }

@@ -56,7 +56,16 @@ export class TradeService {
         ...(query.processed !== undefined && {
           processedAt: query.processed ? { not: null } : null,
         }),
+        mainTokenId: query.mainTokenId,
         ...this.searchQuery(query),
+      },
+      include: {
+        mainToken: {
+          select: {
+            id: true,
+            code: true,
+          },
+        },
       },
     };
 
@@ -69,6 +78,7 @@ export class TradeService {
         ...(query.processed !== undefined && {
           processedAt: query.processed ? { not: null } : null,
         }),
+        mainTokenId: query.mainTokenId,
         ...this.searchQuery(query),
       },
     };

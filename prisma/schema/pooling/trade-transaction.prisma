@@ -5,11 +5,20 @@ model TradeTransaction {
   deletedAt                     DateTime?
   complanId                     String
   complan                       Complan                        @relation(fields: [complanId], references: [id])
-  amount                        Float
   allocationAccountTransactions AllocationAccountTransaction[]
   mainToken                     MainToken                      @relation(fields: [mainTokenId], references: [id])
   mainTokenId                   String
+  managementFee                 Float                          @default(0)
+  referralCommissions           ReferralCommission[]
+  totalGrossSales               Float
+  totalUnitQuantity             Float
+  capital                       Float
+  grossIncome                   Float
+  tax                           Float
+  netIncome                     Float
+  tokenValue                    Float
   trades                        Trade[]
+  subTokenTransactions          SubTokenTransaction[]
 
   @@index([complanId])
   @@index([createdAt])
