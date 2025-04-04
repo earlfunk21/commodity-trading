@@ -20,6 +20,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { LuChartNoAxesCombined } from "react-icons/lu";
+import { MdOutlineGeneratingTokens } from "react-icons/md";
+import { ImNewspaper } from "react-icons/im";
+
 
 type ItemProps = {
   title: string;
@@ -39,22 +42,27 @@ const items: ItemProps[] = [
     url: "/admin",
   },
   {
+    title: "Commodities",
+    icon: LuChartNoAxesCombined,
+    url: "/admin/commodity",
+  },
+  {
+    title: "Main Token",
+    icon: MdOutlineGeneratingTokens,
+    url: "/admin/main-token",
+  },
+  {
+    title: "News & Events",
+    icon: ImNewspaper,
+    url: "/admin/news-event",
+  },
+  {
     title: "Users",
     icon: Users,
     items: [
       { title: "All Users", url: "/admin/user" },
       { title: "All Admins", url: "/admin/admin" },
       { title: "All Holders", url: "/admin/holder" },
-    ],
-  },
-  {
-    title: "Pooling",
-    icon: LuChartNoAxesCombined,
-    items: [
-      { title: "All Blogs", url: "/admin/blog" },
-      { title: "All Commodities", url: "/admin/commodity" },
-      { title: "All Types", url: "/admin/commodity-type" },
-      { title: "All Main Tokens", url: "/admin/main-token" },
     ],
   },
   {

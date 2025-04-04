@@ -18,7 +18,7 @@ export default function NavMenu(props: NavigationMenuProps) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="#">Blog</Link>
+            <Link href="/news-event">News And Events</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>

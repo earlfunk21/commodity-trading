@@ -226,3 +226,14 @@ export type Blog = {
   slug: string;
   show: boolean;
 };
+
+export type NewsEvent = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  title: string;
+  content: string;
+  slug: string;
+  show: boolean;
+}

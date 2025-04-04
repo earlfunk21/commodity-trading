@@ -1,5 +1,5 @@
 "use client";
-import { removeCommodity } from "@/actions/pooling/commodity.action";
+import { removeCommodityType } from "@/actions/pooling/commodity-type.action";
 import { useConfirm } from "@/components/ui-extension/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,36 +9,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Commodity } from "@/types/pooling.type";
+import { CommodityType } from "@/types/pooling.type";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
 type Props = {
-  commodity: Commodity;
+  commodityType: CommodityType;
 };
 
-export default function CommodityDropdownAction({ commodity }: Props) {
+export default function CommodityTypeDropdownAction({ commodityType }: Props) {
   const confirm = useConfirm();
 
-  const onDeleteCommodity = async () => {
+  const onDeleteCommodityType = async () => {
     const confirmResult = await confirm({
-      title: "Are you sure you want to delete this commodity?",
+      title: "Are you sure you want to delete this commodity type?",
     });
 
     if (!confirmResult) {
       return;
     }
 
-    const { error } = await removeCommodity(commodity.id);
+    const { error } = await removeCommodityType(commodityType.id);
 
     if (error) {
       return toast.error(error);
     }
 
-    toast.success("Commodity deleted successfully");
+    toast.success("CommodityType deleted successfully");
   };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -49,19 +48,23 @@ export default function CommodityDropdownAction({ commodity }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={onDeleteCommodity}>
-            Delete Commodity
+          <DropdownMenuItem onClick={onDeleteCommodityType}>
+            Delete Commodity Type
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`./commodity/${commodity.slug}/update`}>
-              Update Commodity
+            <Link href={`commodity-type/${commodityType.slug}/update`}>
+              Update Commodity Type
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`./commodity/${commodity.slug}`}>View Details</Link>
+            <Link href={`commodity-type/${commodityType.slug}`}>
+              View Details
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`./commodity/${commodity.slug}/commodity-type`}>View Types of commodities</Link>
+            <Link href={`commodity-type/${commodityType.slug}/blog`}>
+              View Blogs
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
