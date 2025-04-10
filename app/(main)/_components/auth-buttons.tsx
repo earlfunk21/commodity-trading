@@ -43,7 +43,7 @@ export default async function AuthButtons() {
       <Button
         className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-opacity"
         asChild>
-        <Link href="/login">Get Started</Link>
+        <Link href="/register">Get Started</Link>
       </Button>
     </>
   );

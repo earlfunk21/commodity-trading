@@ -25,6 +25,7 @@ const formSchema = z.object({
   }),
   content: z.string(),
   show: z.boolean(),
+  youtubeUrl: z.string().optional(),
 });
 
 export default function NewsEventCreateForm() {
@@ -34,6 +35,7 @@ export default function NewsEventCreateForm() {
       title: "",
       content: "",
       show: true,
+      youtubeUrl: "",
     },
   });
 
@@ -96,6 +98,23 @@ export default function NewsEventCreateForm() {
               <FormLabel>Content</FormLabel>
               <FormControl>
                 <TextEditor {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="youtubeUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Youtube URL</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="ex. https://youtube.com/?v=ytid"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

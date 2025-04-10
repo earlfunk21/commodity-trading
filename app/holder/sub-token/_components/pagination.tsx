@@ -1,4 +1,4 @@
-import { getSubTokenCount } from "@/actions/pooling/sub-token.action";
+import { getSubTokenCountByHolder } from "@/actions/pooling/sub-token.action";
 import { AlertError } from "@/components/ui-extension/alerts";
 import Pagination from "@/components/ui-extension/pagination";
 
@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default async function SubTokenPagination({ searchParams }: Props) {
-  const result = await getSubTokenCount(searchParams);
+  const result = await getSubTokenCountByHolder(searchParams);
 
   if (result.error) {
     return <AlertError title={result.error} />;

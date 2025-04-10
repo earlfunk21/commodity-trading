@@ -46,7 +46,7 @@ export default function LoginForm({ callbackUrl }: Props) {
     const result = await authenticate(values);
 
     if (result) {
-      toast.error(result.error, { description: result.message });
+      toast.error(result.message);
       return;
     }
     router.replace(callbackUrl ?? DEFAULT_REDIRECT);

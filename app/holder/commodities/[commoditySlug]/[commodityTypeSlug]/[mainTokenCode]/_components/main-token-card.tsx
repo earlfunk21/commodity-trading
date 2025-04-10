@@ -221,7 +221,7 @@ export default function MainTokenCard({
             )}
             asChild>
             <Link
-              href={`/holder/purchase-token/${mainToken.code}`}
+              href={`${mainToken.code}/purchase-token`}
               className="flex items-center justify-center">
               Buy Token
               <ChevronRight size={16} className="ml-1" />

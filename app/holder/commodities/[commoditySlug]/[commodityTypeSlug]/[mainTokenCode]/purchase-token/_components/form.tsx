@@ -5,16 +5,18 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formatNumber } from "@/lib/utils";
+import { currency, formatNumber } from "@/lib/utils";
 import { Complan } from "@/types/accounting.type";
 import { MainToken } from "@/types/pooling.type";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -35,9 +37,14 @@ const formSchema = z.object({
 type Props = {
   mainToken: MainToken;
   complan: Complan;
+  balance: number;
 };
 
-export default function PurchaseTokenForm({ mainToken, complan }: Props) {
+export default function PurchaseTokenForm({
+  mainToken,
+  complan,
+  balance,
+}: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,6 +90,22 @@ export default function PurchaseTokenForm({ mainToken, complan }: Props) {
                 />
               </FormControl>
               <FormMessage />
+              <div className="flex justify-between">
+                <FormDescription>
+                  {balance
+                    ? `Your balance: ${currency(
+                        balance - Number(String(amount).replace(/,/g, ""))
+                      )}`
+                    : "Please deposit first or contact the admin."}
+                </FormDescription>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-auto flex items-center gap-1">
+                  <PlusIcon />
+                  Deposit
+                </Button>
+              </div>
             </FormItem>
           )}
         />

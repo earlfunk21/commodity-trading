@@ -77,13 +77,31 @@ export async function removeBlog(id: string) {
   });
 }
 
-export async function uploadBlogImage(slug: string, formData: FormData) {
-  return apiRequest<Blog>(`/blog/upload-image/${slug}`, {
+export async function uploadBlogImage(id: string, formData: FormData) {
+  return apiRequest<Blog>(`/blog/upload-image/${id}`, {
     method: "PUT",
     body: formData,
-    afterRequest: () => {
+    afterRequest: ({ data, error }) => {
       revalidateTag("blog");
-      revalidateTag(slug);
+      if (!error) {
+        revalidateTag(data.slug);
+      }
+    },
+  });
+}
+
+export async function removeBlogImage(id: string, image: string) {
+  return apiRequest<Blog>(`/blog/remove-image/${id}`, {
+    method: "DELETE",
+    body: JSON.stringify({ image }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    afterRequest: ({ data, error }) => {
+      revalidateTag("blog");
+      if (!error) {
+        revalidateTag(data.slug);
+      }
     },
   });
 }

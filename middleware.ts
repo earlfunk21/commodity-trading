@@ -10,8 +10,9 @@ export default auth((req) => {
   const isAuthenticated = !!session;
 
   const commoditiesRoute = nextUrl.pathname.startsWith("/commodities");
+  const newsEventRoute = nextUrl.pathname.startsWith("/news-event");
 
-  const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname) || commoditiesRoute;
+  const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname) || commoditiesRoute || newsEventRoute;
   const isAuthRoute = AUTH_ROUTES.includes(nextUrl.pathname);
 
   if (isAuthRoute && isAuthenticated)

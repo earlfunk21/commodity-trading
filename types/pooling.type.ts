@@ -88,6 +88,8 @@ export type MainToken = {
   releaseManagementFee: Date;
   currentTokenValue?: MainTokenValue;
   lastTokenValue?: MainTokenValue;
+  totalFundsNeeded: number;
+  totalAccumulatedFunds: number;
 };
 
 export type MainTokenValue = {
@@ -223,6 +225,8 @@ export type Blog = {
   commodity: Commodity;
   title: string;
   content: string;
+  images: string[];
+  youtubeUrl?: string;
   slug: string;
   show: boolean;
 };
@@ -236,4 +240,6 @@ export type NewsEvent = {
   content: string;
   slug: string;
   show: boolean;
+  images: string[];
+  youtubeUrl?: string;
 }

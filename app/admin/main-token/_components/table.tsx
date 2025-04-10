@@ -1,5 +1,4 @@
 import MainTokenDropdownAction from "@/app/admin/main-token/_components/dropdown-action";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -8,7 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { currency } from "@/lib/utils";
 import { MainToken } from "@/types/pooling.type";
+import { format } from "date-fns";
 import Link from "next/link";
 
 type Props = {
@@ -21,11 +22,12 @@ export default function MainTokenTable({ mainTokenList }: Props) {
       <Table>
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
-            <TableHead className="text-xs">Name</TableHead>
+            <TableHead className="text-xs">Update Date</TableHead>
+            <TableHead className="text-xs">Type</TableHead>
             <TableHead className="text-xs">Code</TableHead>
-            <TableHead className="text-xs">Commodity</TableHead>
-            <TableHead className="text-xs">Commodity Type</TableHead>
-            <TableHead className="text-xs">Sub Tokens</TableHead>
+            <TableHead className="text-xs">Funds Needed</TableHead>
+            <TableHead className="text-xs">Accumulated Funds</TableHead>
+            <TableHead className="text-xs">Balance</TableHead>
             <TableHead className="sr-only">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -36,9 +38,19 @@ export default function MainTokenTable({ mainTokenList }: Props) {
               className="group flex flex-col md:table-row hover:bg-muted/50 transition-colors">
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Name
+                  Update Date
                 </span>
-                {mainToken.name}
+                {format(mainToken.updatedAt, "PPp")}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell py-4">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Type
+                </span>
+                <Link
+                  href={`/admin/commodity-type/${mainToken.commodityType.slug}`}
+                  className="text-blue-600 hover:underline">
+                  {mainToken.commodityType.name}
+                </Link>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
@@ -48,31 +60,23 @@ export default function MainTokenTable({ mainTokenList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Commodity
+                  Funds Needed
                 </span>
-                <Link
-                  href={`/admin/commodity/${mainToken.commodity.slug}`}
-                  className="text-blue-600 hover:underline">
-                  {mainToken.commodity.name}
-                </Link>
+                {currency(mainToken.totalFundsNeeded)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Commodity Type
+                  Accumulated Funds
                 </span>
-                <Link
-                  href={`/admin/commodity-type/${mainToken.commodityType.slug}`}
-                  className="text-blue-600 hover:underline">
-                  {mainToken.commodityType.name}
-                </Link>
+                {currency(mainToken.totalAccumulatedFunds)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell py-4">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  No. of Sub Tokens
+                  Balance
                 </span>
-                <Badge className="cursor-pointer">
-                  {mainToken._count.subTokens}
-                </Badge>
+                {currency(
+                  mainToken.totalFundsNeeded - mainToken.totalAccumulatedFunds
+                )}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">

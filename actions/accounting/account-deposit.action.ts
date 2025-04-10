@@ -37,3 +37,23 @@ export async function getAccountDepositCount(query?: any) {
     cache: "no-store",
   });
 }
+
+export async function getAccountDepositListByUser(query?: any) {
+  const params = createURLParams(query);
+  return apiRequest<AccountDeposit[]>(`/account-deposit/list-by-user?${params}`, {
+    next: {
+      tags: ["account-deposit"],
+    },
+    cache: "no-store",
+  });
+}
+
+export async function getAccountDepositCountByUser(query?: any) {
+  const params = createURLParams(query);
+  return apiRequest<number>(`/account-deposit/count-by-user?${params}`, {
+    next: {
+      tags: ["account-deposit"],
+    },
+    cache: "no-store",
+  });
+}

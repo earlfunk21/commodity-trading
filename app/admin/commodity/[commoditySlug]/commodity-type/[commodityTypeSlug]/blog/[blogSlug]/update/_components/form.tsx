@@ -23,6 +23,7 @@ import * as z from "zod";
 const formSchema = z.object({
   title: z.string({ required_error: "Title of the blog is required" }),
   content: z.string(),
+  youtubeUrl: z.string().optional(),
   show: z.boolean(),
 });
 
@@ -37,6 +38,7 @@ export default function BlogUpdateForm({ blog }: Props) {
       title: blog.title,
       content: blog.content,
       show: blog.show,
+      youtubeUrl: blog.youtubeUrl ?? "",
     },
   });
 
@@ -98,6 +100,23 @@ export default function BlogUpdateForm({ blog }: Props) {
               <FormLabel>Content</FormLabel>
               <FormControl>
                 <TextEditor {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="youtubeUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Youtube URL</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="ex. https://youtube.com/?v=ytid"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

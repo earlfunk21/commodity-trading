@@ -69,3 +69,13 @@ export async function resetPassword(values: any) {
     },
   });
 }
+
+export async function registerHolder(values: any) {
+  return apiRequest<User>("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}

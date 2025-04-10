@@ -15,30 +15,9 @@ import Link from "next/link";
 
 const footerLinks = [
   {
-    title: "Products",
-    links: [
-      { label: "Metal Trading", href: "#" },
-      { label: "Energy Markets", href: "#" },
-      { label: "Agricultural", href: "#" },
-      { label: "Market Analysis", href: "#" },
-    ],
-  },
-  {
     title: "Company",
     links: [
-      { label: "About Us", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Press", href: "#" },
-      { label: "News", href: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Trading Guide", href: "#" },
-      { label: "Market Reports", href: "#" },
-      { label: "Analysis Tools", href: "#" },
-      { label: "API Documentation", href: "#" },
+      { label: "News & Events", href: "/news-event" },
     ],
   },
   {
@@ -47,7 +26,6 @@ const footerLinks = [
       { label: "Privacy Policy", href: "#" },
       { label: "Terms of Service", href: "#" },
       { label: "Trading Policy", href: "#" },
-      { label: "Security", href: "#" },
     ],
   },
 ];
@@ -74,7 +52,7 @@ export default function Footer() {
             className="lg:col-span-2">
             <Link href="/" className="inline-block">
               <h3 className="text-2xl font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-                CommodityExchange
+                ACTS Commodity Forward Trading
               </h3>
             </Link>
             <p className="mt-4 text-zinc-400 max-w-sm">
@@ -125,7 +103,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-400">
           <p>
-            © {new Date().getFullYear()} CommodityExchange. All rights reserved.
+            © {new Date().getFullYear()} ACTS Commodity Forward Trading. All rights reserved.
           </p>
           <div className="flex gap-4">
             <Link href="#" className="hover:text-red-500 transition-colors">

@@ -1,5 +1,5 @@
-import MainTokenTransactionData from "@/app/admin/main-token/[code]/transaction/_components/data";
-import MainTokenTransactionPagination from "@/app/admin/main-token/[code]/transaction/_components/pagination";
+import MainTokenValueListData from "@/app/admin/main-token/[code]/value/_components/data";
+import MainTokenValuePagination from "@/app/admin/main-token/[code]/value/_components/pagination";
 import LoadingIcon from "@/components/loading-icon";
 import SearchInput from "@/components/search-input";
 import {
@@ -16,29 +16,33 @@ type Props = {
   searchParams: any;
   params: {
     code: string;
-  }
+  };
 };
 
-export default function MainTokenTransactionPage({ searchParams, params }: Props) {
+export default function MainTokenValuePage({ searchParams, params }: Props) {
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between">
           <div className="space-y-1.5">
-            <CardTitle>MainToken Transactions</CardTitle>
-            <CardDescription>list of mainToken transactions</CardDescription>
+            <CardTitle>MainToken Values</CardTitle>
+            <CardDescription>list of mainToken values</CardDescription>
             <SearchInput />
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <Suspense fallback={<LoadingIcon />}>
-          <MainTokenTransactionData searchParams={searchParams} code={params.code} />
+          <MainTokenValueListData
+            searchParams={{ ...searchParams, mainTokenCode: params.code }}
+          />
         </Suspense>
       </CardContent>
       <CardFooter>
         <Suspense fallback={<LoadingIcon />}>
-          <MainTokenTransactionPagination searchParams={searchParams} code={params.code}  />
+          <MainTokenValuePagination
+            searchParams={{ ...searchParams, mainTokenCode: params.code }}
+          />
         </Suspense>
       </CardFooter>
     </Card>

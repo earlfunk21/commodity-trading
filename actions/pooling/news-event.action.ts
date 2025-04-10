@@ -70,3 +70,32 @@ export async function removeNewsEvent(slug: string) {
     },
   });
 }
+
+export async function uploadNewsEventImage(id: string, formData: FormData) {
+  return apiRequest<NewsEvent>(`/news-event/upload-image/${id}`, {
+    method: "PUT",
+    body: formData,
+    afterRequest: ({ data, error }) => {
+      revalidateTag("news-event");
+      if (!error) {
+        revalidateTag(data.slug);
+      }
+    },
+  });
+}
+
+export async function removeNewsEventImage(id: string, image: string) {
+  return apiRequest<NewsEvent>(`/news-event/remove-image/${id}`, {
+    method: "DELETE",
+    body: JSON.stringify({ image }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    afterRequest: ({ data, error }) => {
+      revalidateTag("news-event");
+      if (!error) {
+        revalidateTag(data.slug);
+      }
+    },
+  });
+}

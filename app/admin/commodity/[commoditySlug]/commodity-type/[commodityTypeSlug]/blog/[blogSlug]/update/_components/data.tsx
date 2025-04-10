@@ -1,6 +1,6 @@
 import { getBlog } from "@/actions/pooling/blog.action";
-import BlogUpdateForm from "@/app/admin/commodity/[commoditySlug]/commodity-type/blog/[slug]/update/_components/form";
 import { AlertError } from "@/components/ui-extension/alerts";
+import BlogUpdateForm from "./form";
 
 type Props = {
   slug: string;

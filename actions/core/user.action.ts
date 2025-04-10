@@ -42,6 +42,24 @@ export async function getUser(username: string) {
   });
 }
 
+export async function validateUsername(username: string) {
+  return apiRequest<boolean>(`/user/validate-username/${username}`, {
+    next: {
+      tags: [`validate-username-${username}`],
+      revalidate: 300,
+    },
+  });
+}
+
+export async function validateEmail(email: string) {
+  return apiRequest<boolean>(`/user/validate-email/${email}`, {
+    next: {
+      tags: [`validate-email-${email}`],
+      revalidate: 300,
+    },
+  });
+}
+
 export async function updateUser(username: string, data: any) {
   return apiRequest(`/user/update/${username}`, {
     method: "PATCH",

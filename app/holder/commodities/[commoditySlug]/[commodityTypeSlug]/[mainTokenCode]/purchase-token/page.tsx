@@ -1,8 +1,10 @@
 import { getComplan } from "@/actions/accounting/complan.action";
 import { getMainToken } from "@/actions/pooling/main-token.action";
-import PurchaseTokenForm from "@/app/holder/purchase-token/[mainTokenCode]/_components/form";
-import MainTokenCard from "@/app/holder/purchase-token/[mainTokenCode]/_components/main-token-card";
+import WithAccount from "@/app/holder/accounting/_components/with-account";
+import PurchaseTokenForm from "@/app/holder/commodities/[commoditySlug]/[commodityTypeSlug]/[mainTokenCode]/purchase-token/_components/form";
+import MainTokenCard from "@/app/holder/commodities/[commoditySlug]/[commodityTypeSlug]/[mainTokenCode]/purchase-token/_components/main-token-card";
 import HolderHeader from "@/components/holder-header";
+import LoadingIcon from "@/components/loading-icon";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronsRight } from "lucide-react";
+import { Suspense } from "react";
 
 type Props = {
   params: {
@@ -55,7 +58,17 @@ export default async function PurchaseMainTokenPage({ params }: Props) {
             <CardTitle>Purchase Form</CardTitle>
           </CardHeader>
           <CardContent>
-            <PurchaseTokenForm mainToken={mainToken} complan={complan} />
+            <Suspense fallback={<LoadingIcon />}>
+              <WithAccount>
+                {async ({ account }) => (
+                  <PurchaseTokenForm
+                    mainToken={mainToken}
+                    complan={complan}
+                    balance={account ? account.balance : 0}
+                  />
+                )}
+              </WithAccount>
+            </Suspense>
           </CardContent>
         </Card>
       </div>

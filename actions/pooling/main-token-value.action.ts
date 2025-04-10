@@ -37,8 +37,8 @@ export async function getMainTokenValueCount(query?: any) {
   });
 }
 
-export async function getTokenValuesByMinute() {
-  return apiRequest<any[]>("/main-token-value/token-values-by-minute", {
+export async function getTokenValuesByMinute(mainTokenId: string) {
+  return apiRequest<any[]>(`/main-token-value/token-values-by-minute/${mainTokenId}`, {
     next: {
       tags: ["main-token-value"],
     },
@@ -46,8 +46,8 @@ export async function getTokenValuesByMinute() {
   });
 }
 
-export async function getTokenValuesByHour() {
-  return apiRequest<any[]>("/main-token-value/token-values-by-hour", {
+export async function getTokenValuesByHour(mainTokenId: string) {
+  return apiRequest<any[]>(`/main-token-value/token-values-by-hour/${mainTokenId}`, {
     next: {
       tags: ["main-token-value"],
     },
@@ -55,8 +55,8 @@ export async function getTokenValuesByHour() {
   });
 }
 
-export async function getTokenValuesByDay() {
-  return apiRequest<any[]>("/main-token-value/token-values-by-day", {
+export async function getTokenValuesByDay(mainTokenId: string) {
+  return apiRequest<any[]>(`/main-token-value/token-values-by-day/${mainTokenId}`, {
     next: {
       tags: ["main-token-value"],
     },
@@ -64,8 +64,8 @@ export async function getTokenValuesByDay() {
   });
 }
 
-export async function getTokenValuesByMonth() {
-  return apiRequest<any[]>("/main-token-value/token-values-by-month", {
+export async function getTokenValuesByMonth(mainTokenId: string) {
+  return apiRequest<any[]>(`/main-token-value/token-values-by-month/${mainTokenId}`, {
     next: {
       tags: ["main-token-value"],
     },
@@ -73,8 +73,8 @@ export async function getTokenValuesByMonth() {
   });
 }
 
-export async function getTokenValuesByYear() {
-  return apiRequest<any[]>("/main-token-value/token-values-by-year", {
+export async function getTokenValuesByYear(mainTokenId: string) {
+  return apiRequest<any[]>(`/main-token-value/token-values-by-year/${mainTokenId}`, {
     next: {
       tags: ["main-token-value"],
     },

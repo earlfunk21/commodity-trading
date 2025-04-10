@@ -21,6 +21,8 @@ import {
 import Link from "next/link";
 import { LuChartNoAxesCombined } from "react-icons/lu";
 import { TbCameraBitcoin } from "react-icons/tb";
+import { MdAccountBalanceWallet } from "react-icons/md";
+
 
 type ItemProps = {
   title: string;
@@ -58,6 +60,11 @@ const items: ItemProps[] = [
     title: "Commodities",
     icon: TbCameraBitcoin,
     url: "/holder/commodities",
+  },
+  {
+    title: "Accounting",
+    icon: MdAccountBalanceWallet,
+    url: "/holder/accounting",
   },
 ];
 

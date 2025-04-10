@@ -24,8 +24,8 @@ export default function ComplanPage({ searchParams }: Props) {
       <CardHeader>
         <div className="flex justify-between">
           <div className="space-y-1.5">
-            <CardTitle>Commodities</CardTitle>
-            <CardDescription>list of commodities</CardDescription>
+            <CardTitle>Complans</CardTitle>
+            <CardDescription>list of complans</CardDescription>
             <SearchInput />
           </div>
           <div className="space-y-1.5">

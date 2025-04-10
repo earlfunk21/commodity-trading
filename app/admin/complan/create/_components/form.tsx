@@ -23,30 +23,33 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
+const feeBracket = z.object({
+  purchases: z.coerce.number(),
+  initialReferralFeePercentage: z.coerce.number(),
+  initialManagementFeePercentage: z.coerce.number(),
+  releaseReferralFeePercentage: z.coerce.number(),
+  releaseManagementFeePercentage: z.coerce.number(),
+});
+
 const formSchema = z
   .object({
     name: z.string({ required_error: "Name of the complan is required" }),
     commission: z.coerce.number(),
     tax: z.coerce.number(),
-    referralCommission: z.coerce.number(),
-    pendingReferralCommission: z.coerce.number(),
-    managementFee: z.coerce.number(),
-    pendingManagementFee: z.coerce.number(),
+    totalFeePercentage: z.coerce.number(),
     capital: z.coerce.number(),
     itManagement: z.coerce.number(),
     partnersManagement: z.coerce.number(),
     tpcpiReferrerManagement: z.coerce.number(),
     tpcpiManagement: z.coerce.number(),
+    feeBrackets: z.array(feeBracket),
   })
   .refine(
     (data) => {
       const totalPercentage =
         Number(data.commission) +
         Number(data.tax) +
-        Number(data.referralCommission) +
-        Number(data.pendingReferralCommission) +
-        Number(data.managementFee) +
-        Number(data.pendingManagementFee) +
+        Number(data.totalFeePercentage) +
         Number(data.capital);
       return totalPercentage === 100;
     },
@@ -70,6 +73,22 @@ const formSchema = z
         "The sum of IT Management, Partners Management, TPCPI Referrer Management, and TPCPI Management must be 100%",
       path: ["itManagement"],
     }
+  )
+  .refine(
+    (data) =>
+      data.feeBrackets.every((bracket) => {
+        const totalBracketPercentage =
+          Number(bracket.initialReferralFeePercentage) +
+          Number(bracket.initialManagementFeePercentage) +
+          Number(bracket.releaseReferralFeePercentage) +
+          Number(bracket.releaseManagementFeePercentage);
+        return totalBracketPercentage === data.totalFeePercentage;
+      }),
+    {
+      message:
+        "The sum of all percentages in each fee bracket must equal the total fee percentage",
+      path: ["feeBrackets"],
+    }
   );
 
 export default function ComplanCreateForm() {
@@ -79,15 +98,21 @@ export default function ComplanCreateForm() {
       name: "",
       commission: 0,
       tax: 0,
-      referralCommission: 0,
-      pendingReferralCommission: 0,
-      managementFee: 0,
-      pendingManagementFee: 0,
+      totalFeePercentage: 0,
       capital: 0,
       itManagement: 0,
       partnersManagement: 0,
       tpcpiReferrerManagement: 0,
       tpcpiManagement: 0,
+      feeBrackets: [
+        {
+          purchases: 0,
+          initialReferralFeePercentage: 0,
+          initialManagementFeePercentage: 0,
+          releaseReferralFeePercentage: 0,
+          releaseManagementFeePercentage: 0,
+        },
+      ],
     },
   });
 
@@ -139,7 +164,7 @@ export default function ComplanCreateForm() {
               Define how the 100% of commission is distributed
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CardContent className="grid grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="commission"
@@ -178,69 +203,15 @@ export default function ComplanCreateForm() {
 
             <FormField
               control={form.control}
-              name="referralCommission"
+              name="totalFeePercentage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Referral Commission (%)</FormLabel>
+                  <FormLabel>Total fee percentage (%)</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="number"
-                      placeholder="Enter referral commission percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="pendingReferralCommission"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pending Referral Commission (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter pending referral percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="managementFee"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Management Fee (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter Management Fee percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="pendingManagementFee"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pending Management Fee (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter pending management fee percentage"
+                      placeholder="Enter total fee percentage percentage"
                     />
                   </FormControl>
                   <FormMessage />
@@ -252,7 +223,7 @@ export default function ComplanCreateForm() {
               control={form.control}
               name="capital"
               render={({ field }) => (
-                <FormItem className="md:col-span-2">
+                <FormItem>
                   <FormLabel>Capital (%)</FormLabel>
                   <FormControl>
                     <Input
@@ -348,6 +319,159 @@ export default function ComplanCreateForm() {
                 </FormItem>
               )}
             />
+          </CardContent>
+        </Card>
+
+        {/* Fee Brackets */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Fee Brackets</CardTitle>
+            <CardDescription>
+              Define the fee brackets for purchases
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {form.watch("feeBrackets").map((_, index) => (
+              <div key={index} className="space-y-4">
+                <div className="grid grid-cols-5 gap-6 items-center">
+                  <FormField
+                    control={form.control}
+                    name={`feeBrackets.${index}.purchases`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Purchases</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            placeholder="Enter purchases amount"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`feeBrackets.${index}.initialReferralFeePercentage`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Initial Referral Fee (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            placeholder="Enter initial referral fee percentage"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`feeBrackets.${index}.initialManagementFeePercentage`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Initial Management Fee (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            placeholder="Enter initial management fee percentage"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`feeBrackets.${index}.releaseReferralFeePercentage`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Release Referral Fee (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            placeholder="Enter release referral fee percentage"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`feeBrackets.${index}.releaseManagementFeePercentage`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Release Management Fee (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            placeholder="Enter release management fee percentage"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => {
+                      const updatedBrackets = form
+                        .getValues("feeBrackets")
+                        .filter((_, i) => i !== index);
+                      form.setValue("feeBrackets", updatedBrackets);
+                    }}>
+                    Remove
+                  </Button>
+                </div>
+
+                {/* Add error message for this specific bracket */}
+                {form.formState.errors.feeBrackets && (
+                  <div className="text-sm font-medium text-destructive">
+                    {(() => {
+                      // Calculate the total percentage for this bracket
+                      const bracket = form.getValues(`feeBrackets.${index}`);
+                      const totalBracketPercentage =
+                        Number(bracket.initialReferralFeePercentage) +
+                        Number(bracket.initialManagementFeePercentage) +
+                        Number(bracket.releaseReferralFeePercentage) +
+                        Number(bracket.releaseManagementFeePercentage);
+                      const totalFeePercentage = Number(
+                        form.getValues("totalFeePercentage")
+                      );
+
+                      if (totalBracketPercentage !== totalFeePercentage) {
+                        return `This bracket's fees total ${totalBracketPercentage}% but should equal ${totalFeePercentage}%`;
+                      }
+                      return null;
+                    })()}
+                  </div>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              onClick={() =>
+                form.setValue("feeBrackets", [
+                  ...form.getValues("feeBrackets"),
+                  {
+                    purchases: 0,
+                    initialReferralFeePercentage: 0,
+                    initialManagementFeePercentage: 0,
+                    releaseReferralFeePercentage: 0,
+                    releaseManagementFeePercentage: 0,
+                  },
+                ])
+              }>
+              Add Fee Bracket
+            </Button>
           </CardContent>
         </Card>
 

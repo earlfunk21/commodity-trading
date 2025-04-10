@@ -1,6 +1,7 @@
 "use client";
 
-import { updateUser } from "@/actions/core/user.action";
+import { getUserList, updateUser } from "@/actions/core/user.action";
+import { AutoComplete } from "@/components/ui-extension/auto-complete";
 import { PasswordInput } from "@/components/ui-extension/password-input";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,7 @@ const formSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
   email: z.string().email({ message: "Email is required" }),
   password: z.string().optional(),
+  uplineId: z.string().optional(),
   status: z.nativeEnum(UserStatus),
 });
 
@@ -45,6 +47,7 @@ export default function UserUpdateForm({ user }: Props) {
       email: user.email,
       password: "",
       status: user.status,
+      uplineId: user.uplineId,
     },
   });
 
@@ -126,6 +129,41 @@ export default function UserUpdateForm({ user }: Props) {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="uplineId"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-4">
+              <FormLabel>Sponsorr</FormLabel>
+              <FormControl>
+                <AutoComplete
+                  name="user"
+                  initialData={user.upline ? [user.upline] : []}
+                  value={field.value}
+                  onChange={field.onChange}
+                  getData={async (searchValue) => {
+                    const result = await getUserList({
+                      search: searchValue,
+                    });
+                    if (result.error) {
+                      toast.error("Something went wrong", {
+                        description: result.error,
+                      });
+                      return [];
+                    }
+                    return result.data.filter(
+                      (item) => item.username !== user.username
+                    );
+                  }}
+                  label={(item: User) => item.username}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="status"

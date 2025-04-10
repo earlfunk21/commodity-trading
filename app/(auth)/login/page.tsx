@@ -1,13 +1,12 @@
 import LoginForm from "@/app/(auth)/login/_components/login-form";
 import { Button } from "@/components/ui/button";
-import { GraduationCap } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
   searchParams: {
     callbackUrl?: string;
-  }
-}
+  };
+};
 
 export default async function LoginPage({ searchParams }: Props) {
   return (
@@ -31,10 +30,7 @@ export default async function LoginPage({ searchParams }: Props) {
           </div>
         </div>
         <Button variant="outline" className="mt-2" asChild>
-          <Link href="/enrollment-request-form">
-            <GraduationCap />
-            Enroll Now!
-          </Link>
+          <Link href="/register">Register</Link>
         </Button>
       </div>
     </div>

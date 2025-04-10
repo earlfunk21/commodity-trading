@@ -74,31 +74,31 @@ export default async function MainTokenChartData({ mainTokenCode }: Props) {
 
           <TabsContent value="1min" className="mt-0 h-[300px]">
             <Suspense fallback={<LoadingIcon />}>
-              <MainTokenValueByMinute />
+              <MainTokenValueByMinute mainTokenId={mainToken.id} />
             </Suspense>
           </TabsContent>
 
           <TabsContent value="1hr" className="mt-0 h-[300px]">
             <Suspense fallback={<LoadingIcon />}>
-              <MainTokenValueByHour />
+              <MainTokenValueByHour mainTokenId={mainToken.id} />
             </Suspense>
           </TabsContent>
 
           <TabsContent value="1day" className="mt-0 h-[300px]">
             <Suspense fallback={<LoadingIcon />}>
-              <MainTokenValueByDay />
+              <MainTokenValueByDay mainTokenId={mainToken.id} />
             </Suspense>
           </TabsContent>
 
           <TabsContent value="1mon" className="mt-0 h-[300px]">
             <Suspense fallback={<LoadingIcon />}>
-              <MainTokenValueByMonth />
+              <MainTokenValueByMonth mainTokenId={mainToken.id} />
             </Suspense>
           </TabsContent>
 
           <TabsContent value="1yr" className="mt-0 h-[300px]">
             <Suspense fallback={<LoadingIcon />}>
-              <MainTokenValueByYear />
+              <MainTokenValueByYear mainTokenId={mainToken.id} />
             </Suspense>
           </TabsContent>
         </Tabs>
@@ -107,8 +107,14 @@ export default async function MainTokenChartData({ mainTokenCode }: Props) {
   );
 }
 
-async function MainTokenValueByMinute() {
-  const { data: tokenValuesByMinute } = await getTokenValuesByMinute();
+type ChartProps = {
+  mainTokenId: string;
+};
+
+async function MainTokenValueByMinute({ mainTokenId }: ChartProps) {
+  const { data: tokenValuesByMinute } = await getTokenValuesByMinute(
+    mainTokenId
+  );
 
   const chartData = tokenValuesByMinute.map((tokenValue) => ({
     value: tokenValue.value,
@@ -118,8 +124,8 @@ async function MainTokenValueByMinute() {
   return <MainTokenValueChart chartData={chartData} />;
 }
 
-async function MainTokenValueByHour() {
-  const { data: tokenValuesByHour } = await getTokenValuesByHour();
+async function MainTokenValueByHour({ mainTokenId }: ChartProps) {
+  const { data: tokenValuesByHour } = await getTokenValuesByHour(mainTokenId);
 
   const chartData = tokenValuesByHour.map((tokenValue) => ({
     value: tokenValue.value,
@@ -129,8 +135,8 @@ async function MainTokenValueByHour() {
   return <MainTokenValueChart chartData={chartData} />;
 }
 
-async function MainTokenValueByDay() {
-  const { data: tokenValuesByDay } = await getTokenValuesByDay();
+async function MainTokenValueByDay({ mainTokenId }: ChartProps) {
+  const { data: tokenValuesByDay } = await getTokenValuesByDay(mainTokenId);
 
   const chartData = tokenValuesByDay.map((tokenValue) => ({
     value: tokenValue.value,
@@ -140,8 +146,8 @@ async function MainTokenValueByDay() {
   return <MainTokenValueChart chartData={chartData} />;
 }
 
-async function MainTokenValueByMonth() {
-  const { data: tokenValuesByMonth } = await getTokenValuesByMonth();
+async function MainTokenValueByMonth({ mainTokenId }: ChartProps) {
+  const { data: tokenValuesByMonth } = await getTokenValuesByMonth(mainTokenId);
 
   const chartData = tokenValuesByMonth.map((tokenValue) => ({
     value: tokenValue.value,
@@ -151,8 +157,8 @@ async function MainTokenValueByMonth() {
   return <MainTokenValueChart chartData={chartData} />;
 }
 
-async function MainTokenValueByYear() {
-  const { data: tokenValuesByYear } = await getTokenValuesByYear();
+async function MainTokenValueByYear({ mainTokenId }: ChartProps) {
+  const { data: tokenValuesByYear } = await getTokenValuesByYear(mainTokenId);
 
   const chartData = tokenValuesByYear.map((tokenValue) => ({
     value: tokenValue.value,

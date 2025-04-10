@@ -24,6 +24,7 @@ const formSchema = z.object({
   title: z.string({ required_error: "Title of the news event is required" }),
   content: z.string(),
   show: z.boolean(),
+  youtubeUrl: z.string().optional(),
 });
 
 type Props = {
@@ -37,6 +38,7 @@ export default function NewsEventUpdateForm({ newsEvent }: Props) {
       title: newsEvent.title,
       content: newsEvent.content,
       show: newsEvent.show,
+      youtubeUrl: newsEvent.youtubeUrl ?? "",
     },
   });
 
@@ -68,8 +70,8 @@ export default function NewsEventUpdateForm({ newsEvent }: Props) {
               <div className="space-y-1 leading-none">
                 <FormLabel>Show to Public</FormLabel>
                 <FormDescription>
-                  This newsEvent post will be publicly visible if checked or stay
-                  private if unchecked
+                  This newsEvent post will be publicly visible if checked or
+                  stay private if unchecked
                 </FormDescription>
               </div>
             </FormItem>
@@ -98,6 +100,23 @@ export default function NewsEventUpdateForm({ newsEvent }: Props) {
               <FormLabel>Content</FormLabel>
               <FormControl>
                 <TextEditor {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="youtubeUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Youtube URL</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="ex. https://youtube.com/?v=ytid"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -163,6 +163,22 @@ export default function SubTokenCard({ subTokenList }: Props) {
                   </span>
                 </div>
 
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">Purchase Value</span>
+                  <span className="text-white font-medium">
+                    {currency(subToken.mainTokenValue.unitValue)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-zinc-400">Current Value</span>
+                  <span className="text-white font-medium">
+                    {!!subToken.mainToken.currentTokenValue
+                      ? currency(subToken.mainToken.currentTokenValue.unitValue)
+                      : "N/A"}
+                  </span>
+                </div>
+
                 {subToken._count.children > 0 && (
                   <div className="flex justify-between col-span-2">
                     <span className="text-zinc-400">Sub Tokens</span>

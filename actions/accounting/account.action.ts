@@ -27,7 +27,16 @@ export async function getAccount(userId: string) {
   return apiRequest<Account>(`/account/get/${userId}`, {
     next: {
       tags: ["account-" + userId],
-      revalidate: 300,
+    },
+    cache: "no-store",
+  });
+}
+
+export async function getAccountByUser() {
+  return apiRequest<Account | null>(`/account/get-by-user`, {
+    cache: "no-store",
+    next: {
+      tags: ["account-by-user"],
     },
   });
 }

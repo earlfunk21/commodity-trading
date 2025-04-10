@@ -43,7 +43,7 @@ export default function SubTokenPage({ searchParams }: Props) {
           </BreadcrumbList>
         </Breadcrumb>
       </HolderHeader>
-      <div className="flex flex-col gap-4k py-4 md:py-8 md:px-4">
+      <div className="flex flex-col gap-4 py-4 md:py-8 md:px-4">
         <SearchInput />
         <Suspense fallback={<LoadingIcon />}>
           <SubTokenData searchParams={searchParams} />

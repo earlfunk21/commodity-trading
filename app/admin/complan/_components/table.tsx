@@ -1,4 +1,5 @@
 import ComplanDropdownAction from "@/app/admin/complan/_components/dropdown-action";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -22,12 +23,7 @@ export default function ComplanTable({ complanList }: Props) {
             <TableHead className="md:font-semibold">Name</TableHead>
             <TableHead className="md:font-semibold">Commission (%)</TableHead>
             <TableHead className="md:font-semibold">Tax (%)</TableHead>
-            <TableHead className="md:font-semibold">
-              Referral Commission (%)
-            </TableHead>
-            <TableHead className="md:font-semibold">
-              Management Fee (%)
-            </TableHead>
+            <TableHead className="md:font-semibold">Total Fee (%)</TableHead>
             <TableHead className="md:font-semibold">
               IT Management (%)
             </TableHead>
@@ -60,15 +56,12 @@ export default function ComplanTable({ complanList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Referral Commission
+                  Total Fee (%)
                 </span>
-                {complan.referralCommission}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Management Fee
-                </span>
-                {complan.managementFee}
+                {complan.totalFeePercentage}
+                <Button className="ml-2 text-xs bg-primary/10 hover:bg-primary/20 text-primary rounded px-2 py-1 transition-colors">
+                  View all fees
+                </Button>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">

@@ -9,10 +9,7 @@ export type Complan = {
   name: string;
   commission: number;
   tax: number;
-  referralCommission: number;
-  pendingReferralCommission: number;
-  managementFee: number;
-  pendingManagementFee: number;
+  totalFeePercentage: number;
   itManagement: number;
   partnersManagement: number;
   tpcpiReferrerManagement: number;
