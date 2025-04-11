@@ -75,3 +75,19 @@ export type AllocationAccountTransaction = {
   tradeTransaction?: TradeTransaction;
   tradeTransactionId?: string;
 };
+
+export interface ComplanFeeBracket {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  purchases: number;
+  referralFeePercentage: number;
+  managementFeePercentage: number;
+  initialReferralFeePercentage: number;
+  initialManagementFeePercentage: number;
+  releaseReferralFeePercentage: number;
+  releaseManagementFeePercentage: number;
+  complanId: string;
+  complan: Complan;
+}

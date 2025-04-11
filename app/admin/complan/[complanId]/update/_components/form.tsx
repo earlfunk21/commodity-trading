@@ -29,10 +29,7 @@ const formSchema = z
     name: z.string({ required_error: "Name of the complan is required" }),
     commission: z.coerce.number(),
     tax: z.coerce.number(),
-    referralCommission: z.coerce.number(),
-    pendingReferralCommission: z.coerce.number(),
-    managementFee: z.coerce.number(),
-    pendingManagementFee: z.coerce.number(),
+    totalFeePercentage: z.coerce.number(),
     capital: z.coerce.number(),
     itManagement: z.coerce.number(),
     partnersManagement: z.coerce.number(),
@@ -44,10 +41,7 @@ const formSchema = z
       const totalPercentage =
         Number(data.commission) +
         Number(data.tax) +
-        Number(data.referralCommission) +
-        Number(data.pendingReferralCommission) +
-        Number(data.managementFee) +
-        Number(data.pendingManagementFee) +
+        Number(data.totalFeePercentage) +
         Number(data.capital);
       return totalPercentage === 100;
     },
@@ -84,10 +78,7 @@ export default function ComplanUpdateForm({ complan }: Props) {
       name: complan.name,
       commission: complan.commission,
       tax: complan.tax,
-      referralCommission: complan.referralCommission,
-      pendingReferralCommission: complan.pendingReferralCommission,
-      managementFee: complan.managementFee,
-      pendingManagementFee: complan.pendingManagementFee,
+      totalFeePercentage: complan.totalFeePercentage,
       capital: complan.capital,
       itManagement: complan.itManagement,
       partnersManagement: complan.partnersManagement,
@@ -144,7 +135,7 @@ export default function ComplanUpdateForm({ complan }: Props) {
               Define how the 100% of commission is distributed
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CardContent className="grid grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="commission"
@@ -183,69 +174,15 @@ export default function ComplanUpdateForm({ complan }: Props) {
 
             <FormField
               control={form.control}
-              name="referralCommission"
+              name="totalFeePercentage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Referral Commission (%)</FormLabel>
+                  <FormLabel>Total fee percentage (%)</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="number"
-                      placeholder="Enter referral commission percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="pendingReferralCommission"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pending Referral Commission (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter pending referral percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="managementFee"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Management Fee (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter Management Fee percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="pendingManagementFee"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pending Management Fee (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter pending management fee percentage"
+                      placeholder="Enter total fee percentage percentage"
                     />
                   </FormControl>
                   <FormMessage />
@@ -257,7 +194,7 @@ export default function ComplanUpdateForm({ complan }: Props) {
               control={form.control}
               name="capital"
               render={({ field }) => (
-                <FormItem className="md:col-span-2">
+                <FormItem>
                   <FormLabel>Capital (%)</FormLabel>
                   <FormControl>
                     <Input
@@ -358,9 +295,7 @@ export default function ComplanUpdateForm({ complan }: Props) {
 
         <div className="flex justify-end">
           <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting
-              ? "Submitting..."
-              : "Create new Complan"}
+            {form.formState.isSubmitting ? "Submitting..." : "Update Complan"}
           </Button>
         </div>
       </form>

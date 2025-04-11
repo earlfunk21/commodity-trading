@@ -26,7 +26,7 @@ export async function createPurchaseTokenByHolder(values: any) {
     },
     afterRequest: () => {
       revalidateTag("purchase-token");
-      revalidatePath("/holder/purchase-token/[mainTokenCode]");
+      revalidatePath("/holder/commodities/[commoditySlug]/[commodityTypeSlug]/[mainTokenCode]/purchase-token", "page");
     },
   });
 }

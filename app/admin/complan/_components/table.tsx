@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Complan } from "@/types/accounting.type";
+import Link from "next/link";
 
 type Props = {
   complanList: Complan[];
@@ -59,8 +60,10 @@ export default function ComplanTable({ complanList }: Props) {
                   Total Fee (%)
                 </span>
                 {complan.totalFeePercentage}
-                <Button className="ml-2 text-xs bg-primary/10 hover:bg-primary/20 text-primary rounded px-2 py-1 transition-colors">
-                  View all fees
+                <Button
+                  className="ml-2 text-xs bg-primary/10 hover:bg-primary/20 text-primary rounded px-2 py-1 transition-colors"
+                  asChild>
+                  <Link href={`complan/${complan.id}/fees`}>View all fees</Link>
                 </Button>
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">

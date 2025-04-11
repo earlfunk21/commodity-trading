@@ -61,7 +61,9 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
 
   const onReleaseReferralCommission = async () => {
     const confirmResult = await confirm({
-      title: "Are you sure you want to release referral commission?",
+      title: `MTC: ${mainToken.code}`,
+      description:
+        "Are you sure you want to release referral commission? Please check the Main Token Code (MTC) before proceeding. ",
     });
 
     if (!confirmResult) {
@@ -79,7 +81,8 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
 
   const onReleasedManagementFee = async () => {
     const confirmResult = await confirm({
-      title: "Are you sure you want to release management fee?",
+      title: `MTC: ${mainToken.code}`,
+      description: `Are you sure you want to release management fee? Please check the Main Token Code (MTC) before proceeding.`,
     });
 
     if (!confirmResult) {
