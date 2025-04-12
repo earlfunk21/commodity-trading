@@ -91,3 +91,25 @@ export interface ComplanFeeBracket {
   complanId: string;
   complan: Complan;
 }
+
+export type AccountTransaction = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  account: Account;
+  accountId: string;
+  amount: number;
+  type: AccountTransactionType;
+  accountDepositId?: string;
+  accountDeposit?: AccountDeposit;
+};
+
+export enum AccountTransactionType {
+  Income = "Income",
+  Purchase = "Purchase",
+  Referral = "Referral",
+  Deposit = "Deposit",
+  Withdraw = "Withdraw",
+  Transfer = "Transfer",
+}
