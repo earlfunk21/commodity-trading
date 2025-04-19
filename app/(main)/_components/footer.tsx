@@ -31,12 +31,12 @@ const footerLinks = [
 ];
 
 const socialLinks = [
-  { icon: Twitter, href: "#", label: "Twitter" },
+  // { icon: Twitter, href: "#", label: "Twitter" },
   { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: LinkedinIcon, href: "#", label: "LinkedIn" },
-  { icon: Globe2, href: "#", label: "Website" },
-  { icon: Bitcoin, href: "#", label: "Crypto" },
+  // { icon: Instagram, href: "#", label: "Instagram" },
+  // { icon: LinkedinIcon, href: "#", label: "LinkedIn" },
+  // { icon: Globe2, href: "#", label: "Website" },
+  // { icon: Bitcoin, href: "#", label: "Crypto" },
 ];
 
 export default function Footer() {

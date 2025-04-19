@@ -2,7 +2,7 @@ import LoadingIcon from "@/components/loading-icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Suspense } from "react";
-import AccountTransactionCardList from "./_components/account-transaction-card";
+import AccountTransactionCardList from "./_components/account-transaction-card-list";
 import UserDetailsCard from "./_components/card";
 import WithAccountTransactionList from "./_components/with-account-transaction-list";
 import WithUser from "./_components/with-user";

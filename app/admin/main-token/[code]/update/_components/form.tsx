@@ -16,8 +16,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Complan } from "@/types/accounting.type";
-import { Commodity, CommodityType, MainToken } from "@/types/pooling.type";
+import {
+  Commodity,
+  CommodityType,
+  MainToken,
+  MainTokenStatus,
+} from "@/types/pooling.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,6 +66,7 @@ const formSchema = z.object({
   tradingDuration: z.date({
     required_error: "Trading duration is required",
   }),
+  status: z.nativeEnum(MainTokenStatus),
 });
 
 type Props = {
@@ -80,6 +93,7 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
       poolingStart: new Date(mainToken.poolingStart),
       poolingEnd: new Date(mainToken.poolingEnd),
       tradingDuration: new Date(mainToken.tradingDuration),
+      status: mainToken.status,
     },
   });
 
@@ -314,8 +328,7 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
           )}
         />
 
-        
-<FormField
+        <FormField
           control={form.control}
           name="poolingStart"
           render={({ field }) => (
@@ -400,6 +413,31 @@ export default function MainTokenUpdateForm({ mainToken }: Props) {
                   onChange={field.onChange}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-6">
+              <FormLabel>Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.values(MainTokenStatus).map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

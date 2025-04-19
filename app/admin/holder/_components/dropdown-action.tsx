@@ -63,7 +63,7 @@ export default function HolderDropdownAction({ holder }: Props) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`user/${holder.userId}`}>View User</Link>
+            <Link href={`user/${holder.user.username}`}>View User</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href={`user/${holder.userId}/update`}>Update User</Link>

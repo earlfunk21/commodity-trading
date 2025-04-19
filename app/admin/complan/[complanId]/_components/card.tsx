@@ -40,34 +40,6 @@ export default function ComplanDetailsCard({ complan }: ComplanCardProps) {
                 <span className="font-medium">{complan.tax}%</span>
               </div>
               <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">
-                  Referral Commission
-                </span>
-                <span className="font-medium">
-                  {complan.referralCommission}%
-                </span>
-              </div>
-              <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">
-                  Pending Referral Commission
-                </span>
-                <span className="font-medium">
-                  {complan.pendingReferralCommission}%
-                </span>
-              </div>
-              <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">Management Fee</span>
-                <span className="font-medium">{complan.managementFee}%</span>
-              </div>
-              <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">
-                  Pending Management Fee
-                </span>
-                <span className="font-medium">
-                  {complan.pendingManagementFee}%
-                </span>
-              </div>
-              <div className="flex flex-col p-2 rounded-md bg-muted/50">
                 <span className="text-muted-foreground">Capital</span>
                 <span className="font-medium">{complan.capital}%</span>
               </div>

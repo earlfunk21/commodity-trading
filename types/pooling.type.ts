@@ -66,8 +66,10 @@ export type MainToken = {
   origin: string;
   performanceBondNumber: string;
   insurerCompany: string;
+  insurancePolicyNumber: string;
   certificateOfStockNumber: string;
   CADTNumber: string;
+  subTokens: SubToken[];
   tradingStart: Date;
   tradingEnd: Date;
   poolingStart: Date;
@@ -84,13 +86,27 @@ export type MainToken = {
   specs: string;
   complanId: string;
   complan: Complan;
-  releaseReferralCommission: Date;
-  releaseManagementFee: Date;
+  purchaseTokens: PurchaseToken[];
+  trades: Trade[];
+  transactions: MainTokenTransaction[];
+  tradeTransactions: TradeTransaction[];
+  tokenValues: MainTokenValue[];
+  currentTokenValueId?: string;
   currentTokenValue?: MainTokenValue;
+  lastTokenValueId?: string;
   lastTokenValue?: MainTokenValue;
   totalFundsNeeded: number;
   totalAccumulatedFunds: number;
+  status: MainTokenStatus;
 };
+
+export enum MainTokenStatus {
+  Pooling = "Pooling",
+  Trading = "Trading",
+  Closed = "Closed",
+  Terminated = "Terminated",
+  Extended = "Extended",
+}
 
 export type MainTokenValue = {
   id: string;
@@ -119,8 +135,43 @@ export type MainTokenTransaction = {
   userId: string;
   user: User;
   amount: number;
+  capital: number;
+  initialReferralFee: number;
+  releaseReferralFee: number;
+  initialManagementFee: number;
+  releaseManagementFee: number;
   mainTokenId: string;
   mainToken: MainToken;
+  releaseReferral?: ReleaseReferral;
+  releaseManagement?: ReleaseManagement;
+};
+
+export type ReleaseManagement = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  amount: number;
+  itManagementAmount: number;
+  partnersManagementAmount: number;
+  tpcpiReferrerManagementAmount: number;
+  tpcpiManagementAmount: number;
+  mainTokenTransactionId: string;
+  mainTokenTransaction: MainTokenTransaction;
+  releasedAt?: Date | null;
+};
+
+export type ReleaseReferral = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  amount: number;
+  mainTokenTransactionId: string;
+  mainTokenTransaction: MainTokenTransaction;
+  releasedAt?: Date | null;
+  userId: string;
+  user: User;
 };
 
 export type Trade = {

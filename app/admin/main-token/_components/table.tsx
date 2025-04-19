@@ -28,6 +28,7 @@ export default function MainTokenTable({ mainTokenList }: Props) {
             <TableHead className="text-xs">Funds Needed</TableHead>
             <TableHead className="text-xs">Accumulated Funds</TableHead>
             <TableHead className="text-xs">Balance</TableHead>
+            <TableHead className="text-xs">Status</TableHead>
             <TableHead className="sr-only">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -77,6 +78,12 @@ export default function MainTokenTable({ mainTokenList }: Props) {
                 {currency(
                   mainToken.totalFundsNeeded - mainToken.totalAccumulatedFunds
                 )}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell py-4">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Status
+                </span>
+                {mainToken.status}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">

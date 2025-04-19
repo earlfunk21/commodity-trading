@@ -32,6 +32,11 @@ export default function UserDropdownAction({ user }: Props) {
           <DropdownMenuItem asChild>
             <Link href={`user/${user.username}`}>View Details</Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`user/${user.username}/account-transaction`}>
+              Transactions
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -62,24 +62,49 @@ export async function updateMainToken(id: string, values: any) {
   });
 }
 
-export async function releasedReferralCommission(id: string) {
-  return apiRequest<MainToken>(
-    `/main-token/released-referral-commission/${id}`,
-    {
-      method: "PATCH",
-      afterRequest: ({ data, error }) => {
-        revalidateTag("main-token");
-        if (!error) {
-          revalidateTag(data.code);
-        }
-      },
-    }
-  );
+export async function updateMainTokenStatusToTrading(id: string) {
+  return apiRequest<MainToken>(`/main-token/update-status-trading/${id}`, {
+    method: "PATCH",
+    afterRequest: ({ data, error }) => {
+      revalidateTag("main-token");
+      if (!error) {
+        revalidateTag(data.code);
+      }
+    },
+  });
 }
 
-export async function releasedManagementFee(id: string) {
-  return apiRequest<MainToken>(`/main-token/released-management-fee/${id}`, {
+export async function updateMainTokenStatusToClosed(id: string) {
+  return apiRequest<MainToken>(`/main-token/update-status-closed/${id}`, {
     method: "PATCH",
+    afterRequest: ({ data, error }) => {
+      revalidateTag("main-token");
+      if (!error) {
+        revalidateTag(data.code);
+      }
+    },
+  });
+}
+
+export async function updateMainTokenStatusToTerminated(id: string) {
+  return apiRequest<MainToken>(`/main-token/update-status-terminated/${id}`, {
+    method: "PATCH",
+    afterRequest: ({ data, error }) => {
+      revalidateTag("main-token");
+      if (!error) {
+        revalidateTag(data.code);
+      }
+    },
+  });
+}
+
+export async function updateMainTokenStatusToExtended(id: string, values: any) {
+  return apiRequest<MainToken>(`/main-token/update-status-extended/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(values),
+    headers: {
+      "Content-Type": "application/json",
+    },
     afterRequest: ({ data, error }) => {
       revalidateTag("main-token");
       if (!error) {

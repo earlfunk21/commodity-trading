@@ -93,7 +93,7 @@ export default function AccountTransactionCardList({
                     </p>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {transaction.id}
+                    {transaction.remarks}
                   </p>
                 </div>
                 <p

@@ -70,7 +70,6 @@ const items: ItemProps[] = [
     icon: TicketsPlane,
     items: [
       { title: "All Complans", url: "/admin/complan" },
-      { title: "All Account Deposit", url: "/admin/account-deposit" },
       { title: "All Allocation Account", url: "/admin/allocation-account" },
     ],
   },

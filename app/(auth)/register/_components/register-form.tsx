@@ -202,7 +202,7 @@ export default function RegisterForm({ referror }: Props) {
           disabled={form.formState.isSubmitting}
           type="submit"
           className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:opacity-90 transition-opacity text-white font-medium py-2 h-11">
-          {form.formState.isSubmitting ? "Signing in..." : "Sign In"}
+          {form.formState.isSubmitting ? "Creating an account..." : "Create Account"}
         </Button>
       </form>
     </Form>

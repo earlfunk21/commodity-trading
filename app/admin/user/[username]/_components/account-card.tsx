@@ -37,12 +37,12 @@ export default async function AccountCard({ userId }: Props) {
             <Button
               size="sm"
               variant="outline"
-              className="flex items-center gap-2 bg-primary/10 dark:bg-primary/20 border-primary/20 dark:border-primary/30 text-primary dark:text-primary-foreground hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-300">
+              className="flex items-center gap-2">
               <PlusCircleIcon className="h-4 w-4" />
               Deposit
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-h-[80vh] overflow-y-auto dark:bg-gray-800 dark:border-gray-700">
+          <DialogContent className="max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-xl dark:text-gray-100">
                 Deposit User Account

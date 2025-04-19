@@ -1,4 +1,4 @@
-import AccountTransactionCardList from "@/app/admin/user/[username]/_components/account-transaction-card";
+import AccountTransactionCardList from "@/app/admin/user/[username]/_components/account-transaction-card-list";
 import HolderHeader from "@/components/holder-header";
 import LoadingIcon from "@/components/loading-icon";
 import {

@@ -1,4 +1,4 @@
-import { getPurchaseTokenList } from "@/actions/pooling/purchase-token.action";
+import { getPurchaseTokenListByHolder } from "@/actions/pooling/purchase-token.action";
 import PurchaseTokenTable from "@/app/holder/purchase-token/_components/table";
 import { AlertError, AlertInfo } from "@/components/ui-extension/alerts";
 
@@ -7,7 +7,9 @@ type Props = {
 };
 
 export default async function PurchaseTokenListData({ searchParams }: Props) {
-  const { data: purchaseTokenList, error } = await getPurchaseTokenList(searchParams);
+  const { data: purchaseTokenList, error } = await getPurchaseTokenListByHolder(
+    searchParams
+  );
 
   if (error) {
     return <AlertError title={error} />;

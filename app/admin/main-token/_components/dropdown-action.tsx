@@ -1,11 +1,19 @@
 "use client";
 import {
-  releasedManagementFee,
-  releasedReferralCommission,
   removeMainToken,
+  updateMainTokenStatusToClosed,
+  updateMainTokenStatusToTerminated,
+  updateMainTokenStatusToTrading,
 } from "@/actions/pooling/main-token.action";
 import { useConfirm } from "@/components/ui-extension/confirm-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { MainToken } from "@/types/pooling.type";
+import { MainToken, MainTokenStatus } from "@/types/pooling.type";
 import {
   BadgePercent,
   BarChart3,
@@ -32,7 +40,9 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { toast } from "sonner";
+import UpdateExtendedStatusForm from "./update-extended-status-form";
 
 type Props = {
   mainToken: MainToken;
@@ -40,6 +50,7 @@ type Props = {
 
 export default function MainTokenDropdownAction({ mainToken }: Props) {
   const confirm = useConfirm();
+  const [openExtendedStatusForm, setOpenExtendedStatusForm] = useState(false);
 
   const onDeleteMainToken = async () => {
     const confirmResult = await confirm({
@@ -59,189 +70,240 @@ export default function MainTokenDropdownAction({ mainToken }: Props) {
     toast.success("MainToken deleted successfully");
   };
 
-  const onReleaseReferralCommission = async () => {
+  const onUpdateStatusToTrading = async () => {
     const confirmResult = await confirm({
       title: `MTC: ${mainToken.code}`,
       description:
-        "Are you sure you want to release referral commission? Please check the Main Token Code (MTC) before proceeding. ",
+        "Are your sure you want to update this main token to trading status?",
     });
 
     if (!confirmResult) {
       return;
     }
 
-    const { error } = await releasedReferralCommission(mainToken.id);
+    const { error } = await updateMainTokenStatusToTrading(mainToken.id);
 
     if (error) {
       return toast.error(error);
     }
 
-    toast.success("Referral commission released successfully");
+    toast.success("MainToken status updated to trading successfully");
   };
 
-  const onReleasedManagementFee = async () => {
+  const onUpdateStatusToClosed = async () => {
     const confirmResult = await confirm({
       title: `MTC: ${mainToken.code}`,
-      description: `Are you sure you want to release management fee? Please check the Main Token Code (MTC) before proceeding.`,
+      description:
+        "Are your sure you want to update this main token to closed status?",
     });
 
     if (!confirmResult) {
       return;
     }
 
-    const { error } = await releasedManagementFee(mainToken.id);
+    const { error } = await updateMainTokenStatusToClosed(mainToken.id);
 
     if (error) {
       return toast.error(error);
     }
 
-    toast.success("Management fee released successfully");
+    toast.success("MainToken status updated to closed successfully");
+  };
+
+  const onUpdateStatusToTerminated = async () => {
+    const confirmResult = await confirm({
+      title: `MTC: ${mainToken.code}`,
+      description:
+        "Are your sure you want to update this main token to terminated status?",
+    });
+
+    if (!confirmResult) {
+      return;
+    }
+
+    const { error } = await updateMainTokenStatusToTerminated(mainToken.id);
+
+    if (error) {
+      return toast.error(error);
+    }
+
+    toast.success("MainToken status updated to terminated successfully");
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          Actions
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={onDeleteMainToken}
-            className="px-3 py-2 flex items-center gap-2 cursor-pointer">
-            <Trash2 className="h-4 w-4" />
-            Delete Main Token
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link
-              href={`./main-token/${mainToken.code}/update`}
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm">
+            Actions
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={onDeleteMainToken}
               className="px-3 py-2 flex items-center gap-2 cursor-pointer">
-              <Edit className="h-4 w-4" />
-              Update Main Token
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link
-              href={`./main-token/${mainToken.code}`}
-              className="px-3 py-2 flex items-center gap-2 cursor-pointer">
-              <Eye className="h-4 w-4" />
-              View Details
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator className="my-1" />
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer">
-              <BarChart3 className="h-4 w-4" />
-              Token Actions
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`./main-token/${mainToken.code}/value`}
-                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-                  <BarChartHorizontal className="h-4 w-4" />
-                  View Token Values
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`./main-token/${mainToken.code}/value/create`}
-                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-                  <PlusCircle className="h-4 w-4" />
-                  New Token Value
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator className="my-1" />
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-              <CreditCard className="h-4 w-4" />
-              Trade Actions
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`./main-token/${mainToken.code}/trade`}
-                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-                  <Eye className="h-4 w-4" />
-                  View Trades
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`./main-token/${mainToken.code}/trade-transaction`}
-                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-                  <ReceiptText className="h-4 w-4" />
-                  View Trade Transactions
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator className="my-1" />
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-              <DollarSign className="h-4 w-4" />
-              Complan Actions
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`./main-token/${mainToken.code}/transaction`}
-                  className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
-                  <ReceiptText className="h-4 w-4" />
-                  View Complan Transactions
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={onReleaseReferralCommission}
-                disabled={!!mainToken.releaseReferralCommission}
-                className={cn(
-                  "px-3 py-2 flex items-center justify-between cursor-pointer",
-                  !!mainToken.releaseReferralCommission
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                )}>
-                <div className="flex items-center gap-2">
-                  <BadgePercent className="h-4 w-4" />
-                  Release Referral Commission
-                </div>
-                {!!mainToken._count.referralCommissions && (
-                  <span className="px-2 py-0.5 text-xs leading-none bg-gradient-to-r from-red-500 to-pink-500 dark:from-red-600 dark:to-pink-600 text-white rounded-full shadow-sm dark:shadow-slate-900/30">
-                    {mainToken._count.referralCommissions}
-                  </span>
-                )}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={onReleasedManagementFee}
-                disabled={!!mainToken.releaseManagementFee}
-                className={cn(
-                  "px-3 py-2 flex items-center justify-between cursor-pointer",
-                  !!mainToken.releaseManagementFee
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                )}>
-                <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  Release Management Fee
-                </div>
-                {!!mainToken._count.pendingManagementFees && (
-                  <span className="px-2 py-0.5 text-xs leading-none bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 text-white rounded-full shadow-sm dark:shadow-slate-900/30">
-                    {mainToken._count.pendingManagementFees}
-                  </span>
-                )}
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+              <Trash2 className="h-4 w-4" />
+              Delete Main Token
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={`./main-token/${mainToken.code}/update`}
+                className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+                <Edit className="h-4 w-4" />
+                Update Main Token
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={`./main-token/${mainToken.code}`}
+                className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+                <Eye className="h-4 w-4" />
+                View Details
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator className="my-1" />
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer">
+                <BarChart3 className="h-4 w-4" />
+                Token Actions
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`./main-token/${mainToken.code}/value`}
+                    className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                    <BarChartHorizontal className="h-4 w-4" />
+                    View Token Values
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`./main-token/${mainToken.code}/value/create`}
+                    className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                    <PlusCircle className="h-4 w-4" />
+                    New Token Value
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator className="my-1" />
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                <CreditCard className="h-4 w-4" />
+                Trade Actions
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`./main-token/${mainToken.code}/trade`}
+                    className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                    <Eye className="h-4 w-4" />
+                    View Trades
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`./main-token/${mainToken.code}/trade-transaction`}
+                    className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                    <ReceiptText className="h-4 w-4" />
+                    View Trade Transactions
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator className="my-1" />
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                <DollarSign className="h-4 w-4" />
+                Complan Actions
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`./main-token/${mainToken.code}/transaction`}
+                    className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                    <ReceiptText className="h-4 w-4" />
+                    View Complan Transactions
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="px-3 py-2 flex items-center gap-2 cursor-pointer ">
+                <DollarSign className="h-4 w-4" />
+                Status Update
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem
+                  onClick={onUpdateStatusToTrading}
+                  disabled={mainToken.status !== MainTokenStatus.Pooling}
+                  className={cn(
+                    "px-3 py-2 flex items-center justify-between cursor-pointer",
+                    mainToken.status !== MainTokenStatus.Pooling
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  )}>
+                  <div className="flex items-center gap-2">
+                    <BadgePercent className="h-4 w-4" />
+                    Process Trading
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={onUpdateStatusToClosed}
+                  disabled={mainToken.status !== MainTokenStatus.Trading}
+                  className={cn(
+                    "px-3 py-2 flex items-center justify-between cursor-pointer",
+                    mainToken.status !== MainTokenStatus.Trading
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  )}>
+                  <div className="flex items-center gap-2">
+                    <BadgePercent className="h-4 w-4" />
+                    Closed Trading
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={onUpdateStatusToTerminated}
+                  disabled={mainToken.status !== MainTokenStatus.Pooling}
+                  className={cn(
+                    "px-3 py-2 flex items-center justify-between cursor-pointer",
+                    mainToken.status !== MainTokenStatus.Pooling
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  )}>
+                  <div className="flex items-center gap-2">
+                    <BadgePercent className="h-4 w-4" />
+                    Terminate
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Dialog
+        open={openExtendedStatusForm}
+        onOpenChange={setOpenExtendedStatusForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>MTC: ${mainToken.code}</DialogTitle>
+            <DialogDescription>
+              Are your sure you want to update this main token to extended
+              status?
+            </DialogDescription>
+          </DialogHeader>
+          <UpdateExtendedStatusForm mainToken={mainToken} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

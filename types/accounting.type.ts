@@ -1,5 +1,4 @@
 import { User } from "@/types/core.type";
-import { MainTokenTransaction, TradeTransaction } from "@/types/pooling.type";
 
 export type Complan = {
   id: string;
@@ -68,12 +67,10 @@ export type AllocationAccountTransaction = {
   deletedAt?: Date;
   allocation: Allocation;
   amount: number;
-  mainTokenTransactionId?: string;
-  mainTokenTransaction?: MainTokenTransaction;
+  remarks: string;
+  type: AccountTransactionType;
   accountId: string;
   account: AllocationAccount;
-  tradeTransaction?: TradeTransaction;
-  tradeTransactionId?: string;
 };
 
 export interface ComplanFeeBracket {
@@ -103,13 +100,17 @@ export type AccountTransaction = {
   type: AccountTransactionType;
   accountDepositId?: string;
   accountDeposit?: AccountDeposit;
+  remarks: string;
 };
 
 export enum AccountTransactionType {
+  Pooling = "Pooling",
   Income = "Income",
+  Trade = "Trade",
   Purchase = "Purchase",
   Referral = "Referral",
   Deposit = "Deposit",
   Withdraw = "Withdraw",
   Transfer = "Transfer",
+  Refund = "Refund",
 }

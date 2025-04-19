@@ -1,6 +1,6 @@
 import { getCommodity } from "@/actions/pooling/commodity.action";
-import CommodityUpdateForm from "@/app/admin/commodity/[slug]/update/_components/form";
 import { AlertError } from "@/components/ui-extension/alerts";
+import CommodityUpdateForm from "./form";
 
 type Props = {
   slug: string;

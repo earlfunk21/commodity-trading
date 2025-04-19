@@ -48,7 +48,7 @@ export default function BlogDetailsCard({ blog }: BlogCardProps) {
               <Carousel className="w-full">
                 <CarouselContent>
                   {blog.images.map((image, index) => (
-                    <CarouselItem key={index}>
+                    <CarouselItem key={index} className="basis-1/2">
                       <MotionDiv
                         whileHover={{ scale: 1.02 }}
                         transition={{ duration: 0.2 }}
@@ -61,11 +61,6 @@ export default function BlogDetailsCard({ blog }: BlogCardProps) {
                           height={500}
                           priority={index === 0}
                         />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                          <p className="text-white text-sm font-medium">
-                            Image {index + 1} of {blog.images.length}
-                          </p>
-                        </div>
                       </MotionDiv>
                     </CarouselItem>
                   ))}
