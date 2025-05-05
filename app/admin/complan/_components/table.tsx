@@ -22,8 +22,6 @@ export default function ComplanTable({ complanList }: Props) {
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
             <TableHead className="md:font-semibold">Name</TableHead>
-            <TableHead className="md:font-semibold">Commission (%)</TableHead>
-            <TableHead className="md:font-semibold">Tax (%)</TableHead>
             <TableHead className="md:font-semibold">Total Fee (%)</TableHead>
             <TableHead className="md:font-semibold">
               IT Management (%)
@@ -42,18 +40,6 @@ export default function ComplanTable({ complanList }: Props) {
                   Name
                 </span>
                 {complan.name}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Commission
-                </span>
-                {complan.commission}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-sm font-medium">
-                  Tax
-                </span>
-                {complan.tax}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">

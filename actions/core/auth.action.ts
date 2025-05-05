@@ -3,6 +3,7 @@ import { signIn, signOut } from "@/auth";
 import { apiRequest } from "@/lib/fetch";
 import { AuthError, User } from "next-auth";
 import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function authenticate(values: any) {
   try {
@@ -38,7 +39,8 @@ export async function authenticate(values: any) {
 }
 
 export async function logout() {
-  await signOut({ redirect: true, redirectTo: "/login" });
+  await signOut({ redirect: false });
+  redirect("/login");
 }
 
 export async function login(values: any) {

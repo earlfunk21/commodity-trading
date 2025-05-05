@@ -1,6 +1,7 @@
 "use client";
 
 import { getComplanList } from "@/actions/accounting/complan.action";
+import { getTradeComplanList } from "@/actions/accounting/trade-complan.action";
 import { createTradeTransaction } from "@/actions/pooling/trade-transaction.action";
 import { AutoComplete } from "@/components/ui-extension/auto-complete";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Complan } from "@/types/accounting.type";
+import { Complan, TradeComplan } from "@/types/accounting.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -71,7 +72,7 @@ export default function ProcessTradesForm({
                   value={field.value}
                   onChange={field.onChange}
                   getData={async (searchValue) => {
-                    const result = await getComplanList({
+                    const result = await getTradeComplanList({
                       search: searchValue,
                     });
                     if (result.error) {
@@ -82,7 +83,7 @@ export default function ProcessTradesForm({
                     }
                     return result.data;
                   }}
-                  label={(item: Complan) => item.name}
+                  label={(item: TradeComplan) => item.name}
                 />
               </FormControl>
               <FormMessage />

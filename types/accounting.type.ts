@@ -6,8 +6,6 @@ export type Complan = {
   updatedAt: Date;
   deletedAt?: Date;
   name: string;
-  commission: number;
-  tax: number;
   totalFeePercentage: number;
   itManagement: number;
   partnersManagement: number;
@@ -58,6 +56,8 @@ export enum Allocation {
   PartnersManagement = "PartnersManagement",
   TPCPIReferrerManagement = "TPCPIReferrerManagement",
   TPCPIManagement = "TPCPIManagement",
+  UnclaimedReferral = "UnclaimedReferral",
+  ServiceCharge = "ServiceCharge",
 }
 
 export type AllocationAccountTransaction = {
@@ -114,3 +114,15 @@ export enum AccountTransactionType {
   Transfer = "Transfer",
   Refund = "Refund",
 }
+
+export type TradeComplan = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  name: string;
+  itManagement: number;
+  tpctiManagement: number;
+  vat: number;
+  serviceCharge: number;
+};

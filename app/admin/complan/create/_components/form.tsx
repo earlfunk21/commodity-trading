@@ -34,8 +34,6 @@ const feeBracket = z.object({
 const formSchema = z
   .object({
     name: z.string({ required_error: "Name of the complan is required" }),
-    commission: z.coerce.number(),
-    tax: z.coerce.number(),
     totalFeePercentage: z.coerce.number(),
     capital: z.coerce.number(),
     itManagement: z.coerce.number(),
@@ -47,8 +45,6 @@ const formSchema = z
   .refine(
     (data) => {
       const totalPercentage =
-        Number(data.commission) +
-        Number(data.tax) +
         Number(data.totalFeePercentage) +
         Number(data.capital);
       return totalPercentage === 100;
@@ -96,8 +92,6 @@ export default function ComplanCreateForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      commission: 0,
-      tax: 0,
       totalFeePercentage: 0,
       capital: 0,
       itManagement: 0,
@@ -165,42 +159,6 @@ export default function ComplanCreateForm() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="commission"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Commission (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter commission percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tax"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tax (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="Enter tax percentage"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="totalFeePercentage"

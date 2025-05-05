@@ -69,7 +69,8 @@ const items: ItemProps[] = [
     title: "Accounting",
     icon: TicketsPlane,
     items: [
-      { title: "All Complans", url: "/admin/complan" },
+      { title: "All Pooling Complans", url: "/admin/complan" },
+      { title: "All Trade Complans", url: "/admin/trade-complan" },
       { title: "All Allocation Account", url: "/admin/allocation-account" },
     ],
   },

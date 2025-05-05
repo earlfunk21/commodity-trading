@@ -1,4 +1,4 @@
-import { Complan } from "@/types/accounting.type";
+import { Complan, TradeComplan } from "@/types/accounting.type";
 import { Admin, User } from "@/types/core.type";
 
 export type Holder = {
@@ -201,19 +201,22 @@ export type TradeTransaction = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
-  complanId: string;
-  complan: Complan;
   mainToken: MainToken;
   mainTokenId: string;
-  managementFee: number;
   totalGrossSales: number;
   totalUnitQuantity: number;
   capital: number;
   grossIncome: number;
-  tax: number;
   netIncome: number;
   tokenValue: number;
-}
+  trades: Trade[];
+  tpcti: number;
+  versaIt: number;
+  serviceFee: number;
+  vat: number;
+  complanId: string;
+  complan: TradeComplan;
+};
 
 export type SubToken = {
   id: string;

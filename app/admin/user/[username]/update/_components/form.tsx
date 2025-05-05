@@ -31,7 +31,7 @@ const formSchema = z.object({
   username: z.string().min(1, { message: "Username is required" }),
   email: z.string().email({ message: "Email is required" }),
   password: z.string().optional(),
-  uplineId: z.string().optional(),
+  uplineId: z.string().nullish(),
   status: z.nativeEnum(UserStatus),
 });
 
@@ -135,7 +135,7 @@ export default function UserUpdateForm({ user }: Props) {
           name="uplineId"
           render={({ field }) => (
             <FormItem className="col-span-12 md:col-span-4">
-              <FormLabel>Sponsorr</FormLabel>
+              <FormLabel>Sponsor</FormLabel>
               <FormControl>
                 <AutoComplete
                   name="user"

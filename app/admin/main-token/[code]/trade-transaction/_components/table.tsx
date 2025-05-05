@@ -22,12 +22,14 @@ export default function TradeTransactionTable({ tradeTransactionList }: Props) {
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
             <TableHead className="text-xs">Complan</TableHead>
-            <TableHead className="text-xs">Gross Sales</TableHead>
-            <TableHead className="text-xs">Unit Quantity</TableHead>
-            <TableHead className="text-xs">Management Fee</TableHead>
+            <TableHead className="text-xs">Total Gross Sales</TableHead>
+            <TableHead className="text-xs">Total Unit Quantity</TableHead>
+            <TableHead className="text-xs">TPCTI</TableHead>
+            <TableHead className="text-xs">Versa IT</TableHead>
             <TableHead className="text-xs">Capital</TableHead>
             <TableHead className="text-xs">Gross Income</TableHead>
-            <TableHead className="text-xs">Tax</TableHead>
+            <TableHead className="text-xs">VAT</TableHead>
+            <TableHead className="text-xs">Service Fee</TableHead>
             <TableHead className="text-xs">Net Income</TableHead>
             <TableHead className="text-xs">Token Value</TableHead>
             <TableHead className="text-xs">Created At</TableHead>
@@ -69,9 +71,15 @@ export default function TradeTransactionTable({ tradeTransactionList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Management Fee
+                  TPCTI
                 </span>
-                {currency(tradeTransaction.managementFee)}
+                {currency(tradeTransaction.tpcti)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
+                  Versa IT
+                </span>
+                {currency(tradeTransaction.versaIt)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
@@ -87,9 +95,15 @@ export default function TradeTransactionTable({ tradeTransactionList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Tax
+                  VAT
                 </span>
-                {currency(tradeTransaction.tax)}
+                {currency(tradeTransaction.vat)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
+                  Service Fee
+                </span>
+                {currency(tradeTransaction.serviceFee)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-[10px] font-medium">
