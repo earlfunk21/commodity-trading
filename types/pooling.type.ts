@@ -1,4 +1,4 @@
-import { Complan, TradeComplan } from "@/types/accounting.type";
+import { Complan } from "@/types/accounting.type";
 import { Admin, User } from "@/types/core.type";
 
 export type Holder = {
@@ -179,18 +179,23 @@ export type Trade = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date | null;
-  commodityId: string;
-  commodity: Commodity;
-  commodityTypeId: string;
-  commodityType: CommodityType;
   mainTokenId: string;
   mainToken: MainToken;
   mainTokenValueId: string;
   mainTokenValue: MainTokenValue;
   capital: number;
+  unitValue: number;
   soldAmount: number;
   quantity: number;
   grossSales: number;
+  grossProfit: number;
+  tpcti: number;
+  itManagement: number;
+  vatAmount: number;
+  netProfit: number;
+  latestCapital: number;
+  currentTokenValue: number;
+  profitPercentage: number;
   transactionId?: string | null;
   transaction?: TradeTransaction | null;
   processedAt?: Date | null;
@@ -203,19 +208,20 @@ export type TradeTransaction = {
   deletedAt?: Date | null;
   mainToken: MainToken;
   mainTokenId: string;
-  totalGrossSales: number;
-  totalUnitQuantity: number;
   capital: number;
-  grossIncome: number;
-  netIncome: number;
-  tokenValue: number;
-  trades: Trade[];
+  unitValue: number;
+  soldAmount: number;
+  quantity: number;
+  grossSales: number;
+  grossProfit: number;
   tpcti: number;
-  versaIt: number;
-  serviceFee: number;
-  vat: number;
-  complanId: string;
-  complan: TradeComplan;
+  itManagement: number;
+  vatAmount: number;
+  netProfit: number;
+  latestCapital: number;
+  currentTokenValue: number;
+  profitPercentage: number;
+  trades: Trade[];
 };
 
 export type SubToken = {
@@ -296,4 +302,4 @@ export type NewsEvent = {
   show: boolean;
   images: string[];
   youtubeUrl?: string;
-}
+};

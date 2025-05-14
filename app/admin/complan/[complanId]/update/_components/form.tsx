@@ -76,8 +76,6 @@ export default function ComplanUpdateForm({ complan }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: complan.name,
-      commission: complan.commission,
-      tax: complan.tax,
       totalFeePercentage: complan.totalFeePercentage,
       capital: complan.capital,
       itManagement: complan.itManagement,

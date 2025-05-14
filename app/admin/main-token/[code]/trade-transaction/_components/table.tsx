@@ -21,18 +21,18 @@ export default function TradeTransactionTable({ tradeTransactionList }: Props) {
       <Table>
         <TableHeader>
           <TableRow className="hidden md:table-row bg-muted/50">
-            <TableHead className="text-xs">Complan</TableHead>
-            <TableHead className="text-xs">Total Gross Sales</TableHead>
-            <TableHead className="text-xs">Total Unit Quantity</TableHead>
-            <TableHead className="text-xs">TPCTI</TableHead>
-            <TableHead className="text-xs">Versa IT</TableHead>
-            <TableHead className="text-xs">Capital</TableHead>
-            <TableHead className="text-xs">Gross Income</TableHead>
-            <TableHead className="text-xs">VAT</TableHead>
-            <TableHead className="text-xs">Service Fee</TableHead>
-            <TableHead className="text-xs">Net Income</TableHead>
-            <TableHead className="text-xs">Token Value</TableHead>
-            <TableHead className="text-xs">Created At</TableHead>
+          <TableHead className="md:font-semibold">Capital</TableHead>
+            <TableHead className="md:font-semibold">Unit Value</TableHead>
+            <TableHead className="md:font-semibold">Sold Amount</TableHead>
+            <TableHead className="md:font-semibold">Quantity</TableHead>
+            <TableHead className="md:font-semibold">Gross Sales</TableHead>
+            <TableHead className="md:font-semibold">Gross Profit</TableHead>
+            <TableHead className="md:font-semibold">Net Profit</TableHead>
+            <TableHead className="md:font-semibold">Latest Capital</TableHead>
+            <TableHead className="md:font-semibold">Profit %</TableHead>
+            <TableHead className="md:font-semibold">VAT Amount</TableHead>
+            <TableHead className="md:font-semibold">Current Value</TableHead>
+            <TableHead className="md:font-semibold">Created At</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,89 +41,76 @@ export default function TradeTransactionTable({ tradeTransactionList }: Props) {
               key={tradeTransaction.id}
               className="group flex flex-col md:table-row hover:bg-muted/50 transition-colors">
               <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Complan
-                </span>
-                <div>
-                  <div>
-                    <Link
-                      href={`/admin/complan/${tradeTransaction.complanId}`}
-                      className="text-blue-600 hover:underline">
-                      {tradeTransaction.complan.name}
-                    </Link>
-                  </div>
-                  <div className="text-muted-foreground text-xs">
-                    {tradeTransaction.complanId}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Gross Sales
-                </span>
-                {currency(tradeTransaction.totalGrossSales)}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Unit Quantity
-                </span>
-                {tradeTransaction.totalUnitQuantity}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  TPCTI
-                </span>
-                {currency(tradeTransaction.tpcti)}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Versa IT
-                </span>
-                {currency(tradeTransaction.versaIt)}
-              </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Capital
                 </span>
                 {currency(tradeTransaction.capital)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Gross Income
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Unit Value
                 </span>
-                {currency(tradeTransaction.grossIncome)}
+                {currency(tradeTransaction.unitValue)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  VAT
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Sold Amount
                 </span>
-                {currency(tradeTransaction.vat)}
+                {currency(tradeTransaction.soldAmount)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Service Fee
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Quantity
                 </span>
-                {currency(tradeTransaction.serviceFee)}
+                {currency(tradeTransaction.quantity)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Net Income
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Gross Sales
                 </span>
-                {currency(tradeTransaction.netIncome)}
+                {currency(tradeTransaction.grossSales)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
-                  Token Value
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Gross Profit
                 </span>
-                {currency(tradeTransaction.tokenValue)}
+                {currency(tradeTransaction.grossProfit)}
               </TableCell>
-              <TableCell className="flex items-center justify-between md:table-cell py-4">
-                <span className="md:hidden text-muted-foreground text-[10px] font-medium">
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Net Profit
+                </span>
+                {currency(tradeTransaction.netProfit)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Latest Capital
+                </span>
+                {currency(tradeTransaction.latestCapital)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Profit %
+                </span>
+                {currency(tradeTransaction.profitPercentage)}%
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  VAT Amount
+                </span>
+                {currency(tradeTransaction.vatAmount)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Current Value
+                </span>
+                {currency(tradeTransaction.currentTokenValue)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Created At
                 </span>
-                <span className="font-medium">
-                  {format(tradeTransaction.createdAt, "PPp")}
-                </span>
+                {new Date(tradeTransaction.createdAt).toLocaleDateString()}
               </TableCell>
             </TableRow>
           ))}

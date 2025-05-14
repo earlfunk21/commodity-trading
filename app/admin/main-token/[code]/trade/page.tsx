@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Suspense } from "react";
-import ProcessTrades from "./_components/process-trades";
+import ProcessTradesForm from "./_components/process-trades-form";
 
 type Props = {
   searchParams: any;
@@ -71,7 +71,7 @@ export default async function TradePage({ searchParams, params }: Props) {
         </div>
       </CardHeader>
       <CardContent className="space-y-1">
-        <ProcessTrades mainToken={mainToken} />
+        <ProcessTradesForm mainTokenId={mainToken.id} />
         <Suspense fallback={<LoadingIcon />}>
           <TradeData
             searchParams={{ mainTokenId: mainToken.id, ...searchParams }}

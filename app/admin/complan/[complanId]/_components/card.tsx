@@ -32,14 +32,6 @@ export default function ComplanDetailsCard({ complan }: ComplanCardProps) {
             </h4>
             <div className="grid gap-3 text-sm">
               <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">Commission</span>
-                <span className="font-medium">{complan.commission}%</span>
-              </div>
-              <div className="flex flex-col p-2 rounded-md bg-muted/50">
-                <span className="text-muted-foreground">Tax</span>
-                <span className="font-medium">{complan.tax}%</span>
-              </div>
-              <div className="flex flex-col p-2 rounded-md bg-muted/50">
                 <span className="text-muted-foreground">Capital</span>
                 <span className="font-medium">{complan.capital}%</span>
               </div>

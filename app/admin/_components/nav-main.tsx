@@ -70,7 +70,6 @@ const items: ItemProps[] = [
     icon: TicketsPlane,
     items: [
       { title: "All Pooling Complans", url: "/admin/complan" },
-      { title: "All Trade Complans", url: "/admin/trade-complan" },
       { title: "All Allocation Account", url: "/admin/allocation-account" },
     ],
   },

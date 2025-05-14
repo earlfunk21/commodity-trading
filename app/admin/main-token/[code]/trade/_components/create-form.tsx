@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formatNumber } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,18 +18,14 @@ import * as z from "zod";
 
 const formSchema = z.object({
   mainTokenId: z.string({ required_error: "Main Token is required" }),
-  capital: z
-    .string()
-    .transform((value) => value.replace(/,/g, ""))
-    .transform((value) => (value === "" ? "" : Number(value))),
-  soldAmount: z
-    .string()
-    .transform((value) => value.replace(/,/g, ""))
-    .transform((value) => (value === "" ? "" : Number(value))),
-  quantity: z
-    .string()
-    .transform((value) => value.replace(/,/g, ""))
-    .transform((value) => (value === "" ? "" : Number(value))),
+  capital: z.coerce.number().min(1, { message: "Capital is required" }),
+  soldAmount: z.coerce.number().min(1, { message: "Sold amount is required" }),
+  quantity: z.coerce.number().min(1, { message: "Quantity is required" }),
+  tpctiPercentage: z.coerce.number().min(1, { message: "TPCTI % is required" }),
+  itManagementPercentage: z.coerce
+    .number()
+    .min(1, { message: "It Management % is required" }),
+  vatPercentage: z.coerce.number().min(1, { message: " VAT % is required" }),
 });
 
 type Props = {
@@ -42,9 +37,12 @@ export default function TradeCreateForm({ mainTokenId }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       mainTokenId,
-      capital: "",
-      soldAmount: "",
-      quantity: "",
+      capital: 0,
+      soldAmount: 0,
+      quantity: 0,
+      tpctiPercentage: 0,
+      itManagementPercentage: 0,
+      vatPercentage: 1.12,
     },
   });
 
@@ -70,14 +68,7 @@ export default function TradeCreateForm({ mainTokenId }: Props) {
             <FormItem className="col-span-12 md:col-span-3">
               <FormLabel>Capital</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  value={formatNumber(field.value)}
-                  placeholder="Enter capital"
-                  type="text"
-                  pattern="^[0-9,]*\.?[0-9]*$"
-                  onChange={(e) => field.onChange(formatNumber(e.target.value))}
-                />
+                <Input {...field} placeholder="Enter capital" type="number" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,11 +84,8 @@ export default function TradeCreateForm({ mainTokenId }: Props) {
               <FormControl>
                 <Input
                   {...field}
-                  value={formatNumber(field.value)}
                   placeholder="Enter sold amount"
-                  type="text"
-                  pattern="^[0-9,]*\.?[0-9]*$"
-                  onChange={(e) => field.onChange(formatNumber(e.target.value))}
+                  type="number"
                 />
               </FormControl>
               <FormMessage />
@@ -112,13 +100,60 @@ export default function TradeCreateForm({ mainTokenId }: Props) {
             <FormItem className="col-span-12 md:col-span-3">
               <FormLabel>Quantity</FormLabel>
               <FormControl>
+                <Input {...field} placeholder="Enter quantity" type="number" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tpctiPercentage"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-3">
+              <FormLabel>TPCTI %</FormLabel>
+              <FormControl>
                 <Input
                   {...field}
-                  value={formatNumber(field.value)}
-                  placeholder="Enter sold amount"
-                  type="text"
-                  pattern="^[0-9,]*\.?[0-9]*$"
-                  onChange={(e) => field.onChange(formatNumber(e.target.value))}
+                  placeholder="Enter percentage of TPCTI"
+                  type="number"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="itManagementPercentage"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-3">
+              <FormLabel>It Management %</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="Enter percentage of IT Management"
+                  type="number"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="vatPercentage"
+          render={({ field }) => (
+            <FormItem className="col-span-12 md:col-span-3">
+              <FormLabel>VAT %</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="Enter percentage of VAT"
+                  type="number"
                 />
               </FormControl>
               <FormMessage />

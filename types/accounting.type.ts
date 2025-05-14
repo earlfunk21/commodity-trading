@@ -114,15 +114,3 @@ export enum AccountTransactionType {
   Transfer = "Transfer",
   Refund = "Refund",
 }
-
-export type TradeComplan = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
-  name: string;
-  itManagement: number;
-  tpctiManagement: number;
-  vat: number;
-  serviceCharge: number;
-};

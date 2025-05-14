@@ -29,9 +29,16 @@ export default function TradeTable({ tradeList }: Props) {
               />
             </TableHead>
             <TableHead className="md:font-semibold">Capital</TableHead>
+            <TableHead className="md:font-semibold">Unit Value</TableHead>
             <TableHead className="md:font-semibold">Sold Amount</TableHead>
             <TableHead className="md:font-semibold">Quantity</TableHead>
             <TableHead className="md:font-semibold">Gross Sales</TableHead>
+            <TableHead className="md:font-semibold">Gross Profit</TableHead>
+            <TableHead className="md:font-semibold">Net Profit</TableHead>
+            <TableHead className="md:font-semibold">Latest Capital</TableHead>
+            <TableHead className="md:font-semibold">Profit %</TableHead>
+            <TableHead className="md:font-semibold">VAT Amount</TableHead>
+            <TableHead className="md:font-semibold">Current Value</TableHead>
             <TableHead className="md:font-semibold">Processed At</TableHead>
             <TableHead className="md:font-semibold">Created At</TableHead>
             <TableHead className="sr-only">Actions</TableHead>
@@ -53,6 +60,12 @@ export default function TradeTable({ tradeList }: Props) {
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Unit Value
+                </span>
+                {currency(trade.unitValue)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
                   Sold Amount
                 </span>
                 {currency(trade.soldAmount)}
@@ -68,6 +81,42 @@ export default function TradeTable({ tradeList }: Props) {
                   Gross Sales
                 </span>
                 {currency(trade.grossSales)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Gross Profit
+                </span>
+                {currency(trade.grossProfit)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Net Profit
+                </span>
+                {currency(trade.netProfit)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Latest Capital
+                </span>
+                {currency(trade.latestCapital)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Profit %
+                </span>
+                {currency(trade.profitPercentage)}%
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  VAT Amount
+                </span>
+                {currency(trade.vatAmount)}
+              </TableCell>
+              <TableCell className="flex items-center justify-between md:table-cell">
+                <span className="md:hidden text-muted-foreground text-sm font-medium">
+                  Current Value
+                </span>
+                {currency(trade.currentTokenValue)}
               </TableCell>
               <TableCell className="flex items-center justify-between md:table-cell">
                 <span className="md:hidden text-muted-foreground text-sm font-medium">

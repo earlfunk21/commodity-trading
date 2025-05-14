@@ -46,8 +46,8 @@ export async function validateUsername(username: string) {
   return apiRequest<boolean>(`/user/validate-username/${username}`, {
     next: {
       tags: [`validate-username-${username}`],
-      revalidate: 300,
     },
+    cache: "no-store",
   });
 }
 
@@ -55,8 +55,8 @@ export async function validateEmail(email: string) {
   return apiRequest<boolean>(`/user/validate-email/${email}`, {
     next: {
       tags: [`validate-email-${email}`],
-      revalidate: 300,
     },
+    cache: "no-store",
   });
 }
 
